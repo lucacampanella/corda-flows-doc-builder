@@ -3,6 +3,7 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer;
 import com.github.lucacampanella.callgraphflows.graphics.components.GGraphBuilder;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import net.corda.core.flows.InitiatedBy;
+import net.corda.core.flows.StartableByRPC;
 import spoon.reflect.CtModel;
 import spoon.reflect.code.CtExpression;
 import spoon.reflect.declaration.CtAnnotation;
@@ -24,6 +25,19 @@ public class AnalyzerWithModel {
 
     public CtModel getModel() {
         return model;
+    }
+
+    public void drawAllStartableClasses() {
+        final List<CtClass> startableByRPCClasses = getClassesByAnnotation(StartableByRPC.class);
+        System.out.println("Found these classes annotated with @StartableByRPC: ");
+        startableByRPCClasses.forEach(klass -> {
+            System.out.println("**** Analyzing class " + klass.getQualifiedName());
+            try {
+                drawFromClass(klass, klass.getQualifiedName() + ".svg");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public void drawFromClass(CtClass klass, String outName) throws IOException {

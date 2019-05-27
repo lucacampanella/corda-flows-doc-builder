@@ -41,15 +41,6 @@ public class Main {
 //                    " and " + initiatedClass.getSimpleName() + " result: " + result);
 //        }
 
-        final List<CtClass> startableByRPCClasses = analyzer.getClassesByAnnotation(StartableByRPC.class);
-        System.out.println("Found these classes annotated with @StartableByRPC: ");
-        startableByRPCClasses.forEach(klass -> {
-            System.out.println("**** Analyzing class " + klass.getQualifiedName());
-            try {
-                analyzer.drawFromClass(klass, "example/testStartable/" + klass.getQualifiedName() + ".svg");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        analyzer.drawAllStartableClasses();
     }
 }
