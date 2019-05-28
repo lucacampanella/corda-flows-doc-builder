@@ -31,8 +31,12 @@ public class AnalyzerWithModel {
         final List<CtClass> startableByRPCClasses = getClassesByAnnotation(StartableByRPC.class);
         System.out.println("Found these classes annotated with @StartableByRPC: ");
         startableByRPCClasses.forEach(klass -> {
-            System.out.println("**** Analyzing class " + klass.getQualifiedName());
+            System.out.println("**** Analyzing class " + klass.getQualifiedName() + " TEST");
+            System.out.println("Here");
+            System.out.flush();
             try {
+                System.out.println("before drawFromClass call");
+                System.out.flush();
                 drawFromClass(klass, klass.getQualifiedName() + ".svg");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -41,6 +45,7 @@ public class AnalyzerWithModel {
     }
 
     public void drawFromClass(CtClass klass, String outName) throws IOException {
+        System.out.println("before AnalysisResult call");
         final AnalysisResult analysisResult = analyzeFlowLogicClass(klass);
 
         GGraphBuilder graphBuilder = new GGraphBuilder();
@@ -61,10 +66,11 @@ public class AnalyzerWithModel {
         }
 
         AnalysisResult res = new AnalysisResult(klass.getSimpleName());
-
+        System.out.println("before matcher");
         final Branch interestingStatements = MatcherHelper.fromCtStatementsToStatements(
                 callMethod.getBody().getStatements(), this);
         res.setStatements(interestingStatements);
+        System.out.println("after matcher");
 
         //is it only a "container" flow with no initiating call or also calls initiateFlow(...)?
         final boolean isInitiatingFlow =

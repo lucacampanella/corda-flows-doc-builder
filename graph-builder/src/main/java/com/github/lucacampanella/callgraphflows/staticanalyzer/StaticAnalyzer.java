@@ -4,6 +4,7 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import net.corda.core.flows.FlowSession;
 import spoon.reflect.code.CtAbstractInvocation;
+import spoon.reflect.code.CtLiteral;
 import spoon.reflect.code.CtStatement;
 import spoon.reflect.code.CtVariableRead;
 import spoon.reflect.declaration.CtClass;
@@ -550,11 +551,14 @@ public class StaticAnalyzer {
                 return res;
             }
         }
+        System.out.println(statement.getShortRepresentation());
+        if(!(statement instanceof CtLiteral)) {
+            final List<CtElement> directChildren = statement.getDirectChildren();
+            System.out.println(directChildren);
 
-        final List<CtElement> directChildren = statement.getDirectChildren();
-
-        for(CtElement elem : directChildren) {
-            res.addIfRelevant(getAllRelevantMethodInvocations(elem, analyzer));
+            for (CtElement elem : directChildren) {
+                res.addIfRelevant(getAllRelevantMethodInvocations(elem, analyzer));
+            }
         }
 
         return res;

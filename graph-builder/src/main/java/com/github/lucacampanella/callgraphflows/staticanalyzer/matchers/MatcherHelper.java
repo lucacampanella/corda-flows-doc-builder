@@ -15,8 +15,10 @@ import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.chain.CtQueryable;
 import spoon.reflect.visitor.filter.NamedElementFilter;
 import spoon.reflect.visitor.filter.TypeFilter;
+import spoon.support.compiler.VirtualFile;
 import spoon.template.TemplateMatcher;
 
+import java.io.*;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -41,9 +43,17 @@ public class MatcherHelper {
         //adds the jars needed to understand the corda imports
         //launcher.getEnvironment().setSourceClasspath(paths);
 
-        launcher.addInputResource(
-                        "./src/main/java/com/github/lucacampanella/callgraphflows/staticanalyzer/matchers/MatcherContainer.java");
+        final InputStream matcherContainerStream =
+                MatcherHelper.class.getClassLoader().getResourceAsStream("MatcherContainer.java");
 
+        final String matcherContainerString = new BufferedReader(new InputStreamReader(matcherContainerStream)).lines()
+                .parallel().collect(Collectors.joining("\n"));
+
+        final VirtualFile matcherContainerVirtualFile = new VirtualFile(matcherContainerString);
+
+        launcher.addInputResource(matcherContainerVirtualFile);
+
+        System.out.println("before building model, curr dir = " + System.getProperty("user.dir"));
         launcher.buildModel();
         model = launcher.getModel();
     }

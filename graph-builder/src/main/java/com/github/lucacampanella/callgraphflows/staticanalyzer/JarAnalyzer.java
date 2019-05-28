@@ -18,18 +18,29 @@ import java.util.*;
 
 public class JarAnalyzer extends AnalyzerWithModel { //TODO: not all the flows are really recognized, debug
 
-    public JarAnalyzer(String pathToJar) {
+    public JarAnalyzer(String pathToJar, String... additionalJars) {
 
         List<String> jarsList =
                 new LinkedList<String>();
         //jarsList.add("./flow-callgraph-drawer/lib/corda-flow-base-0.2.1903271115.jar");
 
         jarsList.add(pathToJar);
+        if(additionalJars.length > 0) {
+            jarsList.addAll(Arrays.asList(additionalJars));
+        }
 
         CustomJarLauncher jr = new CustomJarLauncher(jarsList);
+
+
+
+        //System.out.println("CLASSPATH = " + jr.getEnvironment().getSourceClasspath());
+
+        //jr.getEnvironment().setNoClasspath(false);
 
         jr.buildModel();
 
         model = jr.getModel();
+
+        System.out.println();
     }
 }

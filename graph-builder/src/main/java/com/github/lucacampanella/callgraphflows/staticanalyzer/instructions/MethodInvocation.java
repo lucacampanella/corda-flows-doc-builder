@@ -64,7 +64,7 @@ public class MethodInvocation extends InstructionStatement {
                     }
                 }
                 else {
-                    System.out.println("expr: " + expr +" of type " + expr.getType());
+                    System.out.println("expr: " + expr +" of type " + expr.getType() + " " + expr.getShortRepresentation());
                     if(expr.getType() != null) { //todo: I think this just means void, but test
                         if (expr.getType().isSubtypeOf(MatcherHelper.getTypeReference(FlowSession.class))) {
                             addToMapIfNoException(methodInvocation.callerSessionNameToCalleeSessionName, inv, i);

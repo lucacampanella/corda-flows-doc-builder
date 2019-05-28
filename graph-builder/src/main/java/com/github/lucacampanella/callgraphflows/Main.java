@@ -24,6 +24,8 @@ public class Main {
                     "./workflows-java/build/libs/cordapp-example-workflows.jar");
         }
 
+
+
 //        final Map<CtClass, CtClass> initiatedClassToInitiatingMap = analyzer.getInitiatedClassToInitiatingMap();
 //
 //        System.out.println("***** found these classes referring to each other in the jar: ");

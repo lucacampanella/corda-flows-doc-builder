@@ -77,7 +77,9 @@ public class CustomJarLauncher extends Launcher {
                 File jar = new File(jarPath);
                 if (jar.exists() && jar.isFile()) {
                     if (this.decompile || (jar.lastModified() > this.decompiledSrc.lastModified())) {
+                        System.out.println("Before Decompilation");
                         this.decompiler.decompile(jar.getAbsolutePath());
+                        System.out.println("After Decompilation");
                     }
                 } else {
                     throw new SpoonException("Jar " + jar.getPath() + " not found.");
