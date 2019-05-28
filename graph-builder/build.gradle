@@ -32,3 +32,16 @@ dependencies {
     testImplementation('org.junit.jupiter:junit-jupiter:5.4.2')
     testImplementation("org.assertj:assertj-core:3.11.1")
 }
+
+//processResources {
+//    from("./src/main/java/com/github/lucacampanella/callgraphflows/staticanalyzer/matchers/MatcherContainer.java")
+//}
+
+tasks.withType(JavaCompile) {
+    doFirst {
+        project.copy {
+            from "./src/main/java/com/github/lucacampanella/callgraphflows/staticanalyzer/matchers/MatcherContainer.java"
+            into "./src/main/resources/"
+        }
+    }
+}
