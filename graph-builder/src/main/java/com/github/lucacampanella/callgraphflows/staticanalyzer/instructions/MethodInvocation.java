@@ -25,7 +25,7 @@ public class MethodInvocation extends InstructionStatement {
 
     protected MethodInvocation(CtStatement statement) {
         super(statement.getPosition() instanceof  NoSourcePosition ? 0 : statement.getPosition().getLine(),
-                    Utils.fromStatementToString(statement));
+                Utils.fromStatementToString(statement));
     }
 
 
@@ -33,22 +33,23 @@ public class MethodInvocation extends InstructionStatement {
 
         MethodInvocation methodInvocation = new MethodInvocation(statement);
 
-        if (StaticAnalyzer.isCordaMethod(statement)) { //this should never happen
-            System.out.println("Error");
-            return null;
-        }
-
-        if(statement instanceof CtInvocation) {
-            CtInvocation inv = (CtInvocation) statement;
-
-            if (inv.getTarget() instanceof CtInvocation) { //the target is the "inner" invocation
-                MethodInvocation targetInv = MethodInvocation.fromCtStatement((CtInvocation) inv.getTarget(), analyzer);
-                methodInvocation.internalMethodInvocations.addIfRelevant(targetInv);
-            }
-        }
-
         if(statement instanceof CtAbstractInvocation) {
             CtAbstractInvocation inv = (CtAbstractInvocation) statement;
+
+            if (StaticAnalyzer.isCordaMethod(inv)) { //this should never happen
+                System.out.println("Error");
+                return null;
+            }
+
+            if(statement instanceof CtInvocation) {
+                CtInvocation methodInv = (CtInvocation) statement;
+
+                if (methodInv.getTarget() instanceof CtInvocation) { //the target is the "inner" invocation
+                    MethodInvocation targetInv = MethodInvocation.fromCtStatement((CtInvocation) methodInv.getTarget(), analyzer);
+                    methodInvocation.internalMethodInvocations.addIfRelevant(targetInv);
+                }
+            }
+
             final List<CtExpression> arguments = inv.getArguments();
             System.out.println("all arguments: " + arguments);
             for(int i = 0; i < arguments.size(); ++i) {
@@ -90,8 +91,8 @@ public class MethodInvocation extends InstructionStatement {
             } catch (NullPointerException e) {
                 System.out.println("Couldn't retrieve the body of method" + inv.toString() + ", adding an empty one");
             }
+            methodInvocation.buildGraphElem();
         }
-
 
 //        Object firstArgument = arguments.get(0);
 //
@@ -108,8 +109,6 @@ public class MethodInvocation extends InstructionStatement {
 //        }
 //
 //        receive.targetSessionName = Optional.ofNullable(invocation.getTarget().toString());
-
-        methodInvocation.buildGraphElem();
 
         System.out.println("returning from method invocation of statement " + statement);
         return methodInvocation;
@@ -149,8 +148,8 @@ public class MethodInvocation extends InstructionStatement {
                         return false;
                     }
                     if(stmt instanceof FlowAssignment ||
-                    stmt instanceof FlowConstructor ||
-                    stmt instanceof SessionAssignment) {
+                            stmt instanceof FlowConstructor ||
+                            stmt instanceof SessionAssignment) {
                         return false;
                     }
                     return true;

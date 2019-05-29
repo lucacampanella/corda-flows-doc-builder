@@ -122,7 +122,7 @@ abstract class SubFlowBase implements StatementInterface {
 
     //we return just the flow if is a corda flow or if is an initiating flow
     //this will result on acceptCompanion being called on this instance
-    //for carda flows we'll just check if the flow matches
+    //for carda flows we'll just check if the flow matchesAnyChildren
     //for initiating flow we'll get the other class and compare if they have at least one matching combination
 
     //if the flow doesn't initiate anything than we just inline it, for analysis is the same

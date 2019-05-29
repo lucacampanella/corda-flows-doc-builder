@@ -5,6 +5,7 @@ import net.corda.core.flows.StartableByRPC;
 import org.junit.jupiter.api.Test;
 import spoon.Launcher;
 import spoon.compiler.SpoonResourceHelper;
+import spoon.reflect.code.CtInvocation;
 import spoon.reflect.code.CtStatement;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtMethod;
@@ -198,12 +199,25 @@ public class StaticAnalyzerTest {
         final CtClass ctClass = fromClassToCtClass(InitiatorBaseFlow.class);
         final CtMethod callMethod = StaticAnalyzer.findCallMethod(ctClass);
 
-        final CtStatement nonContainingStatement = callMethod.getBody().getStatements().get(0);//realCallMethod(session);
+        final CtStatement nonContainingStatement = callMethod.getBody().getStatements().get(0);//FlowSession session = initiateFlow(otherParty);
         final Optional<String> emptyTargetSessionName = StaticAnalyzer.findTargetSessionName(nonContainingStatement);
         assertThat(emptyTargetSessionName).isEqualTo(Optional.empty());
 
         final CtStatement containingStatement = callMethod.getBody().getStatements().get(1);//realCallMethod(session);
         final Optional<String> targetSessionName = StaticAnalyzer.findTargetSessionName(containingStatement);
         assertThat(targetSessionName.get()).isEqualTo("session");
+    }
+
+
+    @Test
+    void isCordaMethod() throws FileNotFoundException {
+        final CtClass ctClass = fromClassToCtClass(InitiatorBaseFlow.class);
+        final CtMethod callMethod = StaticAnalyzer.findCallMethod(ctClass);
+
+        final CtInvocation initiateMethod = (CtInvocation) callMethod.getBody().getStatements().get(0).getDirectChildren().get(1);//initiateFlow(otherParty);
+        assertThat(StaticAnalyzer.isCordaMethod(initiateMethod)).isEqualTo(true);
+
+        final CtInvocation nonCordaMethod = (CtInvocation) callMethod.getBody().getStatements().get(1);//realCallMethod(session);
+        assertThat(StaticAnalyzer.isCordaMethod(nonCordaMethod)).isEqualTo(false);
     }
 }

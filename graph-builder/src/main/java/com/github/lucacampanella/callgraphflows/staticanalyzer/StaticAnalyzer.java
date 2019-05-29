@@ -570,7 +570,7 @@ public class StaticAnalyzer {
         return res;
     }
 
-    public static boolean isCordaMethod(CtElement element) {
+    public static boolean isCordaMethod(CtAbstractInvocation element) {
         boolean matched = false;
         final Set<TemplateMatcher> allMatchers = MatcherHelper.getAllMatchers();
         for(TemplateMatcher matcher : allMatchers) {

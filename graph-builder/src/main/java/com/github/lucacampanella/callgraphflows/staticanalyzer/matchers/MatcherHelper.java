@@ -6,7 +6,6 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.*;
 import net.corda.core.flows.FlowLogic;
 import net.corda.core.flows.FlowSession;
 import spoon.Launcher;
-import spoon.pattern.Match;
 import spoon.reflect.CtModel;
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.CtElement;
@@ -57,6 +56,10 @@ public class MatcherHelper {
 
         final InputStream matcherContainerStream =
                 MatcherHelper.class.getClassLoader().getResourceAsStream("MatcherContainer.java");
+
+        if(matcherContainerStream == null) {
+            throw new RuntimeException("MatcherContainer.java not found");
+        }
 
         final String matcherContainerString = new BufferedReader(new InputStreamReader(matcherContainerStream)).lines()
                 .parallel().collect(Collectors.joining("\n"));
@@ -149,12 +152,12 @@ public class MatcherHelper {
     }
 
     /**
-     * Checks if a queryable matches a matcher
+     * Checks if a queryable matchesAnyChildren a matcher
      * @param queryable the queryable to query
      * @param matcherName the name of the matcher to use in the query
      * @return true if the matcher finds a result inside the queryable, false otherwise
      */
-    public static boolean matches(CtQueryable queryable, String matcherName) {
+    public static boolean matchesAnyChildren(CtQueryable queryable, String matcherName) {
         return !queryable.filterChildren(getMatcher(matcherName)).list().isEmpty();
     }
 
@@ -185,23 +188,23 @@ public class MatcherHelper {
     private static StatementInterface initiateIfCordaRelevantStatement(CtStatement statement,
                                                             AnalyzerWithModel analyzer) {
         System.out.println("Initializing " + statement);
-        if (matches(statement, "transactionBuilderMatcher")) {
+        if (matchesAnyChildren(statement, "transactionBuilderMatcher")) {
             return TransactionBuilder.fromStatement(statement, analyzer);
-        } else if (matches(statement, "initiateFlowMatcher")) {
+        } else if (matchesAnyChildren(statement, "initiateFlowMatcher")) {
             System.out.println("Matched initiateFlow");
             return InitiateFlow.fromCtStatement(statement, analyzer);
-        } else if (matches(statement, "sendMatcher") ||
-                matches(statement, "sendWithBoolMatcher")) { //TODO: test the second line
+        } else if (matchesAnyChildren(statement, "sendMatcher") ||
+                matchesAnyChildren(statement, "sendWithBoolMatcher")) { //TODO: test the second line
             return Send.fromCtStatement(statement, analyzer);
-        } else if (matches(statement, "receiveMatcher") ||
-                matches(statement, "receiveWithBoolMatcher")) { //TODO: test the second line
+        } else if (matchesAnyChildren(statement, "receiveMatcher") ||
+                matchesAnyChildren(statement, "receiveWithBoolMatcher")) { //TODO: test the second line
             return Receive.fromCtStatement(statement, analyzer);
-        } else if (matches(statement, "sendAndReceiveMatcher") ||
-                matches(statement, "sendAndReceiveWithBoolMatcher")) { //TODO: test the second line
+        } else if (matchesAnyChildren(statement, "sendAndReceiveMatcher") ||
+                matchesAnyChildren(statement, "sendAndReceiveWithBoolMatcher")) { //TODO: test the second line
             System.out.println("Matched send and receive");
             return SendAndReceive.fromCtStatement(statement, analyzer);
         }
-        else if (matches(statement, "subFlowMatcher")) {
+        else if (matchesAnyChildren(statement, "subFlowMatcher")) {
             return SubFlowBuilder.fromCtStatement(statement, analyzer);
         }
 
@@ -327,17 +330,17 @@ public class MatcherHelper {
     public static StatementInterface instantiateStatementIfQueryableMatches(CtQueryable queryable,
                                                                                          CtStatement statement,
                                                                                          AnalyzerWithModel analyzer) {
-        if (matches(queryable, "sendMatcher") ||
-                matches(statement, "sendWithBoolMatcher")) { //TODO: test the second line
+        if (matchesAnyChildren(queryable, "sendMatcher") ||
+                matchesAnyChildren(statement, "sendWithBoolMatcher")) { //TODO: test the second line
             return Send.fromCtStatement(statement, analyzer);
-        } else if (matches(queryable, "receiveMatcher") ||
-                matches(statement, "receiveWithBoolMatcher")) { //TODO: test the second line
+        } else if (matchesAnyChildren(queryable, "receiveMatcher") ||
+                matchesAnyChildren(statement, "receiveWithBoolMatcher")) { //TODO: test the second line
             return Receive.fromCtStatement(statement, analyzer);
-        } else if (matches(queryable, "sendAndReceiveMatcher") ||
-                matches(statement, "sendAndReceiveWithBoolMatcher")) { //TODO: test the second line
+        } else if (matchesAnyChildren(queryable, "sendAndReceiveMatcher") ||
+                matchesAnyChildren(statement, "sendAndReceiveWithBoolMatcher")) { //TODO: test the second line
             return SendAndReceive.fromCtStatement(statement, analyzer);
         }
-        else if (matches(queryable, "subFlowMatcher")) {
+        else if (matchesAnyChildren(queryable, "subFlowMatcher")) {
             return SubFlowBuilder.fromCtStatement(statement, analyzer);
         }
         return null;
@@ -359,21 +362,21 @@ public class MatcherHelper {
         else if(statement instanceof CtDo) {
             return DoWhile.fromCtStatement(statement); //this will later be desugared into a while
         }
-        else if (matches(statement, "transactionBuilderMatcher")) {
+        else if (matchesAnyChildren(statement, "transactionBuilderMatcher")) {
             return TransactionBuilder.fromStatement(statement);
-        } else if (matches(statement, "initiateFlowMatcher")) {
+        } else if (matchesAnyChildren(statement, "initiateFlowMatcher")) {
             return InitiateFlow.fromCtStatement(statement);
-        } else if (matches(statement, "sendMatcher") ||
-        matches(statement, "sendWithBoolMatcher")) { //TODO: test the second line
+        } else if (matchesAnyChildren(statement, "sendMatcher") ||
+        matchesAnyChildren(statement, "sendWithBoolMatcher")) { //TODO: test the second line
             return Send.fromCtStatement(statement);
-        } else if (matches(statement, "receiveMatcher") ||
-        matches(statement, "receiveWithBoolMatcher")) { //TODO: test the second line
+        } else if (matchesAnyChildren(statement, "receiveMatcher") ||
+        matchesAnyChildren(statement, "receiveWithBoolMatcher")) { //TODO: test the second line
             return Receive.fromCtStatement(statement);
-        } else if (matches(statement, "sendAndReceiveMatcher") ||
-        matches(statement, "sendAndReceiveWithBoolMatcher")) { //TODO: test the second line
+        } else if (matchesAnyChildren(statement, "sendAndReceiveMatcher") ||
+        matchesAnyChildren(statement, "sendAndReceiveWithBoolMatcher")) { //TODO: test the second line
             return SendAndReceive.fromCtStatement(statement);
         }
-        else if (matches(statement, "subFlowMatcher")) {
+        else if (matchesAnyChildren(statement, "subFlowMatcher")) {
             return SubFlow.fromCtStatement(statement);
         }
         else if(statement instanceof CtAssignment) {
