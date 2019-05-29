@@ -5,7 +5,9 @@ import net.corda.core.flows.StartableByRPC;
 import org.junit.jupiter.api.Test;
 import spoon.Launcher;
 import spoon.compiler.SpoonResourceHelper;
+import spoon.reflect.code.CtStatement;
 import spoon.reflect.declaration.CtClass;
+import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.factory.ClassFactory;
 import spoon.reflect.factory.Factory;
 
@@ -13,16 +15,18 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class StaticAnalyzerTest {
 
     @Test
     public void findCallMethod() throws FileNotFoundException {
-        ClassFactory classFactory = getFactory(Arrays.asList(ExtendingSuperclassTestFlow.class)).Class();
-        assertTrue(StaticAnalyzer.findCallMethod(classFactory.get(ExtendingSuperclassTestFlow.class)) != null);
+        final CtClass ctClass = fromClassToCtClass(ExtendingSuperclassTestFlow.class);
+        assertTrue(StaticAnalyzer.findCallMethod(ctClass) != null);
     }
 
 //    @Test
@@ -180,8 +184,26 @@ public class StaticAnalyzerTest {
         return factory;
     }
 
+    private CtClass fromClassToCtClass(Class klass) throws FileNotFoundException {
+        return getFactory(Arrays.asList(klass)).Class().get(klass);
+    }
+
     private static String fromClassSrcToPath(Class klass) {
         return "./src/test/java/com/github/lucacampanella/callgraphflows/staticanalyzer/testclasses/"
                 + klass.getSimpleName() + ".java";
+    }
+
+    @Test
+    void findTargetSessionName() throws FileNotFoundException {
+        final CtClass ctClass = fromClassToCtClass(InitiatorBaseFlow.class);
+        final CtMethod callMethod = StaticAnalyzer.findCallMethod(ctClass);
+
+        final CtStatement nonContainingStatement = callMethod.getBody().getStatements().get(0);//realCallMethod(session);
+        final Optional<String> emptyTargetSessionName = StaticAnalyzer.findTargetSessionName(nonContainingStatement);
+        assertThat(emptyTargetSessionName).isEqualTo(Optional.empty());
+
+        final CtStatement containingStatement = callMethod.getBody().getStatements().get(1);//realCallMethod(session);
+        final Optional<String> targetSessionName = StaticAnalyzer.findTargetSessionName(containingStatement);
+        assertThat(targetSessionName.get()).isEqualTo("session");
     }
 }

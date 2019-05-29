@@ -32,7 +32,6 @@ public class CombinationsHolder {
     }
 
     public void combineWith(CombinationsHolder otherHolder) {
-        //allCombinations.forEach(branch -> branch.add(statement));
         if(otherHolder.allCombinations.size() == 1) { //more efficient way if only one branch on other side
             otherHolder.allCombinations.get(0).forEach(this::appendToAllCombinations);
         }
@@ -53,8 +52,6 @@ public class CombinationsHolder {
     //starting from a desugared branch
     public static CombinationsHolder fromBranch(Branch instructions) {
         CombinationsHolder holder = new CombinationsHolder(true);
-//        List<List<StatementInterface>> result = new LinkedList<>();
-//        result.add(new LinkedList<>());
 
         for(StatementInterface instr : instructions) {
             if(!instr.getInternalMethodInvocations().isEmpty()) {
