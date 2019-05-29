@@ -46,7 +46,6 @@ public abstract class GIndentedComponent extends GBaseGraphicComponent {
         Rectangle rect;
         int currStartY = getStartY();
 
-        int rightBorderX = getStartX() + WIDTH;
         int parentRightBorderX = getStartX() + WIDTH - INDENTATION;
         int arrowRightBorderX = getStartX() + WIDTH + WIDTH/2;
 
@@ -139,7 +138,7 @@ public abstract class GIndentedComponent extends GBaseGraphicComponent {
         if(enteringArrowText != null) {
             enteringArrowText.drawBrothersAndLinks(g2);
         }
-        components.forEach((comp) -> comp.drawBrothersAndLinks(g2));
+        components.forEach(comp -> comp.drawBrothersAndLinks(g2));
         if(exitingArrowText != null) {
             exitingArrowText.drawBrothersAndLinks(g2);
         }

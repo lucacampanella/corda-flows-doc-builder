@@ -57,6 +57,6 @@ public class GIfElse extends GBaseGraphicComponent {
     @Override
     public void drawBrothersAndLinks(SVGGraphics2D g2) {
         super.drawBrothersAndLinks(g2);
-        blocks.forEach((comp) -> comp.drawBrothersAndLinks(g2));
+        blocks.forEach(comp -> comp.drawBrothersAndLinks(g2));
     }
 }

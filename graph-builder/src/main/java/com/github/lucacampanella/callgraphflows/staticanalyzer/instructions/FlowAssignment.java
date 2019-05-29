@@ -33,6 +33,8 @@ public class FlowAssignment extends InstructionStatement {
         }
 
         FlowAssignment flowAssignment = new FlowAssignment(statement);
+        System.out.println("invoked getAllRelevantMethodInvocations for "
+                + statement + " class FlowAssignment");
         flowAssignment.internalMethodInvocations.add(
                 StaticAnalyzer.getAllRelevantMethodInvocations(statement, analyzer));
 
@@ -63,6 +65,7 @@ public class FlowAssignment extends InstructionStatement {
         return true;
     }
 
+    @Override
     protected Color getTextColor() { return GBaseTextComponent.LESS_IMPORTANT_TEXT_COLOR; }
 
     @Override

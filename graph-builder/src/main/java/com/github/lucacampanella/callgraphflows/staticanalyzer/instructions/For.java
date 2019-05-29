@@ -1,6 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.Utils.Utils;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
@@ -27,7 +27,6 @@ public class For extends BranchingStatement {
         final CtExpression<Boolean> condition = forStatement.getExpression();
 
         List<CtStatement> init = forStatement.getForInit();
-        ///List<StatementInterface> initBlockingStatements = Utils.fromCtStatementsToBaseStatementsNoNulls(init);
         Branch initBlockingStatements = MatcherHelper.fromCtStatementsToStatements(init, analyzer);
 
         if(!initBlockingStatements.isEmpty()) { //if there are some blocking statements in the init block of the for
@@ -47,7 +46,6 @@ public class For extends BranchingStatement {
                 ((CtStatementList) forStatement.getBody()).getStatements(), analyzer));
 
         List<CtStatement> update = forStatement.getForUpdate();
-        //List<StatementInterface> updateBlockingStatements = Utils.fromCtStatementsToBaseStatementsNoNulls(update);
 
         Branch updateBlockingStatements = MatcherHelper.fromCtStatementsToStatements(update, analyzer);
 

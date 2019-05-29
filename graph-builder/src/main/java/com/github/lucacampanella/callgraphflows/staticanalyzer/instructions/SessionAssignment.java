@@ -28,6 +28,8 @@ public class SessionAssignment extends InstructionStatement {
             return null;
         }
         SessionAssignment sessionAssignment = new SessionAssignment(statement);
+        System.out.println("invoked getAllRelevantMethodInvocations for "
+                + statement + " class SessionAssignment");
         sessionAssignment.internalMethodInvocations.add(StaticAnalyzer.
                 getAllRelevantMethodInvocations(statement, analyzer));
 
@@ -48,7 +50,7 @@ public class SessionAssignment extends InstructionStatement {
     }
 
     public String getLhsName() {
-        return targetSessionName.get();
+        return targetSessionName.orElse(null);
     }
 
     public String getRhsName() {

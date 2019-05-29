@@ -11,6 +11,7 @@ import spoon.template.TemplateParameter;
  * Class that contains the matchers or patterns that are read by {@link MatcherHelper}
  * and used to query the flow files
  */
+@SuppressWarnings("all")
 public class MatcherContainer extends FlowLogic {
 
     public TemplateParameter<FlowSession> _flowSession_;

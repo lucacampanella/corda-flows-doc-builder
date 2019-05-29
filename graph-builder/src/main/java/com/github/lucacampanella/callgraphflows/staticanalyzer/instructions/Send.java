@@ -1,6 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.Utils.Utils;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzer;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
@@ -8,7 +8,6 @@ import spoon.reflect.code.CtInvocation;
 import spoon.reflect.code.CtStatement;
 import spoon.reflect.declaration.CtTypedElement;
 
-import java.awt.*;
 import java.util.Optional;
 
 public class Send extends InstructionStatement implements StatementWithCompanionInterface {
@@ -25,7 +24,7 @@ public class Send extends InstructionStatement implements StatementWithCompanion
         super();
     }
 
-    private static final Color BACKGROUND_COLOR = new Color(173, 255, 175); //Greenish
+//    private static final Color BACKGROUND_COLOR = new Color(173, 255, 175); //Greenish
 //    protected Color getBackgroundColor() {
 //        return BACKGROUND_COLOR;
 //    }
@@ -33,6 +32,8 @@ public class Send extends InstructionStatement implements StatementWithCompanion
     public static Send fromCtStatement(CtStatement statement, AnalyzerWithModel analyzer) {
         Send send = new Send();
         send.line = statement.getPosition().getLine();
+        System.out.println("invoked getAllRelevantMethodInvocations for "
+                + statement + " class Send");
         send.internalMethodInvocations.add(StaticAnalyzer.getAllRelevantMethodInvocations(statement, analyzer));
 
         CtInvocation invocation = (CtInvocation) MatcherHelper.getFirstMatchedExpression(statement,
@@ -84,6 +85,7 @@ public class Send extends InstructionStatement implements StatementWithCompanion
         return sentType;
     }
 
+    @Override
     public boolean isSendOrReceive() {
         return true;
     }

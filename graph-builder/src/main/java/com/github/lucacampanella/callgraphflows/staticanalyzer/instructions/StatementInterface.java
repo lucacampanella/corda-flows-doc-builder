@@ -62,13 +62,6 @@ public interface StatementInterface {
     default boolean isRelevantForAnalysis() {
         return true;
     }
-//
-//    /**
-//     * @return true if in the statement there is relevant when building up all the possible combinations
-//     */
-//    default boolean isRelevantForBuildingCombination() {
-//        return true;
-//    }
 
     /**
      * @returnan optional containing initiateFlow call if present at this level, meaning that it doesn't

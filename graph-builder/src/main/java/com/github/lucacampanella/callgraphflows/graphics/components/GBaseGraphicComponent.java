@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * The base component to represent anything that can be added to a flow in order
  */
-abstract public class GBaseGraphicComponent {
+public abstract class GBaseGraphicComponent {
 
     GBaseGraphicComponent parent;
     boolean recomputeDimensions = true;
@@ -34,7 +34,7 @@ abstract public class GBaseGraphicComponent {
      * @return the dimensions of this component
      */
     public Dimension getDimensions(SVGGraphics2D g2) {
-        if(recomputeDimensions == true) {
+        if(recomputeDimensions) {
             dimension = computeDimensions(g2);
             recomputeDimensions = false;
         }
@@ -120,10 +120,10 @@ abstract public class GBaseGraphicComponent {
 
     public void drawBrothersAndLinks(SVGGraphics2D g2) {
         brothers.forEach(
-                (brother) -> GUtils.drawHorizontalArrowFromFirstToSecond(g2, this, brother)
+                brother -> GUtils.drawHorizontalArrowFromFirstToSecond(g2, this, brother)
         );
         links.forEach(
-                (link) -> GUtils.drawHorizontalArrowFromFirstToSecond(g2, this, link)
+                link -> GUtils.drawHorizontalArrowFromFirstToSecond(g2, this, link)
         );
     }
 

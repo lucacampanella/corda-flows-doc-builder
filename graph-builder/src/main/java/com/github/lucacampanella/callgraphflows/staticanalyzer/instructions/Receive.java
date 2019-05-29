@@ -1,12 +1,11 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.Utils.Utils;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzer;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import spoon.reflect.code.*;
 
-import java.awt.*;
 import java.util.Optional;
 
 public class Receive extends InstructionStatement implements StatementWithCompanionInterface {
@@ -23,7 +22,7 @@ public class Receive extends InstructionStatement implements StatementWithCompan
         super();
     }
 
-    private static final Color BACKGROUND_COLOR = new Color(255, 250, 173); //Yellowish
+//    private static final Color BACKGROUND_COLOR = new Color(255, 250, 173); //Yellowish
 //    protected Color getBackgroundColor() {
 //        return BACKGROUND_COLOR;
 //    }
@@ -31,6 +30,8 @@ public class Receive extends InstructionStatement implements StatementWithCompan
     public static Receive fromCtStatement(CtStatement statement, AnalyzerWithModel analyzer) {
         Receive receive = new Receive();
         receive.line = statement.getPosition().getLine();
+        System.out.println("invoked getAllRelevantMethodInvocations for "
+                + statement + " class Receive");
         receive.internalMethodInvocations.add(StaticAnalyzer.getAllRelevantMethodInvocations(statement, analyzer));
 
         CtInvocation invocation = (CtInvocation) MatcherHelper.getFirstMatchedExpression(statement,
@@ -100,6 +101,7 @@ public class Receive extends InstructionStatement implements StatementWithCompan
         return receivedType;
     }
 
+    @Override
     public boolean isSendOrReceive() {
         return true;
     }

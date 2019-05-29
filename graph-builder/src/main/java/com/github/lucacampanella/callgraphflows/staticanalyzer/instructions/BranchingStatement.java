@@ -1,17 +1,16 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.Utils.Utils;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseGraphicComponent;
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
 import com.github.lucacampanella.callgraphflows.graphics.components.GConditionalBranch;
 import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzer;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import spoon.reflect.code.CtExpression;
 import spoon.reflect.code.CtStatement;
-import spoon.template.TemplateMatcher;
 
 import java.util.Optional;
 
@@ -129,6 +128,8 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
             this.conditionInstruction.setTextColor(GBaseTextComponent.LESS_IMPORTANT_TEXT_COLOR);
         }
 
+        System.out.println("invoked getAllRelevantMethodInvocations for condition "
+                + condition + " class" + this.getClass().getCanonicalName());
         this.internalMethodInvocations.add(
                 StaticAnalyzer.getAllRelevantMethodInvocations(condition, analyzer));
     }

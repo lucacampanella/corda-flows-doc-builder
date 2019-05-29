@@ -9,8 +9,9 @@ dependencies {
 
     implementation gradleApi()
     implementation group: 'commons-io', name: 'commons-io', version: '2.6'
+    api project(":graph-builder")
 
-    api "$corda_release_group:corda-core:$corda_release_version"
+    //api "$corda_release_group:corda-core:$corda_release_version"
     //implementation "$corda_release_group:corda-core:$corda_release_version"
 
 //    // https://mvnrepository.com/artifact/com.mxgraph/jgraphx
@@ -19,7 +20,6 @@ dependencies {
     //testImplementation group: 'junit', name: 'junit', version: '4.12'
     testImplementation('org.junit.jupiter:junit-jupiter:5.4.2')
     testImplementation("org.assertj:assertj-core:3.11.1")
-    implementation project(":graph-builder")
 }
 
 

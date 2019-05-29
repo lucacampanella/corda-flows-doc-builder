@@ -1,6 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.Utils.Utils;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzer;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
@@ -8,7 +8,6 @@ import spoon.reflect.code.*;
 import spoon.reflect.declaration.CtTypedElement;
 import spoon.reflect.reference.CtTypeReference;
 
-import java.awt.*;
 import java.util.Optional;
 
 public class SendAndReceive extends InstructionStatement implements StatementWithCompanionInterface {
@@ -18,7 +17,7 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
 
     boolean isSentConsumed = false;
 
-    private static final Color BACKGROUND_COLOR = new Color(226, 255, 173); //Greenish and Yellowish
+//    private static final Color BACKGROUND_COLOR = new Color(226, 255, 173); //Greenish and Yellowish
 //    protected Color getBackgroundColor() {
 //        return BACKGROUND_COLOR;
 //    }
@@ -34,6 +33,8 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
     public static SendAndReceive fromCtStatement(CtStatement statement, AnalyzerWithModel analyzer) {
         SendAndReceive sendAndReceive = new SendAndReceive();
         sendAndReceive.line = statement.getPosition().getLine();
+        System.out.println("invoked getAllRelevantMethodInvocations for "
+                + statement + " class SendAndReceive");
         sendAndReceive.internalMethodInvocations.add(StaticAnalyzer.getAllRelevantMethodInvocations(statement,
                 analyzer));
 
@@ -72,7 +73,7 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
     public boolean acceptCompanion(StatementWithCompanionInterface companion) {
         boolean accepted = false;
 
-        if(isSentConsumed == false) { // we treat it as a send
+        if(isSentConsumed) { // we treat it as a send
             accepted = Send.isAccepted(companion, accepted, sentType);
             isSentConsumed = true;
         }
@@ -86,7 +87,7 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
 
     @Override
     public void createGraphLink(StatementWithCompanionInterface companion) {
-        if(isSentConsumed == false) { // we treat it as a send
+        if(isSentConsumed) { // we treat it as a send
             if(companion instanceof Receive) {
                 this.getGraphElem().addBrother(companion.getGraphElem());
             }
@@ -121,6 +122,7 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
         isSentConsumed = sentConsumed;
     }
     
+    @Override
     public boolean isSendOrReceive() {
         return true;
     }

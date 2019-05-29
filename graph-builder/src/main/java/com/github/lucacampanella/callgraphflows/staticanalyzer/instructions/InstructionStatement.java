@@ -1,6 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.Utils.Utils;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseGraphicComponent;
 import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
@@ -44,14 +44,9 @@ public class InstructionStatement implements StatementInterface {
         return targetSessionName;
     }
 
-    //@Override
-//    public List<MethodInvocation> getMethodInvocations() {
-//        return insideMethods;
-//    }
-
     @Override
     public String toString() {
-        return getGraphElem().toString();
+        return graphElem.toString();
     }
 
     @Override

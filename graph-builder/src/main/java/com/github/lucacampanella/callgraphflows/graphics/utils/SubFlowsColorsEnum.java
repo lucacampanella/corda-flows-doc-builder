@@ -9,7 +9,6 @@ public enum SubFlowsColorsEnum {
     private Color awtColor;
 
     static {
-        //REDDISH.awtColor = new Color(255, 91, 165);
         PURPLE.awtColor = new Color(166, 112, 170);
         PINK.awtColor = Color.PINK;
         PINK2.awtColor = PINK.awtColor;

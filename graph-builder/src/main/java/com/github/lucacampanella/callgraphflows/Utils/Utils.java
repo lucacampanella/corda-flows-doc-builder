@@ -1,4 +1,4 @@
-package com.github.lucacampanella.callgraphflows.Utils;
+package com.github.lucacampanella.callgraphflows.utils;
 
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import spoon.reflect.code.CtExpression;
@@ -16,19 +16,14 @@ public class Utils {
     public static final boolean REMOVE_PKG_INFO = true;
     public static final boolean REMOVE_UNWRAP = true;
 
-//    public static Queue<StatementInterface> fromCtStatementsToBaseStatements(List<CtStatement> ctStatements) {
-//        return ctStatements.stream().map(MatcherHelper::instantiateStatement).collect(Collectors.toCollection(LinkedList::new));
-//    }
-//
-//    public static List<StatementInterface> fromCtStatementsToBaseStatementsNoNulls(List<CtStatement> ctStatements) {
-//        return ctStatements.stream().map(MatcherHelper::instantiateStatement).filter(Objects::nonNull)
-//                .collect(Collectors.toCollection(LinkedList::new));
-//    }
+    private Utils() {
+        //private constructor to hide public one
+    }
 
     public static String removePackageDescription(String code) {
         Pattern pattern = Pattern.compile("([a-z0-9]|\\.)+\\.([A-Z])");
         Matcher matcher = pattern.matcher(code);
-        StringBuffer sb = new StringBuffer(code);
+        StringBuilder sb = new StringBuilder(code);
         int removedCharacters = 0;
         while (matcher.find()) {
             int startPoint = matcher.start();

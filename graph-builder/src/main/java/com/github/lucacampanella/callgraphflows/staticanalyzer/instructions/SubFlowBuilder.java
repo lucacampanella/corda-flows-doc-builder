@@ -19,8 +19,11 @@ import java.util.Optional;
 
 public class SubFlowBuilder {
 
+    private SubFlowBuilder() {
+        //private constructor to hide public one
+    }
+
     public static class SubFlowInfo {
-        //String subFlowType;
         CtTypeReference<? extends FlowLogic> subFlowType = null;
         Optional<String> assignedVariableName = Optional.empty(); //if the subflow returns an object and assigns it
         //to a variable this is present and contains the variable name
@@ -39,8 +42,6 @@ public class SubFlowBuilder {
         Boolean isInitiatingFlow = null;
 
         GInstruction initiatingInstruction; //this is the call to subFlow
-
-//        AnalysisResult resultOfClassAnalysis = new AnalysisResult();
 
         public void initializeFlow(SubFlowBase flow) {
             flow.subFlowType = subFlowType;
@@ -85,6 +86,8 @@ public class SubFlowBuilder {
 
         subFlowInfo.line = statement.getPosition().getLine();
 
+        System.out.println("invoked getAllRelevantMethodInvocations for "
+                + statement + " class SubFlowBase");
         subFlowInfo.internalMethodInvocations.add(StaticAnalyzer.getAllRelevantMethodInvocations(statement, analyzer));
 
         if(statement instanceof CtLocalVariable) {
@@ -95,14 +98,12 @@ public class SubFlowBuilder {
         }
 
         final CtExpression expression = MatcherHelper.getFirstMatchedExpression(statement, "subFlowMatcher");
-        if(expression != null && expression instanceof CtInvocation) {
+        if(expression instanceof CtInvocation) {
             CtInvocation invocation = (CtInvocation) expression;
             Object firstArgument = invocation.getArguments().get(0);
             if(firstArgument instanceof CtAbstractInvocation) {
 
                 subFlowInfo.subFlowType = ((CtAbstractInvocation) firstArgument).getExecutable().getType();
-
-                //subFlow.subFlowType = ((CtAbstractInvocation) firstArgument).getExecutable().getType().box().getSimpleName();
 
                 //this works if the subflow is created with a "new" in the subFlow invocation itself, otherwise it doesn't
                 //if it doesn't a more profound search must be done, looking for which flow is passed and what
@@ -111,7 +112,6 @@ public class SubFlowBuilder {
             }
             else if(firstArgument instanceof CtVariableRead) {
                 subFlowInfo.subFlowType = ((CtVariableRead) firstArgument).getVariable().getType();
-                //subFlow.subFlowType = ((CtVariableRead) firstArgument).getVariable().getType().box().getSimpleName();
                 subFlowInfo.subFlowVariableName = Optional.ofNullable(((CtVariableRead) firstArgument).getVariable().getSimpleName());
 
             }
@@ -139,7 +139,6 @@ public class SubFlowBuilder {
                     (CtClass) subFlowInfo.subFlowType.getDeclaration());
 
             subFlowInfo.isInitiatingFlow = resultOfClassAnalysis.hasCounterpartyResult();
-            //todo: here put creator of the other two options
             if(subFlowInfo.isInitiatingFlow) {
                 result = new InitiatingSubFlow();
             }

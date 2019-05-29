@@ -15,12 +15,15 @@ public class TransactionBuilder extends InstructionStatement {
 
     public static TransactionBuilder fromStatement(CtStatement statement, AnalyzerWithModel analyzer) {
         TransactionBuilder transactionBuilder = new TransactionBuilder(statement);
+        System.out.println("invoked getAllRelevantMethodInvocations for "
+                + statement + " class TransactionBuilder");
         transactionBuilder.internalMethodInvocations.add(
                 StaticAnalyzer.getAllRelevantMethodInvocations(statement, analyzer));
 
         return transactionBuilder;
     }
 
+    @Override
     protected Color getTextColor() { return GBaseTextComponent.LESS_IMPORTANT_TEXT_COLOR; }
 
     @Override

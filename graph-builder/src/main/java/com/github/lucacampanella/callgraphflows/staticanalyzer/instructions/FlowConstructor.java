@@ -23,6 +23,8 @@ public class FlowConstructor extends InstructionStatement {
 
     public static FlowConstructor fromStatement(CtStatement statement, AnalyzerWithModel analyzer) {
         FlowConstructor flowConstructor = new FlowConstructor(statement);
+        System.out.println("invoked getAllRelevantMethodInvocations for "
+                + statement + " class FlowConstructor");
         flowConstructor.internalMethodInvocations.add(StaticAnalyzer.getAllRelevantMethodInvocations(statement,
                 analyzer));
 
@@ -48,6 +50,7 @@ public class FlowConstructor extends InstructionStatement {
         return true;
     }
 
+    @Override
     protected Color getTextColor() { return GBaseTextComponent.LESS_IMPORTANT_TEXT_COLOR; }
 
     @Override

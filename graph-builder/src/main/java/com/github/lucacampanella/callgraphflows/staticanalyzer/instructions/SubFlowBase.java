@@ -1,6 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.Utils.Utils;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
 import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
 import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlow;
@@ -12,7 +12,6 @@ import java.util.Optional;
 
 abstract class SubFlowBase implements StatementInterface {
 
-    //String subFlowType;
     CtTypeReference<? extends FlowLogic> subFlowType = null;
     Optional<String> assignedVariableName = Optional.empty(); //if the subflow returns an object and assigns it
     //to a variable this is present and contains the variable name
@@ -32,7 +31,6 @@ abstract class SubFlowBase implements StatementInterface {
 
     GInstruction initiatingInstruction; //this is the call to subFlow
 
-//AnalysisResult resultOfClassAnalysis = new AnalysisResult();
 
     public boolean isCordaSubFlow() {
         return false;
@@ -86,11 +84,6 @@ abstract class SubFlowBase implements StatementInterface {
         return initiatingInstruction;
     }
 
-    //
-//    public String getSubFlowType() {
-//        return subFlowType;
-//    }
-
     @Override
     public String getStringDescription() {
         StringBuilder sb = new StringBuilder();
@@ -110,7 +103,6 @@ abstract class SubFlowBase implements StatementInterface {
         mainSubFlow.setEnteringArrowText(initiatingInstruction);
 
         StringBuilder returnArrowTextBuilder = new StringBuilder();
-        //assignedVariableName.ifPresent(returnArrowTextBuilder::append);
         if(returnType.isPresent() && !returnType.get().equals("java.lang.Void")) {
             returnArrowTextBuilder.append(" <<");
             returnArrowTextBuilder.append(Utils.removePackageDescriptionIfWanted(returnType.get()));

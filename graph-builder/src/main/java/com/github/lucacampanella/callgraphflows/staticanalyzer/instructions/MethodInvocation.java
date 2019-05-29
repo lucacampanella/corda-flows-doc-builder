@@ -1,6 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.Utils.Utils;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseGraphicComponent;
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
 import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlow;
@@ -50,6 +50,7 @@ public class MethodInvocation extends InstructionStatement {
         if(statement instanceof CtAbstractInvocation) {
             CtAbstractInvocation inv = (CtAbstractInvocation) statement;
             final List<CtExpression> arguments = inv.getArguments();
+            System.out.println("all arguments: " + arguments);
             for(int i = 0; i < arguments.size(); ++i) {
                 CtExpression expr = arguments.get(i);
                 if(expr instanceof CtVariableRead && expr.getType() != null) {
@@ -76,6 +77,7 @@ public class MethodInvocation extends InstructionStatement {
                             System.out.println("found a flow logic argument");
                         }
                     }
+                    System.out.println("invoked getAllRelevantMethodInvocations for expr " + expr);
                     final Branch allRelevantMethodInvocations = StaticAnalyzer.getAllRelevantMethodInvocations(expr,
                             analyzer);
                     methodInvocation.internalMethodInvocations.addIfRelevant(allRelevantMethodInvocations);
@@ -109,6 +111,7 @@ public class MethodInvocation extends InstructionStatement {
 
         methodInvocation.buildGraphElem();
 
+        System.out.println("returning from method invocation of statement " + statement);
         return methodInvocation;
     }
 
@@ -124,11 +127,15 @@ public class MethodInvocation extends InstructionStatement {
 
     @Override
     public GBaseGraphicComponent getGraphElem() {
-        return toBePainted() ?
-                (body.isEmpty() ? super.getGraphElem() : indentedComponent)
-                : null;
+        if (toBePainted()) {
+            return body.isEmpty() ? super.getGraphElem() : indentedComponent;
+        }
+        else {
+            return null;
+        }
     }
 
+    @Override
     protected void buildGraphElem() {
         indentedComponent.setEnteringArrowText((GBaseTextComponent) super.getGraphElem());
         body.forEach(stmt -> indentedComponent.addComponent(stmt.getGraphElem()));
@@ -148,7 +155,6 @@ public class MethodInvocation extends InstructionStatement {
                     }
                     return true;
                 });
-        //return true;
     }
 
     @Override

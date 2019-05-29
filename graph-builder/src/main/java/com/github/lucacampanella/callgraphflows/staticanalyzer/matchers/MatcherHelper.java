@@ -6,6 +6,7 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.*;
 import net.corda.core.flows.FlowLogic;
 import net.corda.core.flows.FlowSession;
 import spoon.Launcher;
+import spoon.pattern.Match;
 import spoon.reflect.CtModel;
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.CtElement;
@@ -18,7 +19,9 @@ import spoon.reflect.visitor.filter.TypeFilter;
 import spoon.support.compiler.VirtualFile;
 import spoon.template.TemplateMatcher;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,6 +37,8 @@ public class MatcherHelper {
 
     private static CtModel model;
 
+    private static Set<String> allMatchersName = null;
+
     private static final String[] matchersWithCompanion = {"sendMatcher", "sendWithBoolMatcher", "receiveMatcher",
             "receiveWithBoolMatcher", "sendAndReceiveMatcher", "sendAndReceiveWithBoolMatcher", "subFlowMatcher"};
 
@@ -41,7 +46,14 @@ public class MatcherHelper {
         Launcher launcher = new Launcher();
 
         //adds the jars needed to understand the corda imports
-        //launcher.getEnvironment().setSourceClasspath(paths);
+
+
+//        final InputStream dependenciesTxt = MatcherHelper.class.getClassLoader().getResourceAsStream("AllPossibleClassPaths.txt");
+//        final String[] paths = new BufferedReader(new InputStreamReader(dependenciesTxt)).lines()
+//                .filter(str -> str.contains(".jar"))
+//                .toArray(String[]::new);
+//
+//        launcher.getEnvironment().setSourceClasspath(paths);
 
         final InputStream matcherContainerStream =
                 MatcherHelper.class.getClassLoader().getResourceAsStream("MatcherContainer.java");
@@ -58,36 +70,31 @@ public class MatcherHelper {
         model = launcher.getModel();
     }
 
+    private MatcherHelper() {
+        //private constructor to hide public one
+    }
+
     /**
      * Creates or loads the matcher corresponding to the passed name
      * @param name name of the matcher, so the name of the method containing the matcher
      * @return the matcher corresponding to the first line of the method with that name in {@link MatcherContainer}
      */
     public static TemplateMatcher getMatcher(String name) {
-        TemplateMatcher result = matchersMap.get(name);
-        if(result == null) {
+        return matchersMap.computeIfAbsent(name, (key) -> {
             CtMethod<?> method = (CtMethod<?>) model.getElements(
                     new NamedElementFilter(CtMethod.class, name)).get(0);
-
-            CtElement templateRoot = (CtElement) (method.getBody().getStatement(0));
-            result = new TemplateMatcher(templateRoot);
-            matchersMap.put(name, result);
-        }
-
-        return result;
+            CtElement templateRoot = method.getBody().getStatement(0);
+            return new TemplateMatcher(templateRoot);
+        });
     }
 
     public static CtTypeReference getTypeReference(Class klass) {
-        CtTypeReference result = typesMap.get(klass);
-        if(result == null) {
+        return typesMap.computeIfAbsent(klass, (key) -> {
             CtMethod<?> method = (CtMethod<?>) model.getElements(
                     new NamedElementFilter(CtMethod.class, "typeTemplateFor" + klass.getSimpleName())).get(0);
 
-            result = ((CtLocalVariable) (method.getBody().getStatement(0))).getType();
-            typesMap.put(klass, result);
-        }
-
-        return result;
+            return  ((CtLocalVariable) method.getBody().getStatement(0)).getType();
+        });
     }
 
     /**
@@ -119,17 +126,18 @@ public class MatcherHelper {
      * @return all the possible matcher names
      */
     public static Set<String> getAllMatcherNames() {
-        Set<String> result = new HashSet<>();
-
-        Class c = MatcherContainer.class;
-        Method[] methods = c.getDeclaredMethods();
-        for (Method m : methods) {
-            if(m.getName().endsWith("Matcher")) {
-                result.add(m.getName());
+        if(allMatchersName == null) {
+            allMatchersName = new HashSet<>();
+            Class c = MatcherContainer.class;
+            Method[] methods = c.getDeclaredMethods();
+            for (Method m : methods) {
+                if (m.getName().endsWith("Matcher")) {
+                    allMatchersName.add(m.getName());
+                }
             }
         }
 
-        return result;
+        return allMatchersName;
     }
 
     /**
@@ -176,9 +184,11 @@ public class MatcherHelper {
 
     private static StatementInterface initiateIfCordaRelevantStatement(CtStatement statement,
                                                             AnalyzerWithModel analyzer) {
+        System.out.println("Initializing " + statement);
         if (matches(statement, "transactionBuilderMatcher")) {
             return TransactionBuilder.fromStatement(statement, analyzer);
         } else if (matches(statement, "initiateFlowMatcher")) {
+            System.out.println("Matched initiateFlow");
             return InitiateFlow.fromCtStatement(statement, analyzer);
         } else if (matches(statement, "sendMatcher") ||
                 matches(statement, "sendWithBoolMatcher")) { //TODO: test the second line
@@ -188,6 +198,7 @@ public class MatcherHelper {
             return Receive.fromCtStatement(statement, analyzer);
         } else if (matches(statement, "sendAndReceiveMatcher") ||
                 matches(statement, "sendAndReceiveWithBoolMatcher")) { //TODO: test the second line
+            System.out.println("Matched send and receive");
             return SendAndReceive.fromCtStatement(statement, analyzer);
         }
         else if (matches(statement, "subFlowMatcher")) {
@@ -216,6 +227,7 @@ public class MatcherHelper {
     }
 
     private static StatementInterface initiateIfContainsRelevantMethod(CtStatement statement, AnalyzerWithModel analyzer) {
+        System.out.println("Called initiateIfContainsRelevantMethod for statement " + statement);
         final List<CtAbstractInvocation> methods = statement.getElements(new TypeFilter<>(CtAbstractInvocation.class));
         if(methods.isEmpty()) {
             return null;

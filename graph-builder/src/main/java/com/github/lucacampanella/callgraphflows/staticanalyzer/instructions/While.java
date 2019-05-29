@@ -1,6 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.Utils.Utils;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
@@ -43,11 +43,6 @@ public class While extends BranchingStatement {
                  Branch bodyStatements, AnalyzerWithModel analyzer) {
 
         initiateBlockingStatementAndConditionInstruction(condition, statement, analyzer);
-
-        //automatically initiated to null if the condition doesn't contain a matching blocking statement that
-        //communicates with the other flow
-//        blockingStatementInCondition = MatcherHelper.instantiateStatementIfQueryableMatches(condition, statement,
-//                analyzer);
 
         //we unfold the loop only once for now
         branchTrue = new Branch();

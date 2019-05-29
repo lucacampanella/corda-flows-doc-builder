@@ -19,6 +19,10 @@ import java.util.stream.Collectors;
 
 public class StaticAnalyzer {
 
+    private StaticAnalyzer() {
+        //private constructor to hide public one
+    }
+
     private static class Session {
         private final StatementInterface initiatingStatement; //this can either be an initiateFlow or any other
         //call that has as target a variable we never saw before (so it's a field or an argument)
@@ -228,7 +232,7 @@ public class StaticAnalyzer {
             call = currClass.getElements(new NamedElementFilter(CtMethod.class,
                     "call"));
             if(!call.isEmpty()) {
-                return (CtMethod) call.get(0);
+                return call.get(0);
             }
             try {
                 currClass = (CtClass) currClass.getSuperclass().getTypeDeclaration();
@@ -557,6 +561,8 @@ public class StaticAnalyzer {
             System.out.println(directChildren);
 
             for (CtElement elem : directChildren) {
+                System.out.println("REC: invoked getAllRelevantMethodInvocations for "
+                        + statement + " class StaticAnalyzer");
                 res.addIfRelevant(getAllRelevantMethodInvocations(elem, analyzer));
             }
         }

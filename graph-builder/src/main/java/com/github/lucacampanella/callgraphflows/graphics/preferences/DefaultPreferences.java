@@ -2,12 +2,12 @@ package com.github.lucacampanella.callgraphflows.graphics.preferences;
 
 public class DefaultPreferences implements PreferencesInterface {
 
-    private static double BRIGHTER_FACTOR = 1.2;
+    private static final double BRIGHTER_FACTOR = 1.2;
 
 //    public static final Color LESS_IMPORTANT_TEXT_COLOR = Color.GRAY;
 
-    // static variable single_instance of type Singleton
-    private static DefaultPreferences single_instance = null;
+    // static variable singleInstance of type Singleton
+    private static DefaultPreferences singleInstance = null;
 
     // private constructor restricted to this class itself
     private DefaultPreferences()
@@ -17,10 +17,10 @@ public class DefaultPreferences implements PreferencesInterface {
     // static method to create instance of Singleton class
     public static DefaultPreferences getInstance()
     {
-        if (single_instance == null)
-            single_instance = new DefaultPreferences();
+        if (singleInstance == null)
+            singleInstance = new DefaultPreferences();
 
-        return single_instance;
+        return singleInstance;
     }
 
     @Override

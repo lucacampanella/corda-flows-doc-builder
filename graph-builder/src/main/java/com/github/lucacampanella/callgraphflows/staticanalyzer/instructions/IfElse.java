@@ -1,6 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.Utils.Utils;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
 import com.github.lucacampanella.callgraphflows.graphics.components.GIfElse;
 import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
@@ -26,19 +26,13 @@ public class IfElse extends BranchingStatement {
         CtStatementList thenStatement = ifStatement.getThenStatement();
         ifElse.branchTrue = new Branch();
         if(thenStatement != null) { //there is a then statement
-
             ifElse.branchTrue.add(MatcherHelper.fromCtStatementsToStatements(thenStatement.getStatements(), analyzer));
-//
-//            Utils.fromCtStatementsToBaseStatementsNoNulls(
-//                    thenStatement.getStatements()).forEach(stmt -> ifElse.branchTrue.add(stmt.desugar()));
         }
 
         CtStatementList elseStatement = ifStatement.getElseStatement();
         ifElse.branchFalse = new Branch();
         if(elseStatement != null) { //there is an else statement
             ifElse.branchFalse.add(MatcherHelper.fromCtStatementsToStatements(elseStatement.getStatements(), analyzer));
-            //            Utils.fromCtStatementsToBaseStatementsNoNulls(
-//                    elseStatement.getStatements()).forEach(stmt -> ifElse.branchFalse.add(stmt.desugar()));
         }
         //here the statements can be also if statements if an "else if" condition is applied
 
@@ -56,6 +50,7 @@ public class IfElse extends BranchingStatement {
         return toBePainted() ? graphIfElse : null;
     }
 
+    @Override
     protected void buildGraphElem() {
         GIfElse elem = graphIfElse;
 

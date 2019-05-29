@@ -37,16 +37,18 @@ public class GConditionalBranch extends GIndentedComponent {
         if(enteringArrowText != null) {
             enteringArrowText.drawBrothersAndLinks(g2);
         }
-        components.forEach((comp) -> comp.drawBrothersAndLinks(g2));
+        components.forEach(comp -> comp.drawBrothersAndLinks(g2));
         if(exitingArrowText != null) {
             exitingArrowText.drawBrothersAndLinks(g2);
         }
     }
 
+    @Override
     public void setEnteringArrowText(GBaseTextComponent enteringArrowText) {
         this.enteringArrowText = enteringArrowText;
     }
 
+    @Override
     public void setExitingArrowText(GBaseTextComponent exitingArrowText) {
         this.exitingArrowText = exitingArrowText;
     }
@@ -70,10 +72,12 @@ public class GConditionalBranch extends GIndentedComponent {
         return sb.toString();
     }
 
+    @Override
     public GBaseTextComponent getEnteringArrowText() {
         return enteringArrowText;
     }
 
+    @Override
     public GBaseTextComponent getExitingArrowText() {
         return exitingArrowText;
     }

@@ -16,35 +16,52 @@ import spoon.reflect.visitor.filter.AnnotationFilter;
 import spoon.reflect.visitor.filter.TypeFilter;
 import spoon.support.reflect.code.CtFieldReadImpl;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class AnalyzerWithModel {
+    private static final String FILE_SEP = System.getProperty("file.separator");
+    private static final String DEFAULT_OUT_DIR = "build" + FILE_SEP + "graphs" + FILE_SEP;
+
     protected CtModel model;
 
     public CtModel getModel() {
         return model;
     }
 
-    public void drawAllStartableClasses() {
+    public void drawAllStartableClasses(String outPath) {
+
+        System.out.println("All matcher names: " + MatcherHelper.getAllMatcherNames());
+        System.out.println("All matchers: " + MatcherHelper.getAllMatchers());
+
+        if(!outPath.endsWith(FILE_SEP)) {
+            outPath = outPath + FILE_SEP;
+        }
         final List<CtClass> startableByRPCClasses = getClassesByAnnotation(StartableByRPC.class);
         System.out.println("Found these classes annotated with @StartableByRPC: ");
-        startableByRPCClasses.forEach(klass -> {
+        for (CtClass klass : startableByRPCClasses) {
             System.out.println("**** Analyzing class " + klass.getQualifiedName() + " TEST");
             System.out.println("Here");
             System.out.flush();
             try {
                 System.out.println("before drawFromClass call");
                 System.out.flush();
-                drawFromClass(klass, klass.getQualifiedName() + ".svg");
+                new File(outPath).mkdirs();
+                drawFromClass(klass, outPath + klass.getQualifiedName() + ".svg");
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });
+        }
     }
 
-    public void drawFromClass(CtClass klass, String outName) throws IOException {
+
+    public void drawAllStartableClasses() {
+        drawAllStartableClasses(DEFAULT_OUT_DIR);
+    }
+
+    public void drawFromClass(CtClass klass, String outPath) throws IOException {
         System.out.println("before AnalysisResult call");
         final AnalysisResult analysisResult = analyzeFlowLogicClass(klass);
 
@@ -55,7 +72,7 @@ public class AnalyzerWithModel {
         if(initiatedClassResult != null) {
             graphBuilder.addSession(initiatedClassResult.getClassName(), initiatedClassResult.getStatements());
         }
-        graphBuilder.drawToFile(outName);
+        graphBuilder.drawToFile(outPath);
     }
 
     public AnalysisResult analyzeFlowLogicClass(CtClass klass) {
@@ -70,12 +87,11 @@ public class AnalyzerWithModel {
         final Branch interestingStatements = MatcherHelper.fromCtStatementsToStatements(
                 callMethod.getBody().getStatements(), this);
         res.setStatements(interestingStatements);
-        System.out.println("after matcher");
+        System.out.println("after matcher - interesting statements: " + interestingStatements);
 
         //is it only a "container" flow with no initiating call or also calls initiateFlow(...)?
         final boolean isInitiatingFlow =
                 interestingStatements.getInitiateFlowStatementAtThisLevel().isPresent();
-        //todo: look in method calls too, for now is fine
 
         System.out.println("Contains initiate call? " + isInitiatingFlow);
         if(isInitiatingFlow) {
@@ -164,12 +180,12 @@ public class AnalyzerWithModel {
             final CtClass correspondingInitiatingClass = (CtClass) ((CtFieldReadImpl) referenceToClass).getVariable()
                     .getDeclaringType().getTypeDeclaration();
 
-            if(correspondingInitiatingClass.getReference().isSubtypeOf(initiatingClass.getReference())) {
-                if(deeperInitiatedByClass == null ||
-                        klass.getReference().isSubtypeOf(deeperInitiatedByClass.getReference())) {
+            if(correspondingInitiatingClass.getReference().isSubtypeOf(initiatingClass.getReference()) &&
+                (deeperInitiatedByClass == null ||
+                        klass.getReference().isSubtypeOf(deeperInitiatedByClass.getReference()))) {
                     deeperInitiatedByClass = klass;
                 }
-            }
+
         }
 
         return deeperInitiatedByClass;

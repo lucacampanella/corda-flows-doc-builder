@@ -6,16 +6,14 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.Stat
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class GGraphBuilder {
 
-    private static final String OUT_DIR = "build" + System.getProperty("file.separator") + "graphs" + System.getProperty("file.separator");
     private static final int BORDER = 10;
     private static final int DISTANCE_TITLE_SESSION = 25;
 
@@ -23,6 +21,7 @@ public class GGraphBuilder {
     //linked so we can iterate over it on same order of insertion
 
     public GGraphBuilder() {
+        //empty constructor
     }
 
     public boolean addSession(String title, GSubFlow flow) {
@@ -127,8 +126,7 @@ public class GGraphBuilder {
 
         String svgElement = g2.getSVGElement();
 
-        new File(OUT_DIR).mkdirs();
-        Files.write(Paths.get(OUT_DIR+path), svgElement.getBytes());
+        Files.write(Paths.get(path), svgElement.getBytes());
 
     }
 }

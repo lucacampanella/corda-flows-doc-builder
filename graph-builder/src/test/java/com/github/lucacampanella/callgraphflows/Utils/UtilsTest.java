@@ -1,4 +1,4 @@
-package com.github.lucacampanella.callgraphflows.Utils;
+package com.github.lucacampanella.callgraphflows.utils;
 
 import org.junit.jupiter.api.Test;
 

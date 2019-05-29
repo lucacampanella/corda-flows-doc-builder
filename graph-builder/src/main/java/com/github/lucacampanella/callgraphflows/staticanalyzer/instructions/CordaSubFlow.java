@@ -2,12 +2,6 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
 import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
-import net.corda.core.flows.*;
-import spoon.reflect.code.*;
-import spoon.reflect.declaration.CtClass;
-import spoon.reflect.declaration.CtMethod;
-import spoon.reflect.reference.CtTypeReference;
-import spoon.support.reflect.code.CtAssignmentImpl;
 
 
 public class CordaSubFlow extends SubFlowBase implements StatementWithCompanionInterface {

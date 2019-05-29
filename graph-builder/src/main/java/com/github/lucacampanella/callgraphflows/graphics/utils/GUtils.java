@@ -10,42 +10,17 @@ import java.awt.geom.Line2D;
 
 public class GUtils {
 
-    static Polygon arrowHead;
-    static {
-        arrowHead = new Polygon();
-        arrowHead.addPoint(0, 5);
-        arrowHead.addPoint(-5, -5);
-        arrowHead.addPoint(5, -5);
-    }
-
-    private static void drawArrowHead(Graphics2D g2d, Line2D.Double line) {
-        AffineTransform tx = new AffineTransform();
-
-        tx.setToIdentity();
-        double angle = Math.atan2(line.y2-line.y1, line.x2-line.x1);
-        tx.translate(line.x2, line.y2);
-        tx.rotate((angle-Math.PI/2d));
-
-        Graphics2D g = (Graphics2D) g2d.create();
-        g.setTransform(tx);
-        g.fill(arrowHead);
-        g.dispose();
+    private GUtils() {
+        //hides public constructor
     }
 
     public static void drawArrow(Graphics2D g2d, Line2D.Double line) {
-//        g2d.draw(line);
-//
-//       drawArrow(g2d, line);
-
         drawArrowLine(g2d, (int) line.x1, (int) line.y1, (int) line.x2, (int) line.y2, 7, 4);
     }
 
     public static void drawHorizontalArrowFromFirstToSecond(SVGGraphics2D g2d, GBaseGraphicComponent first, GBaseGraphicComponent second) {
-//        g2d.draw(line);
-//
-//       drawArrow(g2d, line);
-
-        int firstX, secondX;
+        int firstX;
+        int secondX;
 
         if(first.getMiddleX(g2d) < second.getMiddleX(g2d)) {
             firstX = first.getRightBorder(g2d);
@@ -69,10 +44,16 @@ public class GUtils {
      * @param h  the height of the arrow.
      */
     private static void drawArrowLine(Graphics g, int x1, int y1, int x2, int y2, int d, int h) {
-        int dx = x2 - x1, dy = y2 - y1;
+        int dx = x2 - x1;
+        int dy = y2 - y1;
         double D = Math.sqrt(dx*dx + dy*dy);
-        double xm = D - d, xn = xm, ym = h, yn = -h, x;
-        double sin = dy / D, cos = dx / D;
+        double xm = D - d;
+        double xn = xm;
+        double ym = h;
+        double yn = -h;
+        double x;
+        double sin = dy / D;
+        double cos = dx / D;
 
         x = xm*cos - ym*sin + x1;
         ym = xm*sin + ym*cos + y1;
@@ -114,10 +95,12 @@ public class GUtils {
     }
 
     public static Color makeBrighter(PreferencesInterface pref, Color color) {
-        double R, G, B;
-        R = Math.min(255.0,color.getRed()*pref.getBrighterFactor());
-        G = Math.min(255.0,color.getGreen()*pref.getBrighterFactor());
-        B = Math.min(255.0, color.getBlue()*pref.getBrighterFactor());
-        return new Color((int) R, (int) G, (int) B);
+        double r;
+        double g;
+        double b;
+        r = Math.min(255.0,color.getRed()*pref.getBrighterFactor());
+        g = Math.min(255.0,color.getGreen()*pref.getBrighterFactor());
+        b = Math.min(255.0, color.getBlue()*pref.getBrighterFactor());
+        return new Color((int) r, (int) g, (int) b);
     }
 }

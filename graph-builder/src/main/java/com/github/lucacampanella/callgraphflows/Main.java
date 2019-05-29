@@ -11,17 +11,15 @@ public class Main {
 
     public static void main(String []args) {
 
-//        System.out.println(System.getProperty("java.io.tmpdir"));
-
         JarAnalyzer analyzer;
 
         if(args.length > 0) {
             analyzer = new JarAnalyzer(args[0]);
         }
         else {
-
-            analyzer = new JarAnalyzer(
-                    "./workflows-java/build/libs/cordapp-example-workflows.jar");
+            System.out.println("Please provide " +
+                    "jar parth as first argument and optionally out folder for graphs as second");
+            return;
         }
 
 
@@ -43,6 +41,11 @@ public class Main {
 //                    " and " + initiatedClass.getSimpleName() + " result: " + result);
 //        }
 
-        analyzer.drawAllStartableClasses();
+        if(args.length > 1) {
+            analyzer.drawAllStartableClasses(args[1]);
+        }
+        else {
+            analyzer.drawAllStartableClasses();
+        }
     }
 }

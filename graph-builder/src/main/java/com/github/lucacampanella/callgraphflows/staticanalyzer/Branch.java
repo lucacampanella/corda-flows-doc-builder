@@ -80,4 +80,9 @@ public class Branch implements Iterable<StatementInterface> {
         return statements.stream().map(stmt -> stmt.getInitiateFlowStatementAtThisLevel()).filter(Optional::isPresent)
                 .findFirst().orElse(Optional.empty());
     }
+
+    @Override
+    public String toString() {
+        return statements.toString();
+    }
 }

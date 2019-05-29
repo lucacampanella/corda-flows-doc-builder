@@ -1,6 +1,17 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+    }
+}
+
 plugins {
     id 'java'
+    id 'application'
 }
+apply plugin: 'com.github.johnrengelman.shadow'
 
 group 'com.github.lucacampanella'
 version '1.0-SNAPSHOT'
@@ -31,6 +42,10 @@ dependencies {
     //testImplementation group: 'junit', name: 'junit', version: '4.12'
     testImplementation('org.junit.jupiter:junit-jupiter:5.4.2')
     testImplementation("org.assertj:assertj-core:3.11.1")
+}
+
+application {
+    mainClassName = 'com.github.lucacampanella.callgraphflows.Main'
 }
 
 //processResources {

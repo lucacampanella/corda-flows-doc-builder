@@ -87,6 +87,6 @@ public class GCodeBlock extends GBaseGraphicComponent {
     @Override
     public void drawBrothersAndLinks(SVGGraphics2D g2) {
         super.drawBrothersAndLinks(g2);
-        components.forEach((comp) -> comp.drawBrothersAndLinks(g2));
+        components.forEach(comp -> comp.drawBrothersAndLinks(g2));
     }
 }

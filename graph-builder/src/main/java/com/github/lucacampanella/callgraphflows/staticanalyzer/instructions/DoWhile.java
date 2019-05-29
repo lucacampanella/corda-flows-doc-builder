@@ -1,6 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.Utils.Utils;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
@@ -46,6 +46,7 @@ public class DoWhile extends BranchingStatement {
         return doWhile;
     }
 
+    @Override
     protected void buildGraphElem() {
         super.buildGraphElem();
         graphElem.addComponent(correspondingWhile.getConditionInstruction());

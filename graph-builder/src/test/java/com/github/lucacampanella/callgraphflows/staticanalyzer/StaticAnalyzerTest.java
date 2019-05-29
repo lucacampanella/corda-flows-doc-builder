@@ -21,8 +21,8 @@ public class StaticAnalyzerTest {
 
     @Test
     public void findCallMethod() throws FileNotFoundException {
-        ClassFactory classFactory = getFactory(Arrays.asList(ExtendingSuperclassTest.class)).Class();
-        assertTrue(StaticAnalyzer.findCallMethod(classFactory.get(ExtendingSuperclassTest.class)) != null);
+        ClassFactory classFactory = getFactory(Arrays.asList(ExtendingSuperclassTestFlow.class)).Class();
+        assertTrue(StaticAnalyzer.findCallMethod(classFactory.get(ExtendingSuperclassTestFlow.class)) != null);
     }
 
 //    @Test
@@ -78,53 +78,53 @@ public class StaticAnalyzerTest {
 
     @Test
     public void testWhileForEachStartable() throws IOException {
-        testAnalyzeStartableByRPCWithClass(WhileForEachTest.class);
+        testAnalyzeStartableByRPCWithClass(WhileForEachTestFlow.class);
     }
 
     @Test
     public void testDoWhileStartable() throws IOException {
-        testAnalyzeStartableByRPCWithClass(DoWhileTest.class);
+        testAnalyzeStartableByRPCWithClass(DoWhileTestFlow.class);
     }
 
     @Test
     public void testNestedIfsStartable() throws IOException {
-        testAnalyzeStartableByRPCWithClass(NestedIfsTest.class);
+        testAnalyzeStartableByRPCWithClass(NestedIfsTestFlow.class);
     }
 
     @Test
     public void testForStartable() throws IOException {
-        testAnalyzeStartableByRPCWithClass(ForTest.class);
+        testAnalyzeStartableByRPCWithClass(ForTestFlow.class);
     }
 
     @Test
     public void testExtendingSuperclassStartable() throws IOException {
-        testAnalyzeStartableByRPCWithClass(ExtendingSuperclassTest.class); //todo: we need to get the methods and analyze their body too
+        testAnalyzeStartableByRPCWithClass(ExtendingSuperclassTestFlow.class); //todo: we need to get the methods and analyze their body too
     }
 
 
     @Test
     public void subFlowAnalysisTestStartable() throws IOException {
-        testAnalyzeStartableByRPCWithClass(SubFlowAnalysisTest.class);
+        testAnalyzeStartableByRPCWithClass(SubFlowAnalysisTestFlow.class);
     }
 
     @Test
     public void simpleFlowTestStartable() throws IOException {
-        testAnalyzeStartableByRPCWithClass(SimpleFlowTest.class);
+        testAnalyzeStartableByRPCWithClass(SimpleFlowTestFlow.class);
     }
 
     @Test
     public void methodInvocationTestStartable() throws IOException {
-        testAnalyzeStartableByRPCWithClass(MethodInvocationTest.class);
+        testAnalyzeStartableByRPCWithClass(MethodInvocationTestFlow.class);
     }
 
     @Test
     public void nestedMethodInvocationTestStartable() throws IOException {
-        testAnalyzeStartableByRPCWithClass(NestedMethodInvocationsTest.class);
+        testAnalyzeStartableByRPCWithClass(NestedMethodInvocationsTestFlow.class);
     }
 
     @Test
     public void SubFlowInitializationTestStartable() throws IOException {
-        testAnalyzeStartableByRPCWithClass(SubFlowInitializationTest.class);
+        testAnalyzeStartableByRPCWithClass(SubFlowInitializationTestFlow.class);
     }
 
     private void testAnalyzeStartableByRPCWithClass(Class toBeAnalyzed) throws IOException {

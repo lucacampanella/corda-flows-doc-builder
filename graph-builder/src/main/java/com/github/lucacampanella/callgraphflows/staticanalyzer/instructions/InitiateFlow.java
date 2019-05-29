@@ -1,13 +1,12 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.Utils.Utils;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzer;
 import spoon.reflect.code.CtAssignment;
 import spoon.reflect.code.CtLocalVariable;
 import spoon.reflect.code.CtStatement;
 
-import java.awt.*;
 import java.util.Optional;
 
 public class InitiateFlow extends InstructionStatement {
@@ -19,7 +18,7 @@ public class InitiateFlow extends InstructionStatement {
         super();
     }
 
-    private static final Color BACKGROUND_COLOR = new Color(155, 193, 255); //Blueish
+//    private static final Color BACKGROUND_COLOR = new Color(155, 193, 255); //Blueish
 //    protected Color getBackgroundColor() {
 //        return BACKGROUND_COLOR;
 //    }
@@ -27,6 +26,8 @@ public class InitiateFlow extends InstructionStatement {
     public static InitiateFlow fromCtStatement(CtStatement statement, AnalyzerWithModel analyzer) {
         InitiateFlow initiateFlow = new InitiateFlow();
         initiateFlow.line = statement.getPosition().getLine();
+        System.out.println("invoked getAllRelevantMethodInvocations for "
+                + statement + " class InitiateFlow");
         initiateFlow.internalMethodInvocations.add(StaticAnalyzer.getAllRelevantMethodInvocations(statement, analyzer));
 
         if(statement instanceof CtLocalVariable) {
@@ -40,6 +41,7 @@ public class InitiateFlow extends InstructionStatement {
         return initiateFlow;
     }
 
+    @Override
     public boolean modifiesSession() {
         return true;
     }
@@ -47,6 +49,7 @@ public class InitiateFlow extends InstructionStatement {
     /**
      * @return true, being itself an InitiateFlow call
      */
+    @Override
     public Optional<InitiateFlow> getInitiateFlowStatementAtThisLevel() {
         return Optional.of(this);
     }

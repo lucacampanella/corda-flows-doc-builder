@@ -1,6 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.Utils.Utils;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
@@ -19,10 +19,6 @@ public class ForEach extends BranchingStatement {
         ForEach forInstr = new ForEach();
 
         CtForEach forStatement = (CtForEach) statement;
-
-        //we unfold the loop only once for now
-//        final List<StatementInterface> trueBranchStatements = Utils.fromCtStatementsToBaseStatementsNoNulls(
-//                ((CtStatementList) forStatement.getBody()).getStatements());
 
         //we unfold the loop only once for now
         forInstr.branchTrue.add(

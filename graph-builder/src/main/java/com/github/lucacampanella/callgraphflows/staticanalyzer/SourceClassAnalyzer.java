@@ -2,17 +2,11 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
 import net.corda.core.flows.InitiatedBy;
 import spoon.Launcher;
-import spoon.compiler.SpoonResourceHelper;
 import spoon.legacy.NameFilter;
 import spoon.reflect.code.CtExpression;
-import spoon.reflect.code.CtFieldRead;
 import spoon.reflect.declaration.CtAnnotation;
 import spoon.reflect.declaration.CtClass;
-import spoon.reflect.factory.Factory;
-import spoon.reflect.path.CtPath;
-import spoon.reflect.path.CtPathStringBuilder;
 import spoon.reflect.visitor.filter.AnnotationFilter;
-import spoon.reflect.visitor.filter.NamedElementFilter;
 import spoon.reflect.visitor.filter.TypeFilter;
 import spoon.support.reflect.code.CtFieldReadImpl;
 
@@ -46,7 +40,7 @@ public class SourceClassAnalyzer extends AnalyzerWithModel {
             final CtExpression referenceToClass = (CtExpression) initiatedByAnnotation.getAllValues().get("value");
 
             String stringPath = ((CtFieldReadImpl) referenceToClass).getTarget().toString();
-            String className = stringPath.substring(stringPath.lastIndexOf(".")+1);
+            String className = stringPath.substring(stringPath.lastIndexOf('.')+1);
 
             final CtClass initiatingClass = (CtClass) containerClass.getElements(new NameFilter<>(
                     className)).get(0);
