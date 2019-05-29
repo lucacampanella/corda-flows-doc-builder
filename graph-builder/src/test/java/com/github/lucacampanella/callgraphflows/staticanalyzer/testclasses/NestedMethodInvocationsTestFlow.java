@@ -52,7 +52,9 @@ import java.util.List;
 
             FlowSession session = methodReturningASession();
 
-            ClassWithSendInConstructor classWithSendInConstructor = new ClassWithSendInConstructor(session);
+            ClassWithSendInConstructor classWithSendInConstructor =
+                    new ClassWithSendInConstructor(methodWithASendReturningASession(session));
+
             new ClassWithSendInConstructor(session);
 
             methodWithASend(session);
@@ -72,6 +74,11 @@ import java.util.List;
 
             session.sendAndReceive(String.class, false);
             return null;
+        }
+
+        public FlowSession methodWithASendReturningASession(FlowSession mySession) {
+            mySession.send("this is a string");
+            return mySession;
         }
 
         public void methodWithASend(FlowSession mySession) {

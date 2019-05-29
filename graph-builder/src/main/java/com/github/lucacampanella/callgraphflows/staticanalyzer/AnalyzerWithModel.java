@@ -12,7 +12,10 @@ import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.path.CtPath;
 import spoon.reflect.path.CtPathStringBuilder;
+import spoon.reflect.reference.CtReference;
 import spoon.reflect.visitor.filter.AnnotationFilter;
+import spoon.reflect.visitor.filter.NamedElementFilter;
+import spoon.reflect.visitor.filter.ReferenceTypeFilter;
 import spoon.reflect.visitor.filter.TypeFilter;
 import spoon.support.reflect.code.CtFieldReadImpl;
 
@@ -54,6 +57,14 @@ public class AnalyzerWithModel {
                 e.printStackTrace();
             }
         }
+    }
+
+    public <T> CtClass<T> getClass(Class<T> klass) {
+        final List<CtClass> results = model.getElements(new NamedElementFilter(CtClass.class, klass.getSimpleName()));
+        if(results.isEmpty()) {
+            return null;
+        }
+        return (CtClass<T>) results.get(0);
     }
 
 

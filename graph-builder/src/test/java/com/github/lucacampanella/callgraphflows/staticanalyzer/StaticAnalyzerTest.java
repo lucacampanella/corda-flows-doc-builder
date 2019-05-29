@@ -5,12 +5,14 @@ import net.corda.core.flows.StartableByRPC;
 import org.junit.jupiter.api.Test;
 import spoon.Launcher;
 import spoon.compiler.SpoonResourceHelper;
+import spoon.legacy.NameFilter;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.code.CtStatement;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.factory.ClassFactory;
 import spoon.reflect.factory.Factory;
+import spoon.reflect.visitor.filter.NamedElementFilter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -219,5 +221,27 @@ public class StaticAnalyzerTest {
 
         final CtInvocation nonCordaMethod = (CtInvocation) callMethod.getBody().getStatements().get(1);//realCallMethod(session);
         assertThat(StaticAnalyzer.isCordaMethod(nonCordaMethod)).isEqualTo(false);
+    }
+
+    @Test
+    void getAllRelevantMethodInvocations() throws FileNotFoundException {
+        final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(
+                fromClassSrcToPath(NestedMethodInvocationsTestFlow.class));
+        final CtClass<NestedMethodInvocationsTestFlow> ctClass = analyzer.getClass(NestedMethodInvocationsTestFlow.class);
+        //final CtClass ctClass = (NestedMethodInvocationsTestFlow.class);
+        final CtMethod callMethod = StaticAnalyzer.findCallMethod(ctClass);
+
+        //List<SignedTransaction> list = new LinkedList<>();
+        final CtStatement ctIrrelevantStatement = callMethod.getBody().getStatements().get(0);
+        assertThat(StaticAnalyzer.getAllRelevantMethodInvocations(ctIrrelevantStatement, analyzer)).hasSize(0);
+
+        //ClassWithSendInConstructor classWithSendInConstructor =
+        //                    new ClassWithSendInConstructor(methodWithASendReturningASession(session));
+        final CtStatement ctStatement = callMethod.getBody().getStatements().get(2);
+        assertThat(StaticAnalyzer.getAllRelevantMethodInvocations(ctStatement, analyzer)).hasSize(1);
+        assertThat(StaticAnalyzer.getAllRelevantMethodInvocations(ctStatement, analyzer).getStatements().get(0)
+        .getInternalMethodInvocations()).hasSize(1);
+
+
     }
 }
