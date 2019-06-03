@@ -49,8 +49,8 @@ public class JarAnalyzer extends AnalyzerWithModel { //TODO: not all the flows a
 //        for(String path : paths) {
 //            System.out.println("|" + path + "|");
 //        }
-
-        //jr.getEnvironment().setSourceClasspath(paths);
+//
+//        jr.getEnvironment().setSourceClasspath(paths);
 
 
         //System.out.println("CLASSPATH = " + jr.getEnvironment().getSourceClasspath());

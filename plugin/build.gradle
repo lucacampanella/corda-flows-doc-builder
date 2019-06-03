@@ -9,7 +9,9 @@ dependencies {
 
     implementation gradleApi()
     implementation group: 'commons-io', name: 'commons-io', version: '2.6'
-    api project(":graph-builder")
+    //api project(":graph-builder")
+    compile project(path: ':graph-builder', configuration: 'shadow')
+
 
     //api "$corda_release_group:corda-core:$corda_release_version"
     //implementation "$corda_release_group:corda-core:$corda_release_version"

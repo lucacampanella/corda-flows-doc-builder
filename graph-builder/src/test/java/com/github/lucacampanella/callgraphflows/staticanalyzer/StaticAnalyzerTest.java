@@ -1,18 +1,16 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.*;
+import com.github.lucacampanella.callgraphflows.testUtils.TestUtils;
 import net.corda.core.flows.StartableByRPC;
 import org.junit.jupiter.api.Test;
 import spoon.Launcher;
 import spoon.compiler.SpoonResourceHelper;
-import spoon.legacy.NameFilter;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.code.CtStatement;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtMethod;
-import spoon.reflect.factory.ClassFactory;
 import spoon.reflect.factory.Factory;
-import spoon.reflect.visitor.filter.NamedElementFilter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -135,7 +133,7 @@ public class StaticAnalyzerTest {
     }
 
     private void testAnalyzeStartableByRPCWithClass(Class toBeAnalyzed) throws IOException {
-        final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(fromClassSrcToPath(toBeAnalyzed));
+        final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(TestUtils.fromClassSrcToPath(toBeAnalyzed));
 
         final List<CtClass> startableClasses = analyzer.getClassesByAnnotation(StartableByRPC.class);
         for (CtClass clazz : startableClasses) {
@@ -177,7 +175,7 @@ public class StaticAnalyzerTest {
     private Factory getFactory(List<Class> classes) throws FileNotFoundException {
         Launcher spoon = new Launcher();
         Factory factory = spoon.getFactory();
-        final List<String> paths = classes.stream().map(StaticAnalyzerTest::fromClassSrcToPath)
+        final List<String> paths = classes.stream().map(TestUtils::fromClassSrcToPath)
                 .collect(Collectors.toList());
         spoon.createCompiler(
                 factory,
@@ -189,11 +187,6 @@ public class StaticAnalyzerTest {
 
     private CtClass fromClassToCtClass(Class klass) throws FileNotFoundException {
         return getFactory(Arrays.asList(klass)).Class().get(klass);
-    }
-
-    private static String fromClassSrcToPath(Class klass) {
-        return "./src/test/java/com/github/lucacampanella/callgraphflows/staticanalyzer/testclasses/"
-                + klass.getSimpleName() + ".java";
     }
 
     @Test
@@ -226,7 +219,7 @@ public class StaticAnalyzerTest {
     @Test
     void getAllRelevantMethodInvocations() throws FileNotFoundException {
         final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(
-                fromClassSrcToPath(NestedMethodInvocationsTestFlow.class));
+                TestUtils.fromClassSrcToPath(NestedMethodInvocationsTestFlow.class));
         final CtClass<NestedMethodInvocationsTestFlow> ctClass = analyzer.getClass(NestedMethodInvocationsTestFlow.class);
         //final CtClass ctClass = (NestedMethodInvocationsTestFlow.class);
         final CtMethod callMethod = StaticAnalyzer.findCallMethod(ctClass);

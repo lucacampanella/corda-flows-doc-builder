@@ -15,54 +15,23 @@ import java.util.*;
 public class SourceClassAnalyzer extends AnalyzerWithModel {
 
     public SourceClassAnalyzer(String pathToClass) {
+        init(new String[] {pathToClass});
+    }
+
+    public SourceClassAnalyzer(String... pathsToClass) {
+        init(pathsToClass);
+    }
+
+    public SourceClassAnalyzer(List<String> pathsToClass) {
+        init(pathsToClass.toArray(new String[pathsToClass.size()]));
+    }
+
+    private void init(String [] pathsToClasses) {
         Launcher spoon = new Launcher();
-        spoon.addInputResource(pathToClass);
+        for(String path : pathsToClasses) {
+            spoon.addInputResource(path);
+        }
         spoon.buildModel();
         model = spoon.getModel();
-    }
-
-    public static Map<CtClass, CtClass> getInitiatedClassToInitiatingMap(CtClass containerClass) {
-        //find all classes that are initiated by flows
-        List<CtClass> initiatedClasses = containerClass.getElements(new AnnotationFilter<>(InitiatedBy.class));
-
-        //retain only the ones that are furthest away from FlowLogic.class, these are the one that will actually
-        // be run by corda
-        Set<CtClass> furthestInitiatedClasses = new HashSet<>();
-        initiatedClasses.forEach(klass -> furthestInitiatedClasses.add(getFurthestAwaySubclass(klass, containerClass)));
-
-        //map them to the class that initiates them
-        Map<CtClass, CtClass> initiatedClassToInitiating = new HashMap<>(initiatedClasses.size());
-
-        for(CtClass klass : furthestInitiatedClasses) {
-            CtAnnotation initiatedByAnnotation = klass.getAnnotations().stream().filter(ctAnnotation ->
-                    ctAnnotation.getActualAnnotation().annotationType() == InitiatedBy.class).findFirst().get();
-
-            final CtExpression referenceToClass = (CtExpression) initiatedByAnnotation.getAllValues().get("value");
-
-            String stringPath = ((CtFieldReadImpl) referenceToClass).getTarget().toString();
-            String className = stringPath.substring(stringPath.lastIndexOf('.')+1);
-
-            final CtClass initiatingClass = (CtClass) containerClass.getElements(new NameFilter<>(
-                    className)).get(0);
-
-            initiatedClassToInitiating.put(klass, initiatingClass);
-
-        }
-        return initiatedClassToInitiating;
-    }
-
-    public static CtClass getFurthestAwaySubclass(CtClass superClass, CtClass modelClass) {
-        List<CtClass> allClasses = modelClass.getElements(new TypeFilter<>(CtClass.class));
-
-        CtClass furthestAway = superClass;
-
-        for(CtClass subClass : allClasses) {
-            if (subClass.isSubtypeOf(superClass.getReference())
-                    && subClass.isSubtypeOf(furthestAway.getReference())) {
-                furthestAway = subClass;
-            }
-        }
-
-        return furthestAway;
     }
 }

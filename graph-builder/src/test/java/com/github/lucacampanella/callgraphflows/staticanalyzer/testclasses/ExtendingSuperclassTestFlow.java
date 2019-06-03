@@ -6,7 +6,6 @@ import net.corda.core.identity.Party;
 
 public class ExtendingSuperclassTestFlow {
 
-        @InitiatingFlow
         @StartableByRPC
         public static class Initiator extends InitiatorBaseFlow {
 
@@ -24,7 +23,7 @@ public class ExtendingSuperclassTestFlow {
         @InitiatedBy(Initiator.class)
         public static class Acceptor extends FlowLogic<Void> {
 
-            private final FlowSession otherSession;
+            protected final FlowSession otherSession;
 
             public Acceptor(FlowSession otherSession) {
                 this.otherSession = otherSession;

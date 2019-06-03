@@ -4,6 +4,7 @@ import com.github.lucacampanella.callgraphflows.graphics.components.GGraphBuilde
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import net.corda.core.flows.InitiatedBy;
 import net.corda.core.flows.StartableByRPC;
+import spoon.legacy.NameFilter;
 import spoon.reflect.CtModel;
 import spoon.reflect.code.CtExpression;
 import spoon.reflect.declaration.CtAnnotation;
@@ -217,7 +218,7 @@ public class AnalyzerWithModel {
         return furthestAway;
     }
 
-    public List<CtClass> getAllSubClasses(CtClass superClass) {
+    public List<CtClass> getAllSubClassesIncludingThis(CtClass superClass) {
         List<CtClass> allClasses = model.getElements(new TypeFilter<>(CtClass.class));
 
         return allClasses.stream().filter(klass -> klass.isSubtypeOf(superClass.getReference()))
