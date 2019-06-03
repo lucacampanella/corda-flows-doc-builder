@@ -1,16 +1,8 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
-import net.corda.core.flows.InitiatedBy;
 import spoon.Launcher;
-import spoon.legacy.NameFilter;
-import spoon.reflect.code.CtExpression;
-import spoon.reflect.declaration.CtAnnotation;
-import spoon.reflect.declaration.CtClass;
-import spoon.reflect.visitor.filter.AnnotationFilter;
-import spoon.reflect.visitor.filter.TypeFilter;
-import spoon.support.reflect.code.CtFieldReadImpl;
 
-import java.util.*;
+import java.util.List;
 
 public class SourceClassAnalyzer extends AnalyzerWithModel {
 

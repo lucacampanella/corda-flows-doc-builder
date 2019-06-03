@@ -1,8 +1,8 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
-import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.DoubleExtendingSuperclassTestFlow;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.ExtendingSuperclassTestFlow;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.InitiatorBaseFlow;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.DoubleExtendingSuperclassTestFlow;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.ExtendingSuperclassTestFlow;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.InitiatorBaseFlow;
 import net.corda.core.flows.InitiatedBy;
 import net.corda.core.flows.InitiatingFlow;
 import net.corda.core.flows.StartableByRPC;
@@ -19,21 +19,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class AnalyzerWithModelTest {
 
-    static SourceClassAnalyzer sca;
+    static AnalyzerWithModel analyzerWithModel;
 
     @BeforeAll
     static void setUp() {
-         sca = new SourceClassAnalyzer(fromClassSrcToPath(InitiatorBaseFlow.class),
+         analyzerWithModel = new SourceClassAnalyzer(fromClassSrcToPath(InitiatorBaseFlow.class),
                 fromClassSrcToPath(ExtendingSuperclassTestFlow.class),
                         fromClassSrcToPath(DoubleExtendingSuperclassTestFlow.class));
     }
 
     @Test
     void analyzeFlowLogicClass() {
-        final List<CtClass> initiatingClasses = sca.getClassesByAnnotation(InitiatingFlow.class);
+        final List<CtClass> initiatingClasses = analyzerWithModel.getClassesByAnnotation(InitiatingFlow.class);
         assertThat(initiatingClasses).hasSize(1);
         final CtClass ctClass = initiatingClasses.get(0);
-        final AnalysisResult analysisResult = sca.analyzeFlowLogicClass(ctClass);
+        final AnalysisResult analysisResult = analyzerWithModel.analyzeFlowLogicClass(ctClass);
         System.out.println(analysisResult);
         assertThat(analysisResult.getClassName()).isEqualTo("InitiatorBaseFlow");
         assertThat(analysisResult.getStatements()).hasSize(2);
@@ -43,15 +43,15 @@ class AnalyzerWithModelTest {
 
     @Test
     void getClassesByAnnotation() {
-        final List<CtClass> initiatingClasses = sca.getClassesByAnnotation(InitiatingFlow.class);
+        final List<CtClass> initiatingClasses = analyzerWithModel.getClassesByAnnotation(InitiatingFlow.class);
         assertThat(initiatingClasses).hasSize(1);
         assertThat(initiatingClasses.get(0).getSimpleName()).isEqualTo("InitiatorBaseFlow");
 
-        final List<CtClass> initiatedByClasses = sca.getClassesByAnnotation(InitiatedBy.class);
+        final List<CtClass> initiatedByClasses = analyzerWithModel.getClassesByAnnotation(InitiatedBy.class);
         assertThat(initiatedByClasses).hasSize(2);
         assertThat(initiatedByClasses.get(0).getSimpleName()).isEqualTo("Acceptor");
 
-        final List<CtClass> startableClasses = sca.getClassesByAnnotation(StartableByRPC.class);
+        final List<CtClass> startableClasses = analyzerWithModel.getClassesByAnnotation(StartableByRPC.class);
         assertThat(startableClasses).hasSize(2);
         final List<String> classesNames = startableClasses.stream().map(CtType::getSimpleName).collect(Collectors.toList());
         assertThat(classesNames).contains("InitiatorBaseFlow", "Initiator");
@@ -59,32 +59,32 @@ class AnalyzerWithModelTest {
 
     @Test
     void getDeeperClassInitiatedBy() {
-        final List<CtClass> initiatingClasses = sca.getClassesByAnnotation(InitiatingFlow.class);
+        final List<CtClass> initiatingClasses = analyzerWithModel.getClassesByAnnotation(InitiatingFlow.class);
         assertThat(initiatingClasses).hasSize(1);
         final CtClass ctClass = initiatingClasses.get(0);
-        final CtClass deeperClassInitiatedBy = sca.getDeeperClassInitiatedBy(ctClass);
+        final CtClass deeperClassInitiatedBy = analyzerWithModel.getDeeperClassInitiatedBy(ctClass);
         assertThat(deeperClassInitiatedBy.getQualifiedName())
                 .isEqualTo("com.github.lucacampanella.callgraphflows.staticanalyzer." +
-                        "testclasses.DoubleExtendingSuperclassTestFlow$Acceptor");
+                        "testclasses.subclassestests.DoubleExtendingSuperclassTestFlow$Acceptor");
     }
 
     @Test
     void getFurthestAwaySubclass() {
-        final List<CtClass> initiatingClasses = sca.getClassesByAnnotation(InitiatingFlow.class);
+        final List<CtClass> initiatingClasses = analyzerWithModel.getClassesByAnnotation(InitiatingFlow.class);
         assertThat(initiatingClasses).hasSize(1);
         final CtClass ctClass = initiatingClasses.get(0);
-        final CtClass furthestAwaySubclass = sca.getFurthestAwaySubclass(ctClass);
+        final CtClass furthestAwaySubclass = analyzerWithModel.getFurthestAwaySubclass(ctClass);
         assertThat(furthestAwaySubclass.getQualifiedName())
                 .isEqualTo("com.github.lucacampanella.callgraphflows.staticanalyzer." +
-                        "testclasses.DoubleExtendingSuperclassTestFlow$Initiator");
+                        "testclasses.subclassestests.DoubleExtendingSuperclassTestFlow$Initiator");
     }
 
     @Test
     void getAllSubClasses() {
-         final List<CtClass> initiatingClasses = sca.getClassesByAnnotation(InitiatingFlow.class);
+         final List<CtClass> initiatingClasses = analyzerWithModel.getClassesByAnnotation(InitiatingFlow.class);
          assertThat(initiatingClasses).hasSize(1);
          final CtClass ctClass = initiatingClasses.get(0);
-        final List<CtClass> allSubClasses = sca.getAllSubClassesIncludingThis(ctClass);
+        final List<CtClass> allSubClasses = analyzerWithModel.getAllSubClassesIncludingThis(ctClass);
         assertThat(allSubClasses).hasSize(3);
     }
 }

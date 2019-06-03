@@ -52,6 +52,32 @@ application {
 //    from("./src/main/java/com/github/lucacampanella/callgraphflows/staticanalyzer/matchers/MatcherContainer.java")
 //}
 
+
+task copyTestJarToResources(type: Copy) {
+    //println sourceSets.test.resources.srcDirs
+    //println sourceSets.test.output.resourcesDir
+    from buildDir.toURI().toURL().toString() + "/libs/JarAnalyzerTestJar-" + version + ".jar";
+    //into sourceSets.test.output.resourcesDir
+    into "./src/test/resources/"
+}
+
+task createTestJar(type: Jar) {
+    baseName = "JarAnalyzerTestJar"
+    from {
+        sourceSets.test.output
+        //configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    include '**/testclasses/subclassestests/*.class'
+    //include '**/testclasses/ExtendingSuperclassTestFlow.class'
+    //include '**/InitiatorBaseFlow.class'
+    //include '**/DoubleExtendingSuperclassTestFlow.class'
+    jar.includeEmptyDirs false
+    //with jar
+}
+copyTestJarToResources.dependsOn(createTestJar)
+build.dependsOn(copyTestJarToResources)
+
+
 tasks.withType(JavaCompile) {
     doFirst {
         project.copy {

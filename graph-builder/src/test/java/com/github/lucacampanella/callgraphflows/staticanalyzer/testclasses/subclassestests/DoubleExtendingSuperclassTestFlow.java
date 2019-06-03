@@ -1,6 +1,7 @@
-package com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses;
+package com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests;
 
 import co.paralleluniverse.fibers.Suspendable;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.ExtendingSuperclassTestFlow;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
 
