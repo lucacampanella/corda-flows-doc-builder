@@ -2,7 +2,7 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzer;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
 import spoon.reflect.code.CtAssignment;
 import spoon.reflect.code.CtLocalVariable;
 import spoon.reflect.code.CtStatement;
@@ -25,7 +25,7 @@ public class FlowConstructor extends InstructionStatement {
         FlowConstructor flowConstructor = new FlowConstructor(statement);
         System.out.println("invoked getAllRelevantMethodInvocations for "
                 + statement + " class FlowConstructor");
-        flowConstructor.internalMethodInvocations.add(StaticAnalyzer.getAllRelevantMethodInvocations(statement,
+        flowConstructor.internalMethodInvocations.add(StaticAnalyzerUtils.getAllRelevantMethodInvocations(statement,
                 analyzer));
 
 
@@ -36,7 +36,7 @@ public class FlowConstructor extends InstructionStatement {
             flowConstructor.lhsName = ((CtAssignmentImpl) statement).getAssigned().toString();
         }
 
-        flowConstructor.targetSessionName =  StaticAnalyzer.findTargetSessionName(statement);
+        flowConstructor.targetSessionName =  StaticAnalyzerUtils.findTargetSessionName(statement);
 
         return flowConstructor;
     }

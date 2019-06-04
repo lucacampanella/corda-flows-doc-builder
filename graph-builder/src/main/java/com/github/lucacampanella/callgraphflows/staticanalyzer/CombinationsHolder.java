@@ -109,8 +109,8 @@ public class CombinationsHolder {
         int i = 0;
 
         while(!initiatingQueue.isEmpty() || !initiatedQueue.isEmpty()) {
-            StatementInterface instrLeft = StaticAnalyzer.consumeUntilBlockingOrBranch(initiatingQueue);
-            StatementInterface instrRight = StaticAnalyzer.consumeUntilBlockingOrBranch(initiatedQueue);
+            StatementInterface instrLeft = StaticAnalyzerUtils.consumeUntilBlockingOrBranch(initiatingQueue);
+            StatementInterface instrRight = StaticAnalyzerUtils.consumeUntilBlockingOrBranch(initiatedQueue);
             if (instrLeft == null && instrRight == null) {
                 return true;
             }

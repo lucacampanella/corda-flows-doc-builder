@@ -4,7 +4,7 @@ import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzer;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import net.corda.core.flows.*;
 import spoon.reflect.code.*;
@@ -88,7 +88,7 @@ public class SubFlowBuilder {
 
         System.out.println("invoked getAllRelevantMethodInvocations for "
                 + statement + " class SubFlowBase");
-        subFlowInfo.internalMethodInvocations.add(StaticAnalyzer.getAllRelevantMethodInvocations(statement, analyzer));
+        subFlowInfo.internalMethodInvocations.add(StaticAnalyzerUtils.getAllRelevantMethodInvocations(statement, analyzer));
 
         if(statement instanceof CtLocalVariable) {
             subFlowInfo.assignedVariableName = Optional.ofNullable(((CtLocalVariable) statement).getSimpleName());
@@ -108,7 +108,7 @@ public class SubFlowBuilder {
                 //this works if the subflow is created with a "new" in the subFlow invocation itself, otherwise it doesn't
                 //if it doesn't a more profound search must be done, looking for which flow is passed and what
                 //session this passed flow references
-                subFlowInfo.targetSessionName =  StaticAnalyzer.findTargetSessionName(statement);
+                subFlowInfo.targetSessionName =  StaticAnalyzerUtils.findTargetSessionName(statement);
             }
             else if(firstArgument instanceof CtVariableRead) {
                 subFlowInfo.subFlowType = ((CtVariableRead) firstArgument).getVariable().getType();
@@ -116,7 +116,7 @@ public class SubFlowBuilder {
 
             }
 
-            final CtMethod callMethod = StaticAnalyzer.findCallMethod(
+            final CtMethod callMethod = StaticAnalyzerUtils.findCallMethod(
                     (CtClass) subFlowInfo.subFlowType.getTypeDeclaration());
 
             if(callMethod != null) {

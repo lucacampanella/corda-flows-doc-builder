@@ -3,8 +3,6 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer;
 import com.github.lucacampanella.callgraphflows.graphics.components.GGraphBuilder;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import net.corda.core.flows.InitiatedBy;
-import net.corda.core.flows.StartableByRPC;
-import spoon.legacy.NameFilter;
 import spoon.reflect.CtModel;
 import spoon.reflect.code.CtExpression;
 import spoon.reflect.declaration.CtAnnotation;
@@ -13,51 +11,20 @@ import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.path.CtPath;
 import spoon.reflect.path.CtPathStringBuilder;
-import spoon.reflect.reference.CtReference;
 import spoon.reflect.visitor.filter.AnnotationFilter;
 import spoon.reflect.visitor.filter.NamedElementFilter;
-import spoon.reflect.visitor.filter.ReferenceTypeFilter;
 import spoon.reflect.visitor.filter.TypeFilter;
 import spoon.support.reflect.code.CtFieldReadImpl;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class AnalyzerWithModel {
-    private static final String FILE_SEP = System.getProperty("file.separator");
-    private static final String DEFAULT_OUT_DIR = "build" + FILE_SEP + "graphs" + FILE_SEP;
-
     protected CtModel model;
 
     public CtModel getModel() {
         return model;
-    }
-
-    public void drawAllStartableClasses(String outPath) {
-
-        System.out.println("All matcher names: " + MatcherHelper.getAllMatcherNames());
-        System.out.println("All matchers: " + MatcherHelper.getAllMatchers());
-
-        if(!outPath.endsWith(FILE_SEP)) {
-            outPath = outPath + FILE_SEP;
-        }
-        final List<CtClass> startableByRPCClasses = getClassesByAnnotation(StartableByRPC.class);
-        System.out.println("Found these classes annotated with @StartableByRPC: ");
-        for (CtClass klass : startableByRPCClasses) {
-            System.out.println("**** Analyzing class " + klass.getQualifiedName() + " TEST");
-            System.out.println("Here");
-            System.out.flush();
-            try {
-                System.out.println("before drawFromClass call");
-                System.out.flush();
-                new File(outPath).mkdirs();
-                drawFromClass(klass, outPath + klass.getQualifiedName() + ".svg");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public <T> CtClass<T> getClass(Class<T> klass) {
@@ -69,27 +36,9 @@ public class AnalyzerWithModel {
     }
 
 
-    public void drawAllStartableClasses() {
-        drawAllStartableClasses(DEFAULT_OUT_DIR);
-    }
-
-    public void drawFromClass(CtClass klass, String outPath) throws IOException {
-        System.out.println("before AnalysisResult call");
-        final AnalysisResult analysisResult = analyzeFlowLogicClass(klass);
-
-        GGraphBuilder graphBuilder = new GGraphBuilder();
-
-        graphBuilder.addSession(analysisResult.getClassName(), analysisResult.getStatements());
-        final AnalysisResult initiatedClassResult = analysisResult.getCounterpartyClassResult();
-        if(initiatedClassResult != null) {
-            graphBuilder.addSession(initiatedClassResult.getClassName(), initiatedClassResult.getStatements());
-        }
-        graphBuilder.drawToFile(outPath);
-    }
-
     public AnalysisResult analyzeFlowLogicClass(CtClass klass) {
         System.out.println("*** analyzing sub-class " + klass.getQualifiedName());
-        final CtMethod callMethod = StaticAnalyzer.findCallMethod(klass);
+        final CtMethod callMethod = StaticAnalyzerUtils.findCallMethod(klass);
         if(callMethod == null) {
             return null;
         }

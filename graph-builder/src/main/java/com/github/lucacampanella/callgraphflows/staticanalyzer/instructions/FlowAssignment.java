@@ -2,7 +2,7 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzer;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import net.corda.core.flows.FlowLogic;
 import spoon.reflect.code.CtAssignment;
@@ -36,7 +36,7 @@ public class FlowAssignment extends InstructionStatement {
         System.out.println("invoked getAllRelevantMethodInvocations for "
                 + statement + " class FlowAssignment");
         flowAssignment.internalMethodInvocations.add(
-                StaticAnalyzer.getAllRelevantMethodInvocations(statement, analyzer));
+                StaticAnalyzerUtils.getAllRelevantMethodInvocations(statement, analyzer));
 
 
         if(statement instanceof CtLocalVariable) {

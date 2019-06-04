@@ -1,6 +1,7 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
 import com.github.lucacampanella.TestUtils;
+import com.github.lucacampanella.callgraphflows.Drawer;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.ExtendingSuperclassTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.InitiatorBaseFlow;
@@ -24,12 +25,12 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class StaticAnalyzerTest {
+public class StaticAnalyzerUtilsTest {
 
     @Test
     public void findCallMethod() throws FileNotFoundException {
         final CtClass ctClass = fromClassToCtClass(ExtendingSuperclassTestFlow.class);
-        assertTrue(StaticAnalyzer.findCallMethod(ctClass) != null);
+        assertTrue(StaticAnalyzerUtils.findCallMethod(ctClass) != null);
     }
 
 //    @Test
@@ -139,7 +140,7 @@ public class StaticAnalyzerTest {
 
         final List<CtClass> startableClasses = analyzer.getClassesByAnnotation(StartableByRPC.class);
         for (CtClass clazz : startableClasses) {
-            analyzer.drawFromClass(clazz, toBeAnalyzed.getSimpleName() + ".svg");
+            Drawer.drawFromClass(analyzer, clazz, toBeAnalyzed.getSimpleName() + ".svg");
         }
     }
 
@@ -194,14 +195,14 @@ public class StaticAnalyzerTest {
     @Test
     void findTargetSessionName() throws FileNotFoundException {
         final CtClass ctClass = fromClassToCtClass(InitiatorBaseFlow.class);
-        final CtMethod callMethod = StaticAnalyzer.findCallMethod(ctClass);
+        final CtMethod callMethod = StaticAnalyzerUtils.findCallMethod(ctClass);
 
         final CtStatement nonContainingStatement = callMethod.getBody().getStatements().get(0);//FlowSession session = initiateFlow(otherParty);
-        final Optional<String> emptyTargetSessionName = StaticAnalyzer.findTargetSessionName(nonContainingStatement);
+        final Optional<String> emptyTargetSessionName = StaticAnalyzerUtils.findTargetSessionName(nonContainingStatement);
         assertThat(emptyTargetSessionName).isEqualTo(Optional.empty());
 
         final CtStatement containingStatement = callMethod.getBody().getStatements().get(1);//realCallMethod(session);
-        final Optional<String> targetSessionName = StaticAnalyzer.findTargetSessionName(containingStatement);
+        final Optional<String> targetSessionName = StaticAnalyzerUtils.findTargetSessionName(containingStatement);
         assertThat(targetSessionName.get()).isEqualTo("session");
     }
 
@@ -209,13 +210,13 @@ public class StaticAnalyzerTest {
     @Test
     void isCordaMethod() throws FileNotFoundException {
         final CtClass ctClass = fromClassToCtClass(InitiatorBaseFlow.class);
-        final CtMethod callMethod = StaticAnalyzer.findCallMethod(ctClass);
+        final CtMethod callMethod = StaticAnalyzerUtils.findCallMethod(ctClass);
 
         final CtInvocation initiateMethod = (CtInvocation) callMethod.getBody().getStatements().get(0).getDirectChildren().get(1);//initiateFlow(otherParty);
-        assertThat(StaticAnalyzer.isCordaMethod(initiateMethod)).isEqualTo(true);
+        assertThat(StaticAnalyzerUtils.isCordaMethod(initiateMethod)).isEqualTo(true);
 
         final CtInvocation nonCordaMethod = (CtInvocation) callMethod.getBody().getStatements().get(1);//realCallMethod(session);
-        assertThat(StaticAnalyzer.isCordaMethod(nonCordaMethod)).isEqualTo(false);
+        assertThat(StaticAnalyzerUtils.isCordaMethod(nonCordaMethod)).isEqualTo(false);
     }
 
     @Test
@@ -224,17 +225,17 @@ public class StaticAnalyzerTest {
                 TestUtils.fromClassSrcToPath(NestedMethodInvocationsTestFlow.class));
         final CtClass<NestedMethodInvocationsTestFlow> ctClass = analyzer.getClass(NestedMethodInvocationsTestFlow.class);
         //final CtClass ctClass = (NestedMethodInvocationsTestFlow.class);
-        final CtMethod callMethod = StaticAnalyzer.findCallMethod(ctClass);
+        final CtMethod callMethod = StaticAnalyzerUtils.findCallMethod(ctClass);
 
         //List<SignedTransaction> list = new LinkedList<>();
         final CtStatement ctIrrelevantStatement = callMethod.getBody().getStatements().get(0);
-        assertThat(StaticAnalyzer.getAllRelevantMethodInvocations(ctIrrelevantStatement, analyzer)).hasSize(0);
+        assertThat(StaticAnalyzerUtils.getAllRelevantMethodInvocations(ctIrrelevantStatement, analyzer)).hasSize(0);
 
         //ClassWithSendInConstructor classWithSendInConstructor =
         //                    new ClassWithSendInConstructor(methodWithASendReturningASession(session));
         final CtStatement ctStatement = callMethod.getBody().getStatements().get(2);
-        assertThat(StaticAnalyzer.getAllRelevantMethodInvocations(ctStatement, analyzer)).hasSize(1);
-        assertThat(StaticAnalyzer.getAllRelevantMethodInvocations(ctStatement, analyzer).getStatements().get(0)
+        assertThat(StaticAnalyzerUtils.getAllRelevantMethodInvocations(ctStatement, analyzer)).hasSize(1);
+        assertThat(StaticAnalyzerUtils.getAllRelevantMethodInvocations(ctStatement, analyzer).getStatements().get(0)
         .getInternalMethodInvocations()).hasSize(1);
     }
 }

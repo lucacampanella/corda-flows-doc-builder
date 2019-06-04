@@ -7,7 +7,7 @@ import com.github.lucacampanella.callgraphflows.graphics.components.GConditional
 import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzer;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import spoon.reflect.code.CtExpression;
 import spoon.reflect.code.CtStatement;
@@ -131,7 +131,7 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
         System.out.println("invoked getAllRelevantMethodInvocations for condition "
                 + condition + " class" + this.getClass().getCanonicalName());
         this.internalMethodInvocations.add(
-                StaticAnalyzer.getAllRelevantMethodInvocations(condition, analyzer));
+                StaticAnalyzerUtils.getAllRelevantMethodInvocations(condition, analyzer));
     }
 
     protected abstract String formatDescription(CtStatement statement);

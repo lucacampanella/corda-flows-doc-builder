@@ -2,7 +2,7 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
 import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzer;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
 import spoon.reflect.code.CtAssignment;
 import spoon.reflect.code.CtLocalVariable;
 import spoon.reflect.code.CtStatement;
@@ -28,7 +28,7 @@ public class InitiateFlow extends InstructionStatement {
         initiateFlow.line = statement.getPosition().getLine();
         System.out.println("invoked getAllRelevantMethodInvocations for "
                 + statement + " class InitiateFlow");
-        initiateFlow.internalMethodInvocations.add(StaticAnalyzer.getAllRelevantMethodInvocations(statement, analyzer));
+        initiateFlow.internalMethodInvocations.add(StaticAnalyzerUtils.getAllRelevantMethodInvocations(statement, analyzer));
 
         if(statement instanceof CtLocalVariable) {
             initiateFlow.targetSessionName = Optional.ofNullable(((CtLocalVariable) statement).getReference().getSimpleName());

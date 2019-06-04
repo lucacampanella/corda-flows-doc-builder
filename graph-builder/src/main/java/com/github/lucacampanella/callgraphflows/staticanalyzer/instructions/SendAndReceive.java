@@ -2,7 +2,7 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
 import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzer;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.CtTypedElement;
@@ -35,7 +35,7 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
         sendAndReceive.line = statement.getPosition().getLine();
         System.out.println("invoked getAllRelevantMethodInvocations for "
                 + statement + " class SendAndReceive");
-        sendAndReceive.internalMethodInvocations.add(StaticAnalyzer.getAllRelevantMethodInvocations(statement,
+        sendAndReceive.internalMethodInvocations.add(StaticAnalyzerUtils.getAllRelevantMethodInvocations(statement,
                 analyzer));
 
         CtInvocation invocation = (CtInvocation) MatcherHelper.getFirstMatchedExpression(statement,

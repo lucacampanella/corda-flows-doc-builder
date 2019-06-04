@@ -1,6 +1,7 @@
 package com.github.lucacampanella.callgraphflows.graphics.components;
 
 import com.github.lucacampanella.callgraphflows.graphics.utils.GUtils;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.StatementInterface;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
@@ -22,6 +23,18 @@ public class GGraphBuilder {
 
     public GGraphBuilder() {
         //empty constructor
+    }
+
+    public static GGraphBuilder fromAnalysisResult(AnalysisResult analysisResult) {
+        GGraphBuilder graphBuilder = new GGraphBuilder();
+
+        graphBuilder.addSession(analysisResult.getClassName(), analysisResult.getStatements());
+        final AnalysisResult initiatedClassResult = analysisResult.getCounterpartyClassResult();
+        if(initiatedClassResult != null) {
+            graphBuilder.addSession(initiatedClassResult.getClassName(), initiatedClassResult.getStatements());
+        }
+
+        return graphBuilder;
     }
 
     public boolean addSession(String title, GSubFlow flow) {

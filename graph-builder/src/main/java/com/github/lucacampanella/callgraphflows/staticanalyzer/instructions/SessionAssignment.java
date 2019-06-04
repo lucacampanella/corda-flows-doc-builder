@@ -2,7 +2,7 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzer;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import net.corda.core.flows.FlowSession;
 import spoon.reflect.code.CtAssignment;
@@ -30,7 +30,7 @@ public class SessionAssignment extends InstructionStatement {
         SessionAssignment sessionAssignment = new SessionAssignment(statement);
         System.out.println("invoked getAllRelevantMethodInvocations for "
                 + statement + " class SessionAssignment");
-        sessionAssignment.internalMethodInvocations.add(StaticAnalyzer.
+        sessionAssignment.internalMethodInvocations.add(StaticAnalyzerUtils.
                 getAllRelevantMethodInvocations(statement, analyzer));
 
         if(statement instanceof CtLocalVariable) {

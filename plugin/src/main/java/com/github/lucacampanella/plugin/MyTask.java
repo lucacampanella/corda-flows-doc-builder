@@ -1,5 +1,6 @@
 package com.github.lucacampanella.plugin;
 
+import com.github.lucacampanella.callgraphflows.Drawer;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.JarAnalyzer;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Task;
@@ -25,7 +26,7 @@ public class MyTask extends DefaultTask {
             JarAnalyzer analyzer = new JarAnalyzer(path/*, cordaJar.get().getAbsolutePath()*/);
             //JarAnalyzer analyzer = new JarAnalyzer("/Users/camp/Desktop/cardossier-core/cardossier-core-flows/build/libs/cardossier-core-flows-FAT-SNAPSHOT.jar");
             System.out.println("After");
-            analyzer.drawAllStartableClasses();
+            Drawer.drawAllStartableClasses(analyzer);
         });
     }
 }

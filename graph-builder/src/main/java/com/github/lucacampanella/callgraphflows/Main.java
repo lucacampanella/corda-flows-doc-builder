@@ -1,11 +1,6 @@
 package com.github.lucacampanella.callgraphflows;
 
 import com.github.lucacampanella.callgraphflows.staticanalyzer.JarAnalyzer;
-import net.corda.core.flows.StartableByRPC;
-import spoon.reflect.declaration.CtClass;
-
-import java.io.IOException;
-import java.util.List;
 
 public class Main {
 
@@ -42,10 +37,10 @@ public class Main {
 //        }
 
         if(args.length > 1) {
-            analyzer.drawAllStartableClasses(args[1]);
+            Drawer.drawAllStartableClasses(analyzer, args[1]);
         }
         else {
-            analyzer.drawAllStartableClasses();
+            Drawer.drawAllStartableClasses(analyzer);
         }
     }
 }

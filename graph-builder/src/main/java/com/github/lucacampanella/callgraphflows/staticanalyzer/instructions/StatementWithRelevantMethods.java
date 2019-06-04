@@ -1,7 +1,7 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzer;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
 import spoon.reflect.code.CtStatement;
 
 public class StatementWithRelevantMethods extends InstructionStatement {
@@ -15,7 +15,7 @@ public class StatementWithRelevantMethods extends InstructionStatement {
         System.out.println("invoked getAllRelevantMethodInvocations for "
                 + statement + " class StatementWithRelevantMethods");
         statementWithRelevantMethods.internalMethodInvocations.add(
-                StaticAnalyzer.getAllRelevantMethodInvocations(statement, analyzer));
+                StaticAnalyzerUtils.getAllRelevantMethodInvocations(statement, analyzer));
 
         return statementWithRelevantMethods;
     }

@@ -6,7 +6,7 @@ import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextCom
 import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzer;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import net.corda.core.flows.FlowLogic;
 import net.corda.core.flows.FlowSession;
@@ -36,7 +36,7 @@ public class MethodInvocation extends InstructionStatement {
         if(statement instanceof CtAbstractInvocation) {
             CtAbstractInvocation inv = (CtAbstractInvocation) statement;
 
-            if (StaticAnalyzer.isCordaMethod(inv)) { //this should never happen
+            if (StaticAnalyzerUtils.isCordaMethod(inv)) { //this should never happen
                 System.out.println("Error");
                 return null;
             }
@@ -79,7 +79,7 @@ public class MethodInvocation extends InstructionStatement {
                         }
                     }
                     System.out.println("invoked getAllRelevantMethodInvocations for expr " + expr);
-                    final Branch allRelevantMethodInvocations = StaticAnalyzer.getAllRelevantMethodInvocations(expr,
+                    final Branch allRelevantMethodInvocations = StaticAnalyzerUtils.getAllRelevantMethodInvocations(expr,
                             analyzer);
                     methodInvocation.internalMethodInvocations.addIfRelevant(allRelevantMethodInvocations);
                 }

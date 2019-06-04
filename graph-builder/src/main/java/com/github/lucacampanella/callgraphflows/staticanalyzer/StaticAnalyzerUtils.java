@@ -17,9 +17,9 @@ import spoon.template.TemplateMatcher;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class StaticAnalyzer {
+public class StaticAnalyzerUtils {
 
-    private StaticAnalyzer() {
+    private StaticAnalyzerUtils() {
         //private constructor to hide public one
     }
 

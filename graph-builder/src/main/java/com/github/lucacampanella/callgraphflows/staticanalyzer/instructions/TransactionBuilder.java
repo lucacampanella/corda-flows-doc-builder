@@ -2,7 +2,7 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzer;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
 import spoon.reflect.code.CtStatement;
 
 import java.awt.*;
@@ -18,7 +18,7 @@ public class TransactionBuilder extends InstructionStatement {
         System.out.println("invoked getAllRelevantMethodInvocations for "
                 + statement + " class TransactionBuilder");
         transactionBuilder.internalMethodInvocations.add(
-                StaticAnalyzer.getAllRelevantMethodInvocations(statement, analyzer));
+                StaticAnalyzerUtils.getAllRelevantMethodInvocations(statement, analyzer));
 
         return transactionBuilder;
     }
