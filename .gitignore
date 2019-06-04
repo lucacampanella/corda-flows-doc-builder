@@ -120,6 +120,9 @@ gradle-app.setting
 #include jars that are in any libs folder
 !**/libs/*
 
+#ignore svg files as they are the result of the analysis
+**/*.svg
+
 # Cache of project
 .gradletasknamecache
 
