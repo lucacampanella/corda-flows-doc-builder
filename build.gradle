@@ -1,3 +1,12 @@
+plugins {
+    id 'com.gradle.build-scan' version '1.16'
+}
+
+buildScan {
+    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    termsOfServiceAgree = 'yes'
+}
+
 allprojects {
 
     apply plugin: 'java'
