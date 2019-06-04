@@ -1,9 +1,9 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
+import com.github.lucacampanella.TestUtils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.ExtendingSuperclassTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.InitiatorBaseFlow;
-import com.github.lucacampanella.callgraphflows.testUtils.TestUtils;
 import net.corda.core.flows.StartableByRPC;
 import org.junit.jupiter.api.Test;
 import spoon.Launcher;
@@ -236,7 +236,5 @@ public class StaticAnalyzerTest {
         assertThat(StaticAnalyzer.getAllRelevantMethodInvocations(ctStatement, analyzer)).hasSize(1);
         assertThat(StaticAnalyzer.getAllRelevantMethodInvocations(ctStatement, analyzer).getStatements().get(0)
         .getInternalMethodInvocations()).hasSize(1);
-
-
     }
 }

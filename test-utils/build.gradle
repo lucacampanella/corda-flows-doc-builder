@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+}
+
+group 'com.github.lucacampanella'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation('org.junit.jupiter:junit-jupiter:5.4.2')
+    testImplementation("org.assertj:assertj-core:3.11.1")
+}

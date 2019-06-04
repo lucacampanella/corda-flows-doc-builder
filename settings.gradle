@@ -1,4 +1,5 @@
 rootProject.name = 'corda-flows-doc-builder'
 include 'graph-builder'
 include 'plugin'
+include 'test-utils'
 
