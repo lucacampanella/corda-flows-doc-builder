@@ -28,6 +28,10 @@ repositories {
 //        url 'http://maven.inria.fr/artifactory/spoon-public-snapshot'
 //    }
     mavenLocal()
+
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
@@ -35,7 +39,11 @@ dependencies {
     //compile "ch.adnovum.sb4b:corda-flow-base:0.2.1903271115"
     implementation "$corda_release_group:corda-core:$corda_release_version"
     implementation "fr.inria.gforge.spoon:spoon-core:$spoon_version"
-    implementation "fr.inria.gforge.spoon:spoon-decompiler:0.1.0-SNAPSHOT"
+
+    //FIXME: we should depend on the thing they should publish on the remote repo, bu have not done yet
+    implementation "org.jboss.windup.decompiler.fernflower:fernflower:2.5.0.Final"
+    implementation "org.benf:cfr:0.135"
+    implementation name: 'spoon-decompiler-0.1.0-SNAPSHOT'//"fr.inria.gforge.spoon:spoon-decompiler:0.1.0-SNAPSHOT"
 
     implementation "org.jfree:jfreesvg:3.4"
 

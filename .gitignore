@@ -117,6 +117,9 @@ gradle-app.setting
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
 
+#include jars that are in any libs folder
+!**/libs/*
+
 # Cache of project
 .gradletasknamecache
 
