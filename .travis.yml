@@ -7,7 +7,7 @@ jdk:
 #before_script: cat /home/travis/build/luca-campanella/corda-flows-doc-builder/graph-builder/build/reports/tests/test/index.html
 
 script:
-  - ./gradlew build --scan -s
+  - ./gradlew build --scan -s --info
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
