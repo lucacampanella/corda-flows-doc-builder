@@ -15,8 +15,6 @@ public class TransactionBuilder extends InstructionStatement {
 
     public static TransactionBuilder fromStatement(CtStatement statement, AnalyzerWithModel analyzer) {
         TransactionBuilder transactionBuilder = new TransactionBuilder(statement);
-        System.out.println("invoked getAllRelevantMethodInvocations for "
-                + statement + " class TransactionBuilder");
         transactionBuilder.internalMethodInvocations.add(
                 StaticAnalyzerUtils.getAllRelevantMethodInvocations(statement, analyzer));
 

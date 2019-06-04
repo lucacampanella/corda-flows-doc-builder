@@ -53,7 +53,6 @@ public class MethodInvocationTestFlow {
 
         public FlowSession methodReturningASession() {
             FlowSession session = initiateFlow(otherParty);
-            System.out.println();
             return session;
         }
 

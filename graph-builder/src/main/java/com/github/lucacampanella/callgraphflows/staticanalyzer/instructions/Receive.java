@@ -30,8 +30,6 @@ public class Receive extends InstructionStatement implements StatementWithCompan
     public static Receive fromCtStatement(CtStatement statement, AnalyzerWithModel analyzer) {
         Receive receive = new Receive();
         receive.line = statement.getPosition().getLine();
-        System.out.println("invoked getAllRelevantMethodInvocations for "
-                + statement + " class Receive");
         receive.internalMethodInvocations.add(StaticAnalyzerUtils.getAllRelevantMethodInvocations(statement, analyzer));
 
         CtInvocation invocation = (CtInvocation) MatcherHelper.getFirstMatchedExpression(statement,

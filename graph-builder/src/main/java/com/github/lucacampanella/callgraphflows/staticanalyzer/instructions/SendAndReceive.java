@@ -33,8 +33,6 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
     public static SendAndReceive fromCtStatement(CtStatement statement, AnalyzerWithModel analyzer) {
         SendAndReceive sendAndReceive = new SendAndReceive();
         sendAndReceive.line = statement.getPosition().getLine();
-        System.out.println("invoked getAllRelevantMethodInvocations for "
-                + statement + " class SendAndReceive");
         sendAndReceive.internalMethodInvocations.add(StaticAnalyzerUtils.getAllRelevantMethodInvocations(statement,
                 analyzer));
 

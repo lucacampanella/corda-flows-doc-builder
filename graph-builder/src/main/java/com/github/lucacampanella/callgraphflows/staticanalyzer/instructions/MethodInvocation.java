@@ -51,18 +51,15 @@ public class MethodInvocation extends InstructionStatement {
             }
 
             final List<CtExpression> arguments = inv.getArguments();
-            System.out.println("all arguments: " + arguments);
             for(int i = 0; i < arguments.size(); ++i) {
                 CtExpression expr = arguments.get(i);
                 if(expr instanceof CtVariableRead && expr.getType() != null) {
                     CtVariableRead varRead = (CtVariableRead) expr;
                     if(varRead.getType().isSubtypeOf(MatcherHelper.getTypeReference(FlowSession.class))) {
                         addToMapIfNoException(methodInvocation.callerSessionNameToCalleeSessionName, inv, i);
-                        System.out.println("found a flow session argument");
                     }
                     else if(varRead.getType().isSubtypeOf(MatcherHelper.getTypeReference(FlowLogic.class))) {
                         addToMapIfNoException(methodInvocation.callerFlowNameToCalleeFlowName, inv, i);
-                        System.out.println("found a flow logic argument");
                     }
                 }
                 else {
@@ -71,14 +68,11 @@ public class MethodInvocation extends InstructionStatement {
                         if (expr.getType().isSubtypeOf(MatcherHelper.getTypeReference(FlowSession.class))) {
                             addToMapIfNoException(methodInvocation.callerSessionNameToCalleeSessionName, inv, i);
                             //todo: how to handle methods here?
-                            System.out.println("found a flow session argument");
                         } else if (expr.getType().isSubtypeOf(MatcherHelper.getTypeReference(FlowLogic.class))) {
                             addToMapIfNoException(methodInvocation.callerFlowNameToCalleeFlowName, inv, i);
                             //todo: how to handle methods here?
-                            System.out.println("found a flow logic argument");
                         }
                     }
-                    System.out.println("invoked getAllRelevantMethodInvocations for expr " + expr);
                     final Branch allRelevantMethodInvocations = StaticAnalyzerUtils.getAllRelevantMethodInvocations(expr,
                             analyzer);
                     methodInvocation.internalMethodInvocations.addIfRelevant(allRelevantMethodInvocations);
@@ -110,7 +104,6 @@ public class MethodInvocation extends InstructionStatement {
 //
 //        receive.targetSessionName = Optional.ofNullable(invocation.getTarget().toString());
 
-        System.out.println("returning from method invocation of statement " + statement);
         return methodInvocation;
     }
 

@@ -88,7 +88,7 @@ public class StaticAnalyzerUtils {
                             discoveredSession = new Session(stmt);
                             nameToSessionMap.put(assignment.getLhsName(), discoveredSession);
                             nameToSessionMap.put(assignment.getRhsName(), discoveredSession);
-                            System.out.println();
+
                         }
                     }
                 }
@@ -170,7 +170,7 @@ public class StaticAnalyzerUtils {
                     sessionToStatementMap.put(discoveredSession, newList);
                 }
 
-                    System.out.println();
+
             });
         }
 
@@ -555,14 +555,10 @@ public class StaticAnalyzerUtils {
                 return res;
             }
         }
-        System.out.println(statement.getShortRepresentation());
         if(!(statement instanceof CtLiteral)) {
             final List<CtElement> directChildren = statement.getDirectChildren();
-            System.out.println(directChildren);
 
             for (CtElement elem : directChildren) {
-                System.out.println("REC: invoked getAllRelevantMethodInvocations for "
-                        + statement + " class StaticAnalyzer");
                 res.addIfRelevant(getAllRelevantMethodInvocations(elem, analyzer));
             }
         }

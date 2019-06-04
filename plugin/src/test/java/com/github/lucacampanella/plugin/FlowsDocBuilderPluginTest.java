@@ -41,7 +41,6 @@ class FlowsDocBuilderPluginTest {
         //versions
 
         System.out.println(buildResult.getOutput());
-
         System.out.println(buildResult);
     }
 

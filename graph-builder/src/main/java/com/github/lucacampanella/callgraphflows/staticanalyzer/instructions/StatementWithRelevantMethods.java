@@ -12,8 +12,6 @@ public class StatementWithRelevantMethods extends InstructionStatement {
 
     public static StatementWithRelevantMethods fromCtStatement(CtStatement statement, AnalyzerWithModel analyzer) {
         StatementWithRelevantMethods statementWithRelevantMethods = new StatementWithRelevantMethods(statement);
-        System.out.println("invoked getAllRelevantMethodInvocations for "
-                + statement + " class StatementWithRelevantMethods");
         statementWithRelevantMethods.internalMethodInvocations.add(
                 StaticAnalyzerUtils.getAllRelevantMethodInvocations(statement, analyzer));
 

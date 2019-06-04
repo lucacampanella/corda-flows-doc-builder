@@ -32,8 +32,6 @@ public class Send extends InstructionStatement implements StatementWithCompanion
     public static Send fromCtStatement(CtStatement statement, AnalyzerWithModel analyzer) {
         Send send = new Send();
         send.line = statement.getPosition().getLine();
-        System.out.println("invoked getAllRelevantMethodInvocations for "
-                + statement + " class Send");
         send.internalMethodInvocations.add(StaticAnalyzerUtils.getAllRelevantMethodInvocations(statement, analyzer));
 
         CtInvocation invocation = (CtInvocation) MatcherHelper.getFirstMatchedExpression(statement,

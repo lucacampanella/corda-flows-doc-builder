@@ -100,7 +100,7 @@ import java.util.List;
 
         public FlowSession methodReturningASession() {
             FlowSession session = initiateFlow(otherParty);
-            System.out.println();
+
             return session;
         }
 

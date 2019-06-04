@@ -86,8 +86,6 @@ public class SubFlowBuilder {
 
         subFlowInfo.line = statement.getPosition().getLine();
 
-        System.out.println("invoked getAllRelevantMethodInvocations for "
-                + statement + " class SubFlowBase");
         subFlowInfo.internalMethodInvocations.add(StaticAnalyzerUtils.getAllRelevantMethodInvocations(statement, analyzer));
 
         if(statement instanceof CtLocalVariable) {

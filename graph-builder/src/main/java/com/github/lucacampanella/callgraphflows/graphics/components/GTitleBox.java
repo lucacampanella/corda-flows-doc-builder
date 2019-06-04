@@ -22,7 +22,6 @@ public class GTitleBox extends GBaseTextComponent {
     @Override
     public void draw(SVGGraphics2D g2) {
         Dimension dim = getDimensions(g2);
-        System.out.println(dim);
         Rectangle rect = new Rectangle(getStartX(), getStartY(), dim.width, dim.height);
         GUtils.fillWithColor(g2, rect, BACKGROUND_COLOR);
         g2.draw(rect);

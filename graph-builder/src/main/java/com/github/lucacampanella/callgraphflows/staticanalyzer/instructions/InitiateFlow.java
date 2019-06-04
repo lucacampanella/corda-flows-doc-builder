@@ -26,8 +26,6 @@ public class InitiateFlow extends InstructionStatement {
     public static InitiateFlow fromCtStatement(CtStatement statement, AnalyzerWithModel analyzer) {
         InitiateFlow initiateFlow = new InitiateFlow();
         initiateFlow.line = statement.getPosition().getLine();
-        System.out.println("invoked getAllRelevantMethodInvocations for "
-                + statement + " class InitiateFlow");
         initiateFlow.internalMethodInvocations.add(StaticAnalyzerUtils.getAllRelevantMethodInvocations(statement, analyzer));
 
         if(statement instanceof CtLocalVariable) {

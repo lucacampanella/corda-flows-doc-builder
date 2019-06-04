@@ -23,7 +23,6 @@ public class GBaseTextComponent extends GBaseGraphicComponent {
     @Override
     public void draw(SVGGraphics2D g2) {
         Dimension dim = getDimensions(g2);
-        System.out.println(dim);
         Rectangle rect = new Rectangle(getStartX(), getStartY(), dim.width, dim.height);
         GUtils.fillWithColor(g2, rect, getBackgroundColor());
         if(drawBox) {

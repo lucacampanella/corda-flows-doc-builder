@@ -72,21 +72,13 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
 //            task.finalizedBy("myTask");
 //        });
 
-
-        System.out.println(project.getBuildscript().getConfigurations().getByName("classpath").getAllDependencies());
-
         final File jarExecutable = project.getBuildscript().getConfigurations().getByName("classpath").getFiles()
                 .stream().filter((file) -> file.getName().startsWith("graph-builder")).findFirst().orElseThrow(() -> new RuntimeException());
-
-        System.out.println(jarExecutable);
-
 
         final TaskCollection<Jar> jarTasks = project.getTasks().withType(Jar.class);
         String pathToExecJar = jarExecutable.getPath();
 
-        int i = 0;
         for(Jar task : jarTasks) {
-//            try {
                 final String path = task.getArchivePath().getAbsolutePath();
 
                 final JavaExec javaExecTask = project.getTasks().create(task.getName()
@@ -94,12 +86,7 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
 
                 javaExecTask.setMain("-jar");
                 javaExecTask.args(pathToExecJar, path, "./graphs");
-                //javaExecTask.args(pathToExecJar, "/Users/camp/Desktop/cardossier-core/cardossier-core-flows/build/libs/cardossier-core-flows-FAT-SNAPSHOT.jar", "./graphs");
                 javaExecTask.dependsOn(task);
-                i++;
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
         }
     }
 

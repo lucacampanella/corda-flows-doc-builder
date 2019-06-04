@@ -67,8 +67,6 @@ public class MatcherHelper {
         final VirtualFile matcherContainerVirtualFile = new VirtualFile(matcherContainerString);
 
         launcher.addInputResource(matcherContainerVirtualFile);
-
-        System.out.println("before building model, curr dir = " + System.getProperty("user.dir"));
         launcher.buildModel();
         model = launcher.getModel();
     }
@@ -187,11 +185,9 @@ public class MatcherHelper {
 
     private static StatementInterface initiateIfCordaRelevantStatement(CtStatement statement,
                                                             AnalyzerWithModel analyzer) {
-        System.out.println("Initializing " + statement);
         if (matchesAnyChildren(statement, "transactionBuilderMatcher")) {
             return TransactionBuilder.fromStatement(statement, analyzer);
         } else if (matchesAnyChildren(statement, "initiateFlowMatcher")) {
-            System.out.println("Matched initiateFlow");
             return InitiateFlow.fromCtStatement(statement, analyzer);
         } else if (matchesAnyChildren(statement, "sendMatcher") ||
                 matchesAnyChildren(statement, "sendWithBoolMatcher")) { //TODO: test the second line
@@ -201,7 +197,6 @@ public class MatcherHelper {
             return Receive.fromCtStatement(statement, analyzer);
         } else if (matchesAnyChildren(statement, "sendAndReceiveMatcher") ||
                 matchesAnyChildren(statement, "sendAndReceiveWithBoolMatcher")) { //TODO: test the second line
-            System.out.println("Matched send and receive");
             return SendAndReceive.fromCtStatement(statement, analyzer);
         }
         else if (matchesAnyChildren(statement, "subFlowMatcher")) {
@@ -230,7 +225,6 @@ public class MatcherHelper {
     }
 
     private static StatementInterface initiateIfContainsRelevantMethod(CtStatement statement, AnalyzerWithModel analyzer) {
-        System.out.println("Called initiateIfContainsRelevantMethod for statement " + statement);
         final List<CtAbstractInvocation> methods = statement.getElements(new TypeFilter<>(CtAbstractInvocation.class));
         if(methods.isEmpty()) {
             return null;

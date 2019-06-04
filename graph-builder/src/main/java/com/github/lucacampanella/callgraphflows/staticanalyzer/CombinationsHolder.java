@@ -79,7 +79,7 @@ public class CombinationsHolder {
                     mergedCombination.mergeWith(fromBranch(((BranchingStatement) instr).getBranchFalse()));
                 }
                 holder.combineWith(mergedCombination);
-                System.out.println();
+
             }
         }
 

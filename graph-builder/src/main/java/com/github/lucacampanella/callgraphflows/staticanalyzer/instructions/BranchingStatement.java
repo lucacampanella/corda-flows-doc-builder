@@ -128,8 +128,6 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
             this.conditionInstruction.setTextColor(GBaseTextComponent.LESS_IMPORTANT_TEXT_COLOR);
         }
 
-        System.out.println("invoked getAllRelevantMethodInvocations for condition "
-                + condition + " class" + this.getClass().getCanonicalName());
         this.internalMethodInvocations.add(
                 StaticAnalyzerUtils.getAllRelevantMethodInvocations(condition, analyzer));
     }

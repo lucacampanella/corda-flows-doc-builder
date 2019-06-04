@@ -30,8 +30,6 @@ public class TestUtils {
         XPath xPath = XPathFactory.newInstance().newXPath();
         String expression = "//text";
         NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET);
-        System.out.println(nodeList);
-        System.out.println(nodeList.item(0));
 
         for(int i = 0; i < nodeList.getLength(); ++i) {
             res.add(nodeList.item(i).getFirstChild().getTextContent());

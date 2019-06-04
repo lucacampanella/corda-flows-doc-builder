@@ -26,8 +26,7 @@ public class JarAnalyzer extends AnalyzerWithModel { //TODO: not all the flows a
 
     public JarAnalyzer(String pathToJar, String... additionalJars) {
 
-        printClasspath();
-        //System.exit(0);
+        //printClasspath();
 
         List<String> jarsList =
                 new LinkedList<String>();
@@ -61,7 +60,7 @@ public class JarAnalyzer extends AnalyzerWithModel { //TODO: not all the flows a
 
         model = jr.getModel();
 
-        System.out.println();
+
     }
 
     private static void printClasspath() {

@@ -44,11 +44,9 @@ public class AnalyzerWithModel {
         }
 
         AnalysisResult res = new AnalysisResult(klass.getSimpleName());
-        System.out.println("before matcher");
         final Branch interestingStatements = MatcherHelper.fromCtStatementsToStatements(
                 callMethod.getBody().getStatements(), this);
         res.setStatements(interestingStatements);
-        System.out.println("after matcher - interesting statements: " + interestingStatements);
 
         //is it only a "container" flow with no initiating call or also calls initiateFlow(...)?
         final boolean isInitiatingFlow =
@@ -57,7 +55,7 @@ public class AnalyzerWithModel {
         System.out.println("Contains initiate call? " + isInitiatingFlow);
         if(isInitiatingFlow) {
             CtClass initiatedFlowClass = getDeeperClassInitiatedBy(klass);
-            System.out.println();
+
             if(initiatedFlowClass != null) {
                 res.setCounterpartyClassResult(analyzeFlowLogicClass(initiatedFlowClass));
             }

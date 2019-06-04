@@ -23,8 +23,6 @@ public class FlowConstructor extends InstructionStatement {
 
     public static FlowConstructor fromStatement(CtStatement statement, AnalyzerWithModel analyzer) {
         FlowConstructor flowConstructor = new FlowConstructor(statement);
-        System.out.println("invoked getAllRelevantMethodInvocations for "
-                + statement + " class FlowConstructor");
         flowConstructor.internalMethodInvocations.add(StaticAnalyzerUtils.getAllRelevantMethodInvocations(statement,
                 analyzer));
 

@@ -28,8 +28,6 @@ public class SessionAssignment extends InstructionStatement {
             return null;
         }
         SessionAssignment sessionAssignment = new SessionAssignment(statement);
-        System.out.println("invoked getAllRelevantMethodInvocations for "
-                + statement + " class SessionAssignment");
         sessionAssignment.internalMethodInvocations.add(StaticAnalyzerUtils.
                 getAllRelevantMethodInvocations(statement, analyzer));
 

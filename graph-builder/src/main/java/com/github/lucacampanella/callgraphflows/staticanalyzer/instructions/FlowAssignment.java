@@ -33,8 +33,6 @@ public class FlowAssignment extends InstructionStatement {
         }
 
         FlowAssignment flowAssignment = new FlowAssignment(statement);
-        System.out.println("invoked getAllRelevantMethodInvocations for "
-                + statement + " class FlowAssignment");
         flowAssignment.internalMethodInvocations.add(
                 StaticAnalyzerUtils.getAllRelevantMethodInvocations(statement, analyzer));
 

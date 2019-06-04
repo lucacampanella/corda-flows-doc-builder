@@ -16,10 +16,6 @@ public class Drawer {
     private static final String DEFAULT_OUT_DIR = "build" + FILE_SEP + "graphs" + FILE_SEP;
 
     public static void drawAllStartableClasses(AnalyzerWithModel analyzerWithModel, String outPath) {
-
-        System.out.println("All matcher names: " + MatcherHelper.getAllMatcherNames());
-        System.out.println("All matchers: " + MatcherHelper.getAllMatchers());
-
         if(!outPath.endsWith(FILE_SEP)) {
             outPath = outPath + FILE_SEP;
         }
@@ -27,11 +23,7 @@ public class Drawer {
         System.out.println("Found these classes annotated with @StartableByRPC: ");
         for (CtClass klass : startableByRPCClasses) {
             System.out.println("**** Analyzing class " + klass.getQualifiedName() + " TEST");
-            System.out.println("Here");
-            System.out.flush();
             try {
-                System.out.println("before drawFromClass call");
-                System.out.flush();
                 new File(outPath).mkdirs();
                 drawFromClass(analyzerWithModel, klass, outPath + klass.getQualifiedName() + ".svg");
             } catch (IOException e) {
@@ -45,7 +37,6 @@ public class Drawer {
     }
 
     public static void drawFromClass(AnalyzerWithModel analyzerWithModel, CtClass klass, String outPath) throws IOException {
-        System.out.println("before AnalysisResult call");
         final AnalysisResult analysisResult = analyzerWithModel.analyzeFlowLogicClass(klass);
 
         GGraphBuilder graphBuilder = new GGraphBuilder();
