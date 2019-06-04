@@ -66,12 +66,6 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
 //            );
 //        });
 
-//        project.getTasks().create("myTask", MyTask.class);
-//        //project.getTasksByName("myTask", false).forEach((task) -> project.;
-//        project.getTasksByName("build", false).forEach( (task) -> {
-//            task.finalizedBy("myTask");
-//        });
-
         final File jarExecutable = project.getBuildscript().getConfigurations().getByName("classpath").getFiles()
                 .stream().filter((file) -> file.getName().startsWith("graph-builder")).findFirst().orElseThrow(() -> new RuntimeException());
 
