@@ -29,4 +29,8 @@ allprojects {
 //    }
         mavenLocal()
     }
+
+    test {
+        useJUnitPlatform()
+    }
 }

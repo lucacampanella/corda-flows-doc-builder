@@ -12,13 +12,18 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FlowsDocBuilderPluginTest {
-    private static final File sampleProjectDirectory = new File("../../simple-flow-project");
-    static final File outputDir = new File("../../simple-flow-project/graphs");
+
+    private static final Path upperDir = Paths.get(System.getProperty("user.dir")).getParent();
+
+    private static final File sampleProjectDirectory = Paths.get(upperDir.toString(), "simple-flow-project").toFile();
+    private static final File outputDir = Paths.get(sampleProjectDirectory.toString(), "graphs").toFile();
 
     @BeforeEach
     void setUp() throws IOException {
@@ -32,6 +37,8 @@ class FlowsDocBuilderPluginTest {
 
         final BuildResult buildResult = GradleRunner.create().withProjectDir(sampleProjectDirectory)
                 .withPluginClasspath().withArguments("JarAnalyzerTask").build();
+        //todo: copy only the important files, not caches and so on, this may also allow to fire up different gradle
+        //versions
 
         System.out.println(buildResult.getOutput());
 
@@ -46,9 +53,10 @@ class FlowsDocBuilderPluginTest {
 
     @Test
     void outputIsCorrect() throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
-        //we check directly the XML file
+
+       //we check directly the XML file
         final List<String> nodeContents = TestUtils.parseXMLFile(outputDir.toString()
-                + "/com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.SimpleFlowTest$Initiator.svg");
+                + "/com.github.lucacampanella.testclasses.SimpleFlowTest$Initiator.svg");
 
         assertThat(nodeContents).hasSize(4);
         assertThat(nodeContents).contains("[52] initiateFlow(session)",
