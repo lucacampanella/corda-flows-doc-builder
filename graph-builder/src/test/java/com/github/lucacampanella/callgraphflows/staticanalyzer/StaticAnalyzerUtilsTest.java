@@ -6,6 +6,8 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.ExtendingSuperclassTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.InitiatorBaseFlow;
 import net.corda.core.flows.StartableByRPC;
+import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import spoon.Launcher;
 import spoon.compiler.SpoonResourceHelper;
@@ -15,8 +17,10 @@ import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.factory.Factory;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +30,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class StaticAnalyzerUtilsTest {
+
+    @BeforeAll
+    static void setUp() {
+        final boolean mkdirs = Paths.get(System.getProperty("user.dir"), Drawer.DEFAULT_OUT_DIR).toFile().mkdirs();
+    }
 
     @Test
     public void findCallMethod() throws FileNotFoundException {
@@ -140,7 +149,11 @@ public class StaticAnalyzerUtilsTest {
 
         final List<CtClass> startableClasses = analyzer.getClassesByAnnotation(StartableByRPC.class);
         for (CtClass clazz : startableClasses) {
-            Drawer.drawFromClass(analyzer, clazz, toBeAnalyzed.getSimpleName() + ".svg");
+            System.out.println(Drawer.DEFAULT_OUT_DIR + toBeAnalyzed.getSimpleName() + ".svg");
+            final File file = new File(Drawer.DEFAULT_OUT_DIR + toBeAnalyzed.getSimpleName() + ".svg");
+            System.out.println(file.getAbsolutePath());
+            System.out.println(file.exists());
+            Drawer.drawFromClass(analyzer, clazz, Drawer.DEFAULT_OUT_DIR + toBeAnalyzed.getSimpleName() + ".svg");
         }
     }
 

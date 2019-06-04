@@ -13,10 +13,13 @@ import java.util.List;
 
 public class Drawer {
     private static final String FILE_SEP = System.getProperty("file.separator");
-    private static final String DEFAULT_OUT_DIR = "build" + FILE_SEP + "graphs" + FILE_SEP;
+    public static final String DEFAULT_OUT_DIR = "build" + FILE_SEP + "graphs" + FILE_SEP;
 
     public static void drawAllStartableClasses(AnalyzerWithModel analyzerWithModel, String outPath) {
-        if(!outPath.endsWith(FILE_SEP)) {
+        if(outPath == null) {
+            outPath = DEFAULT_OUT_DIR;
+        }
+        else if(!outPath.endsWith(FILE_SEP)) {
             outPath = outPath + FILE_SEP;
         }
         final List<CtClass> startableByRPCClasses = analyzerWithModel.getClassesByAnnotation(StartableByRPC.class);

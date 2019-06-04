@@ -63,6 +63,7 @@ application {
 //}
 
 
+
 task copyTestJarToResources(type: Copy) {
     //println sourceSets.test.resources.srcDirs
     //println sourceSets.test.output.resourcesDir
@@ -72,6 +73,8 @@ task copyTestJarToResources(type: Copy) {
 }
 
 task createTestJar(type: Jar) {
+    println "#1234567890"
+    println sourceSets.test.output.asPath
     baseName = "JarAnalyzerTestJar"
     from {
         sourceSets.test.output
@@ -84,15 +87,32 @@ task createTestJar(type: Jar) {
     jar.includeEmptyDirs false
     //with jar
 }
-copyTestJarToResources.dependsOn(createTestJar)
-build.dependsOn(copyTestJarToResources)
 
+tasks.withType(Test).each{it -> it.dependsOn(copyTestJarToResources)}
 
-tasks.withType(JavaCompile) {
-    doFirst {
-        project.copy {
-            from "./src/main/java/com/github/lucacampanella/callgraphflows/staticanalyzer/matchers/MatcherContainer.java"
-            into "./src/main/resources/"
-        }
-    }
+//processTestResources {
+//    from buildDir.toURI().toURL().toString() + "/libs/JarAnalyzerTestJar-" + version + ".jar"
+//}
+
+processResources {
+    println "1234567890"
+    println sourceSets.main.java.filter {it.toString().endsWith("MatcherContainer.java")}.first().toString()
+    from sourceSets.main.java.filter {it.toString().endsWith("MatcherContainer.java")}.first().toString()
+    // "./src/main/java/com/github/lucacampanella/callgraphflows/staticanalyzer/matchers/MatcherContainer.java"
 }
+
+
+copyTestJarToResources.dependsOn(createTestJar)
+//tasks.withType(JavaCompile).all(it -> copyTestJarToResources.dependsOn(it))
+//copyTestJarToResources.dependsOn()
+//build.dependsOn(copyTestJarToResources)
+
+//
+//tasks.withType(JavaCompile) {
+//    doFirst {
+//        project.copy {
+//            from "./src/main/java/com/github/lucacampanella/callgraphflows/staticanalyzer/matchers/MatcherContainer.java"
+//            into "./src/main/resources/"
+//        }
+//    }
+//}

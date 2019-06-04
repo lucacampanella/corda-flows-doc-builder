@@ -37,7 +37,7 @@ public class MethodInvocation extends InstructionStatement {
             CtAbstractInvocation inv = (CtAbstractInvocation) statement;
 
             if (StaticAnalyzerUtils.isCordaMethod(inv)) { //this should never happen
-                System.out.println("Error");
+                System.out.println("Error"); //todo: this happens
                 return null;
             }
 
