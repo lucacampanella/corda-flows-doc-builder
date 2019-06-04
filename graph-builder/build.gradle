@@ -65,11 +65,12 @@ application {
 
 
 task copyTestJarToResources(type: Copy) {
+    println "56+5665+ copytask executed"
     //println sourceSets.test.resources.srcDirs
     //println sourceSets.test.output.resourcesDir
     from buildDir.toURI().toURL().toString() + "/libs/JarAnalyzerTestJar-" + version + ".jar";
     //into sourceSets.test.output.resourcesDir
-    into "./src/test/resources/"
+    into sourceSets.test.output.resourcesDir
 }
 
 task createTestJar(type: Jar) {

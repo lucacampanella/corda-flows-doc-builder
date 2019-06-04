@@ -13,6 +13,7 @@ class JarAnalyzerTest extends AnalyzerWithModelTest {
         System.out.println(testURL);
         System.out.println(new File(testURL.getFile()).toString() + ": " + new File(testURL.getFile()).exists());
         final URL jarURL = JarAnalyzerTest.class.getClassLoader().getResource("JarAnalyzerTestJar-1.0-SNAPSHOT.jar");
+        System.out.println(jarURL);
         analyzerWithModel = new JarAnalyzer(jarURL.getPath());
     }
 }
