@@ -7,6 +7,7 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.Dependency;
+import org.gradle.api.artifacts.PublishArtifact;
 import org.gradle.api.artifacts.query.ArtifactResolutionQuery;
 import org.gradle.api.artifacts.result.ArtifactResolutionResult;
 import org.gradle.api.component.SoftwareComponent;
@@ -20,7 +21,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class FlowsDocBuilderPlugin implements Plugin<Project> {
 
@@ -70,52 +73,16 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
 //        });
 
 
-//        System.out.println(project.getConfigurations());
-//        for (Configuration conf : project.getConfigurations()) {
-//            System.out.println(conf);
-//        if(conf.toString().equals("configuration ':apiElements'") || conf.toString().equals("configuration ':implementation'"))
-//            continue;
-//
-//            conf.forEach(System.out::println);
-//            System.out.println(conf.getAllDependencies().size());
-//            conf.getAllDependencies().forEach(System.out::println);
-//        }
-//
-//        System.out.println(project.getRepositories().size());
-//        project.getRepositories().forEach((rep) -> {
-//            System.out.println(rep.getName());
-//        });
-//
-//        final Configuration lol = project.getConfigurations().create("lol");
-//
-//        project.getDependencies().add("lol", "" +
-//                "project(path: ':graph-builder', configuration: 'shadow')");
-//
-//        project.getConfigurations().getByName("lol").getFiles().forEach(System.out::println);
+        System.out.println(project.getBuildscript().getConfigurations().getByName("classpath").getAllDependencies());
 
-//        final ArtifactResolutionResult result = project.getDependencies().createArtifactResolutionQuery().
-//                forModule("com.github.lucacampanella", "graph-builder", "1.0-SNAPSHOT-all")
-//                .withArtifacts(Application.class, SourcesArtifact.class)
-//                .execute();
-//        System.out.println(result);
-//        result.getComponents().forEach((comp) -> {
-//            System.out.println(comp);
-//            System.out.println(comp.getId());
-//            final SoftwareComponent softComp = project.getComponents().getByName(comp.getId().getDisplayName());
-//            System.out.println(softComp);
-//        });
+        final File jarExecutable = project.getBuildscript().getConfigurations().getByName("classpath").getFiles()
+                .stream().filter((file) -> file.getName().startsWith("graph-builder")).findFirst().orElseThrow(() -> new RuntimeException());
 
-//        project.getConfigurations().forEach((conf) -> {
-//            System.out.println(conf);
-//            conf.getFiles().forEach(System.out::println);
-//        });
+        System.out.println(jarExecutable);
 
-
-        //project(path: ':graph-builder', configuration: 'shadow')
 
         final TaskCollection<Jar> jarTasks = project.getTasks().withType(Jar.class);
-        String pathToExecJar =
-                "/Users/camp/projects/corda-flows-doc-builder/graph-builder/build/libs/graph-builder-1.0-SNAPSHOT-all.jar";
+        String pathToExecJar = jarExecutable.getPath();
 
         int i = 0;
         for(Jar task : jarTasks) {

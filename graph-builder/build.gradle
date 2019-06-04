@@ -43,7 +43,6 @@ dependencies {
     testImplementation('org.junit.jupiter:junit-jupiter:5.4.2')
     testImplementation("org.assertj:assertj-core:3.11.1")
     testImplementation project(":test-utils").sourceSets.test.output
-
 }
 
 application {

@@ -14,7 +14,7 @@ import spoon.reflect.declaration.CtType;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.github.lucacampanella.callgraphflows.testUtils.TestUtils.fromClassSrcToPath;
+import static com.github.lucacampanella.TestUtils.fromClassSrcToPath;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AnalyzerWithModelTest {

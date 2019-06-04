@@ -5,7 +5,8 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subcl
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.InitiatorBaseFlow;
 import org.junit.jupiter.api.BeforeAll;
 
-import static com.github.lucacampanella.callgraphflows.testUtils.TestUtils.fromClassSrcToPath;
+import static com.github.lucacampanella.TestUtils.fromClassSrcToPath;
+
 
 class SourceClassAnalyzerTest extends AnalyzerWithModelTest {
 
