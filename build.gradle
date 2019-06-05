@@ -13,9 +13,7 @@ reckon {
     scopeFromProp()
     stageFromProp('beta', 'rc', 'final')
 }
-if (System.getenv('CI') == null) {
-    project.version = "0.0.0-SNAPSHOT"
-}
+
 task version {
     doLast {
         if (project.findProperty('reckon.stage')) {
@@ -29,6 +27,10 @@ task version {
 }
 
 allprojects {
+    if (System.getenv('CI') == null) {
+        println "CI == null"
+        project.version = '0.0.0-SNAPSHOT'
+    }
 
     apply plugin: 'java'
 

@@ -13,10 +13,6 @@ plugins {
 }
 apply plugin: 'com.github.johnrengelman.shadow'
 
-group 'com.github.lucacampanella'
-version '1.0-SNAPSHOT'
-
-sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
@@ -68,7 +64,8 @@ task copyTestJarToResources(type: Copy) {
     println "56+5665+ copytask executed"
     //println sourceSets.test.resources.srcDirs
     //println sourceSets.test.output.resourcesDir
-    from buildDir.toURI().toURL().toString() + "/libs/JarAnalyzerTestJar-" + version + ".jar";
+//    from buildDir.toURI().toURL().toString() + "/libs/JarAnalyzerTestJar-" + version + ".jar";
+    from buildDir.toURI().toURL().toString() + "/libs/JarAnalyzerTestJar.jar";
     //into sourceSets.test.output.resourcesDir
     into sourceSets.test.output.resourcesDir
 }
@@ -76,7 +73,7 @@ task copyTestJarToResources(type: Copy) {
 task createTestJar(type: Jar) {
     println "#1234567890"
     println sourceSets.test.output.asPath
-    baseName = "JarAnalyzerTestJar"
+    archiveName = "JarAnalyzerTestJar.jar"
     from {
         sourceSets.test.output
         //configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
@@ -85,7 +82,7 @@ task createTestJar(type: Jar) {
     //include '**/testclasses/ExtendingSuperclassTestFlow.class'
     //include '**/InitiatorBaseFlow.class'
     //include '**/DoubleExtendingSuperclassTestFlow.class'
-    jar.includeEmptyDirs false
+    includeEmptyDirs false
     //with jar
 }
 
