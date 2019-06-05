@@ -1,10 +1,31 @@
 plugins {
     id 'com.gradle.build-scan' version '2.3'
+    id 'com.github.ben-manes.versions' version '0.21.0' // task: dependencyUpdates
+    id 'org.ajoberstar.reckon' version '0.11.0'
 }
 
 buildScan {
     termsOfServiceUrl = 'https://gradle.com/terms-of-service'
     termsOfServiceAgree = 'yes'
+}
+
+reckon {
+    scopeFromProp()
+    stageFromProp('beta', 'rc', 'final')
+}
+if (System.getenv('CI') == null) {
+    project.version = "0.0.0-SNAPSHOT"
+}
+task version {
+    doLast {
+        if (project.findProperty('reckon.stage')) {
+            println "to tag and release a new version use:"
+            println "git tag -a '${project.version}' -m '${project.version}' && git push origin '${project.version}'"
+        } else {
+            println "to figure out the next version run:"
+            println "CI=true ./gradlew version -Preckon.scope=[major,minor,patch] -Preckon.stage=[rc,final]"
+        }
+    }
 }
 
 allprojects {
@@ -15,10 +36,12 @@ allprojects {
         corda_release_group = 'net.corda'
         corda_release_version = '4.0'
         spoon_version = '7.4.0' //TODO: understand how to propagate this
+        assertj_version = '3.12.2'
+        junit5_version = '5.4.2'
     }
     
     group 'com.github.lucacampanella'
-    version '0.0.1-SNAPSHOT'
+    //version '0.0.1-SNAPSHOT'
 
     sourceCompatibility = 1.8
 

@@ -45,6 +45,8 @@ public class MethodInvocation extends InstructionStatement {
                 CtInvocation methodInv = (CtInvocation) statement;
 
                 if (methodInv.getTarget() instanceof CtInvocation) { //the target is the "inner" invocation
+                    //todo: this makes the "Error" happen, if the corda method is a target invocation is called from here
+                    //think about how to resolve this and what implications in has
                     MethodInvocation targetInv = MethodInvocation.fromCtStatement((CtInvocation) methodInv.getTarget(), analyzer);
                     methodInvocation.internalMethodInvocations.addIfRelevant(targetInv);
                 }

@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.3'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.0.0'
     }
 }
 
@@ -48,9 +48,9 @@ dependencies {
     implementation "org.jfree:jfreesvg:3.4"
 
     //testImplementation group: 'junit', name: 'junit', version: '4.12'
-    testImplementation('org.junit.jupiter:junit-jupiter:5.4.2')
-    testImplementation("org.assertj:assertj-core:3.11.1")
-    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.4.2')
+    testImplementation("org.junit.jupiter:junit-jupiter:$junit5_version")
+    testImplementation("org.assertj:assertj-core:$assertj_version")
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:$junit5_version')
     testImplementation project(":test-utils").sourceSets.test.output
 }
 
