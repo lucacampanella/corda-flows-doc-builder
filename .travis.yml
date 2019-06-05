@@ -4,7 +4,7 @@ install: true
 jdk:
   - oraclejdk8
 
-#before_script: cat /home/travis/build/luca-campanella/corda-flows-doc-builder/graph-builder/build/reports/tests/test/index.html
+#before_script: cat /home/travis/build/lucacampanella/corda-flows-doc-builder/graph-builder/build/reports/tests/test/index.html
 
 script:
   - ./gradlew build --scan -s --info

@@ -1,5 +1,5 @@
-# Corda flows doc builder
-Gradle plugin to automatically generate graph that represent Corda flows interactions
+# Corda flows doc builder plugin
+Gradle plugin to automatically generate graph that represent Corda flows interactions. 
 
 ## Getting Started
 
