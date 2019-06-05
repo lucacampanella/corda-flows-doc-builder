@@ -129,3 +129,4 @@ gradle-app.setting
 ### Gradle Patch ###
 **/build/
 
+secret-keys.gpg

@@ -39,8 +39,8 @@ gradlePlugin {
 }
 
 pluginBundle {
-    website = 'https://github.com/luca-campanella/corda-flows-doc-builder'
-    vcsUrl = 'https://github.com/luca-campanella/corda-flows-doc-builder'
+    website = 'https://github.com/lucacampanella/corda-flows-doc-builder'
+    vcsUrl = 'https://github.com/lucacampanella/corda-flows-doc-builder.git'
     tags = ['documentation', 'docs', 'corda', 'cordaledger', 'flow', 'graph']
 }
 

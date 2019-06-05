@@ -4,6 +4,8 @@ buildscript {
     }
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:5.0.0'
+//--------------------------------------- Added for publishing on sonartype
+        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
     }
 }
 
@@ -14,6 +16,8 @@ plugins {
     id 'maven-publish'
 }
 apply plugin: 'com.github.johnrengelman.shadow'
+//--------------------------------------- Added for publishing on sonartype
+apply plugin: 'com.bmuschko.nexus'
 
 artifactory {
     contextUrl = "${artifactory_contextUrl}"   //The base Artifactory URL if not overridden by the publisher/resolver
@@ -51,13 +55,52 @@ publishing {
     }
 }
 
+//--------------------------------------- Added for publishing on sonartype
+//archivesBaseName = 'graph-builder'
+//modifyPom {
+//    project {
+//        name 'corda-flows-doc-builder'
+//        description 'Library that builds graphs regarding Croda flows, useful for documentation'
+//        url 'https://bitbucket.org/objdict/objjson'
+//        inceptionYear '2018'
+//        scm {
+//            url 'https://github.com/lucacampanella/corda-flows-doc-builder'
+//            connection 'scm:https://github.com/lucacampanella/corda-flows-doc-builder.git'
+//            developerConnection 'scm:git://github.com/lucacampanella/corda-flows-doc-builder.git'
+//        }
+//        licenses {
+//            license {
+//                name 'The Apache Software License, Version 2.0'
+//                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//                distribution 'repo'
+//            }
+//        }
+//        developers {
+//            developer {
+//                id 'lucacampanella'
+//                name 'Luca Campanella'
+//                email 'luca.campanella1@gmail.com'
+//            }
+//        }
+//    }
+//}
+//extraArchive {
+//    sources = true
+//    tests = true
+//    javadoc = true
+//}
+//nexus {
+//    sign = true
+//    repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+//    snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+//}
+
+//-------------------------------
+
 build.dependsOn(publish)
 
 repositories {
     mavenCentral()
-//    maven {
-//        url 'http://maven.inria.fr/artifactory/spoon-public-snapshot'
-//    }
     mavenLocal()
 
     flatDir {
@@ -66,8 +109,6 @@ repositories {
 }
 
 dependencies {
-
-    //compile "ch.adnovum.sb4b:corda-flow-base:0.2.1903271115"
     implementation "$corda_release_group:corda-core:$corda_release_version"
     implementation "fr.inria.gforge.spoon:spoon-core:$spoon_version"
 
@@ -78,7 +119,6 @@ dependencies {
 
     implementation "org.jfree:jfreesvg:3.4"
 
-    //testImplementation group: 'junit', name: 'junit', version: '4.12'
     testImplementation("org.junit.jupiter:junit-jupiter:$junit5_version")
     testImplementation("org.assertj:assertj-core:$assertj_version")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:$junit5_version")
@@ -89,63 +129,24 @@ application {
     mainClassName = 'com.github.lucacampanella.callgraphflows.Main'
 }
 
-//processResources {
-//    from("./src/main/java/com/github/lucacampanella/callgraphflows/staticanalyzer/matchers/MatcherContainer.java")
-//}
-
-
-
 task copyTestJarToResources(type: Copy) {
-    println "56+5665+ copytask executed"
-    //println sourceSets.test.resources.srcDirs
-    //println sourceSets.test.output.resourcesDir
-//    from buildDir.toURI().toURL().toString() + "/libs/JarAnalyzerTestJar-" + version + ".jar";
     from buildDir.toURI().toURL().toString() + "/libs/JarAnalyzerTestJar.jar";
-    //into sourceSets.test.output.resourcesDir
     into sourceSets.test.output.resourcesDir
 }
 
 task createTestJar(type: Jar) {
-    println "#1234567890"
-    println sourceSets.test.output.asPath
     archiveName = "JarAnalyzerTestJar.jar"
     from {
         sourceSets.test.output
-        //configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
     include '**/testclasses/subclassestests/*.class'
-    //include '**/testclasses/ExtendingSuperclassTestFlow.class'
-    //include '**/InitiatorBaseFlow.class'
-    //include '**/DoubleExtendingSuperclassTestFlow.class'
     includeEmptyDirs false
-    //with jar
 }
 
 tasks.withType(Test).each{it -> it.dependsOn(copyTestJarToResources)}
 
-//processTestResources {
-//    from buildDir.toURI().toURL().toString() + "/libs/JarAnalyzerTestJar-" + version + ".jar"
-//}
-
 processResources {
-    println "1234567890"
-    println sourceSets.main.java.filter {it.toString().endsWith("MatcherContainer.java")}.first().toString()
     from sourceSets.main.java.filter {it.toString().endsWith("MatcherContainer.java")}.first().toString()
-    // "./src/main/java/com/github/lucacampanella/callgraphflows/staticanalyzer/matchers/MatcherContainer.java"
 }
 
-
 copyTestJarToResources.dependsOn(createTestJar)
-//tasks.withType(JavaCompile).all(it -> copyTestJarToResources.dependsOn(it))
-//copyTestJarToResources.dependsOn()
-//build.dependsOn(copyTestJarToResources)
-
-//
-//tasks.withType(JavaCompile) {
-//    doFirst {
-//        project.copy {
-//            from "./src/main/java/com/github/lucacampanella/callgraphflows/staticanalyzer/matchers/MatcherContainer.java"
-//            into "./src/main/resources/"
-//        }
-//    }
-//}
