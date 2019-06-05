@@ -64,7 +64,7 @@ public interface StatementInterface {
     }
 
     /**
-     * @returnan optional containing initiateFlow call if present at this level, meaning that it doesn't
+     * @return an optional containing initiateFlow call if present at this level, meaning that it doesn't
      * look into subFlows
      */
     default Optional<InitiateFlow> getInitiateFlowStatementAtThisLevel() {
