@@ -40,6 +40,9 @@ allprojects {
         spoon_version = '7.4.0' //TODO: understand how to propagate this
         assertj_version = '3.12.2'
         junit5_version = '5.4.2'
+        artifactory_contextUrl = 'http://localhost:8081/artifactory/'
+        artifactory_user = 'admin'
+        artifactory_password = 'JFr0g4rt1f4ct0ry'
     }
     
     group 'com.github.lucacampanella'

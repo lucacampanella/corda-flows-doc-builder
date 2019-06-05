@@ -2,6 +2,7 @@ plugins {
     id 'java-library'
     id 'maven'
     id 'java-gradle-plugin'
+    id "com.gradle.plugin-publish" version "0.10.1"
 }
 
 
@@ -12,7 +13,6 @@ dependencies {
     //api project(":graph-builder")
     compile project(path: ':graph-builder', configuration: 'shadow')
 
-
     //api "$corda_release_group:corda-core:$corda_release_version"
     //implementation "$corda_release_group:corda-core:$corda_release_version"
 
@@ -22,7 +22,7 @@ dependencies {
     //testImplementation group: 'junit', name: 'junit', version: '4.12'
     testImplementation("org.junit.jupiter:junit-jupiter:$junit5_version")
     testImplementation("org.assertj:assertj-core:$assertj_version")
-    testRuntime('org.junit.jupiter:junit-jupiter-engine:$junit5_version')
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:$junit5_version")
     testImplementation project(":test-utils").sourceSets.test.output
 }
 
@@ -31,10 +31,19 @@ gradlePlugin {
     plugins {
         cordaFlowsDocBuilder {
             id = 'com.github.lucacampanella.plugin.flows-doc-builder-plugin'
+            displayName = 'corda flows doc builder plugin'
+            description = 'Gradle plugin to automatically generate graph that represent Corda flows interactions'
             implementationClass = 'com.github.lucacampanella.plugin.FlowsDocBuilderPlugin'
         }
     }
 }
+
+pluginBundle {
+    website = 'https://github.com/luca-campanella/corda-flows-doc-builder'
+    vcsUrl = 'https://github.com/luca-campanella/corda-flows-doc-builder'
+    tags = ['documentation', 'docs', 'corda', 'cordaledger', 'flow', 'graph']
+}
+
 
 //uploadArchives {
 //    repositories {

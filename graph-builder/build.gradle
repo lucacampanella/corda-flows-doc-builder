@@ -10,13 +10,48 @@ buildscript {
 plugins {
     id 'java'
     id 'application'
+    id "com.jfrog.artifactory" version "4.9.6"
+    id 'maven-publish'
 }
 apply plugin: 'com.github.johnrengelman.shadow'
 
+artifactory {
+    contextUrl = "${artifactory_contextUrl}"   //The base Artifactory URL if not overridden by the publisher/resolver
+    publish {
+        repository {
+            repoKey = 'gradle-dev-local'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+            maven = true
 
-repositories {
-    mavenCentral()
+        }
+    }
+    resolve {
+        repository {
+            repoKey = 'gradle-dev'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+            maven = true
+
+        }
+    }
 }
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+//            groupId = group
+//            artifactId = project.getName()
+//            version = project.version
+//
+//            from components.java
+            artifact file("build/graph-builder-" + project.version + ".jar")
+            println "publish called"
+        }
+    }
+}
+
+build.dependsOn(publish)
 
 repositories {
     mavenCentral()
@@ -46,7 +81,7 @@ dependencies {
     //testImplementation group: 'junit', name: 'junit', version: '4.12'
     testImplementation("org.junit.jupiter:junit-jupiter:$junit5_version")
     testImplementation("org.assertj:assertj-core:$assertj_version")
-    testRuntime('org.junit.jupiter:junit-jupiter-engine:$junit5_version')
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:$junit5_version")
     testImplementation project(":test-utils").sourceSets.test.output
 }
 
