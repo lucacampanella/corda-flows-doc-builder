@@ -114,7 +114,7 @@ dependencies {
     //FIXME: we should depend on the thing they should publish on the remote repo, bu have not done yet
     implementation "org.jboss.windup.decompiler.fernflower:fernflower:2.5.0.Final"
     implementation "org.benf:cfr:0.135"
-    implementation name: 'spoon-decompiler-0.1.0-SNAPSHOT'//"fr.inria.gforge.spoon:spoon-decompiler:0.1.0-SNAPSHOT"
+    //implementation name: 'spoon-decompiler-0.1.0-SNAPSHOT'//"fr.inria.gforge.spoon:spoon-decompiler:0.1.0-SNAPSHOT"
 
     implementation "org.jfree:jfreesvg:3.4"
 
@@ -123,6 +123,13 @@ dependencies {
     testRuntime("org.junit.jupiter:junit-jupiter-engine:$junit5_version")
     testImplementation project(":test-utils").sourceSets.test.output
 }
+
+//jar {
+//    from configurations.implementation.collect {
+//
+//        it.isDirectory() ? it : zipTree(it)
+//    }
+//}
 
 application {
     mainClassName = 'com.github.lucacampanella.callgraphflows.Main'
