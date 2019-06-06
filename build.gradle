@@ -13,7 +13,6 @@ plugins {
     id 'com.github.ben-manes.versions' version '0.21.0' // task: dependencyUpdates
     id 'org.ajoberstar.reckon' version '0.11.0'
 }
-apply plugin: 'com.jfrog.bintray'
 
 buildScan {
     termsOfServiceUrl = 'https://gradle.com/terms-of-service'
@@ -83,19 +82,15 @@ allprojects {
 // releases
 subprojects {
     if (sourceSets.main.allSource.isEmpty()) {
+        println "returned empty from subproject " + project.name
         return // excluding test-only subprojects
     }
-
 
     apply plugin: 'maven-publish'
 
     task sourcesJar(type: Jar, dependsOn: classes) {
         classifier = 'sources'
         from sourceSets.main.allSource
-    }
-
-    javadoc {
-        options.addStringOption('Xdoclint:none', '-quiet')
     }
 
     task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -126,8 +121,7 @@ subprojects {
 
     // bintray
     apply plugin: 'com.jfrog.bintray'
-    def isReleaseBuild = false; //todo: automatically change this
-    // project.version.toString().matches("[0-9.]+") // no "rc" or "snapshot"
+    def isReleaseBuild = project.version.toString().matches("[0-9.]+") // no "rc" or "snapshot"
     bintray {
         user = 'lucacampanella'
         key = System.getenv('BINTRAY_TOKEN')
@@ -141,7 +135,7 @@ subprojects {
 
             websiteUrl = project.url
             vcsUrl = project.git_url
-            githubRepo = project.git_url
+            //githubRepo = project.git_url
             licenses = ['Apache-2.0']
             labels = ['configuration']
             version {
