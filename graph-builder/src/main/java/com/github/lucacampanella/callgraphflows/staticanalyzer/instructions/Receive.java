@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class Receive extends InstructionStatement implements StatementWithCompanionInterface {
 
-    private static final String SYMBOL = "◀";
+    private static final String SYMBOL = "<==";
 
     String receivedType;
 

@@ -59,8 +59,8 @@ class FlowsDocBuilderPluginTest {
 
         assertThat(nodeContents).hasSize(4);
         assertThat(nodeContents).contains("[52] initiateFlow(session)",
-                "[53] ▶◀ sendAndReceive(◀ <<String>>, ▶ <<Boolean>>)▶◀",
-                "[32] ◀ receive(<<Boolean>>) ◀", "[33] ▶ send(<<String>>) ▶");
+                "[53] ==><== sendAndReceive(<== <<String>>, ==> <<Boolean>>)==><==",
+                "[32] <== receive(<<Boolean>>) <==", "[33] ==> send(<<String>>) ==>");
 
     }
 }
