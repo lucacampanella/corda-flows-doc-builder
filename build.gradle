@@ -1,8 +1,19 @@
+// bintray
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+    }
+}
+
 plugins {
     id 'com.gradle.build-scan' version '2.3'
     id 'com.github.ben-manes.versions' version '0.21.0' // task: dependencyUpdates
     id 'org.ajoberstar.reckon' version '0.11.0'
 }
+apply plugin: 'com.jfrog.bintray'
 
 buildScan {
     termsOfServiceUrl = 'https://gradle.com/terms-of-service'
@@ -25,10 +36,10 @@ task version {
         }
     }
 }
+reckonTagCreate.dependsOn "build"
 
 allprojects {
     if (System.getenv('CI') == null) {
-        println "CI == null"
         project.version = '0.0.0-SNAPSHOT'
     }
 
@@ -40,9 +51,9 @@ allprojects {
         spoon_version = '7.4.0' //TODO: understand how to propagate this
         assertj_version = '3.12.2'
         junit5_version = '5.4.2'
-        artifactory_contextUrl = 'http://localhost:8081/artifactory/'
-        artifactory_user = 'admin'
-        artifactory_password = 'JFr0g4rt1f4ct0ry'
+        short_description='Gradle plugin to automatically generate graph that represent Corda flows interactions.'
+        url='https://github.com/lucacampanella/corda-flows-doc-builder'
+        git_url = url + ".git"
     }
     
     group 'com.github.lucacampanella'
@@ -52,17 +63,102 @@ allprojects {
 
     repositories {
         mavenCentral()
-//    maven {
-//        url 'http://maven.inria.fr/artifactory/spoon-public-snapshot'
-//    }
         mavenLocal()
     }
 
     test {
+        // junit5 support
         useJUnitPlatform()
-        testLogging {
-            events "failed"
-            exceptionFormat "short"
+
+        if (System.getenv('CI') != null) {
+            testLogging {
+                events "passed", "skipped", "failed"
+                exceptionFormat "full"
+            }
         }
     }
+}
+
+
+// releases
+subprojects {
+    if (sourceSets.main.allSource.isEmpty()) {
+        return // excluding test-only subprojects
+    }
+
+
+    apply plugin: 'maven-publish'
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    javadoc {
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+                artifact javadocJar
+                pom {
+                    name = project.name
+                    description = project.short_description
+                    url = project.url
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // bintray
+    apply plugin: 'com.jfrog.bintray'
+    def isReleaseBuild = false; //todo: automatically change this
+    // project.version.toString().matches("[0-9.]+") // no "rc" or "snapshot"
+    bintray {
+        user = 'lucacampanella'
+        key = System.getenv('BINTRAY_TOKEN')
+        publications = project.publishing.publications.collect{ it.name }
+        publish = isReleaseBuild //todo: fix
+
+        pkg {
+            repo = isReleaseBuild ? 'mvn-release' : 'mvn-snapshot'
+            name = project.name
+            desc = project.short_description
+
+            websiteUrl = project.url
+            vcsUrl = project.git_url
+            githubRepo = project.git_url
+            licenses = ['Apache-2.0']
+            labels = ['configuration']
+            version {
+                name = project.version
+                released = new Date()
+                mavenCentralSync {
+                    sync = false
+                }
+            }
+        }
+    }
+
+    bintrayUpload {
+        dependsOn publishToMavenLocal
+        doFirst {
+            Objects.requireNonNull(apiKey, 'missing bintray token')
+        }
+    }
+    publish.dependsOn bintrayUpload
 }
