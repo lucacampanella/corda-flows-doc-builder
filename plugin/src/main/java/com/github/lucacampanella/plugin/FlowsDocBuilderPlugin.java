@@ -86,8 +86,11 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
                 System.out.println("Run task " + taskName + " to generate graph documents for file " + task.getArchiveName());
 
                 javaExecTask.setMain("-jar");
+                System.out.println("after set jar");
                 javaExecTask.args(pathToExecJar, path, "./graphs");
+                System.out.println("after set path");
                 javaExecTask.dependsOn(task);
+                System.out.println("after set dependOn");
         }
     }
 
