@@ -124,20 +124,22 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
         System.out.println("Found " + jarTasks.size() + " jar tasks");
 
         for(Jar task : jarTasks) {
-                final String path = task.getArchivePath().getAbsolutePath();
+            System.out.println("Task " + task.getName());
+
+            final String path = task.getArchivePath().getAbsolutePath();
 
             final String taskName = task.getName() + "AnalyzerTask";
 
             final JavaExec javaExecTask = project.getTasks().create(taskName, JavaExec.class);
 
-                System.out.println("Run task " + taskName + " to generate graph documents for file " + task.getArchiveName());
+             System.out.println("Run task " + taskName + " to generate graph documents for file " + task.getArchiveName());
 
-                javaExecTask.setMain("-jar");
-                System.out.println("after set jar");
-                javaExecTask.args(pathToExecJar, path, "./graphs");
-                System.out.println("after set path");
-                javaExecTask.dependsOn(task);
-                System.out.println("after set dependOn");
+             javaExecTask.setMain("-jar");
+             System.out.println("after set jar");
+             javaExecTask.args(pathToExecJar, path, "./graphs");
+             System.out.println("after set path");
+             javaExecTask.dependsOn(task);
+             System.out.println("after set dependOn");
         }
     }
 
