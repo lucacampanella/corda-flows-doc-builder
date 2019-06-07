@@ -19,6 +19,8 @@ import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FlowsDocBuilderPlugin implements Plugin<Project> {
 
@@ -121,14 +123,15 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
         final TaskCollection<Jar> jarTasks = project.getTasks().withType(Jar.class);
         String pathToExecJar = dowloadedJarExecutable.getAbsolutePath(); ///jarExecutable.getPath();
 
+        List<Jar> jarTasksList = new ArrayList<>(jarTasks.size());
         System.out.println("Found " + jarTasks.size() + " jar tasks");
         for(Jar task : jarTasks) {
             System.out.println(task.getName());
-            final JavaExec javaExecTask = project.getTasks().create(task.getName(), JavaExec.class);
+            jarTasksList.add(task);
         }
+        System.out.println("List created");
 
-
-        for(Jar task : jarTasks) {
+        for(Jar task : jarTasksList) {
             System.out.println("Task " + task.getName());
 
             final String path = task.getArchivePath().getAbsolutePath();
