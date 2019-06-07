@@ -69,14 +69,21 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
         final File jarExecutable = project.getBuildscript().getConfigurations().getByName("classpath").getFiles()
                 .stream().filter((file) -> file.getName().startsWith("graph-builder")).findFirst().orElseThrow(() -> new RuntimeException());
 
+        System.out.println("Found plugin file in: " + jarExecutable.getPath());
+
         final TaskCollection<Jar> jarTasks = project.getTasks().withType(Jar.class);
         String pathToExecJar = jarExecutable.getPath();
+
+        System.out.println("Found " + jarTasks.size() + " jar tasks");
 
         for(Jar task : jarTasks) {
                 final String path = task.getArchivePath().getAbsolutePath();
 
-                final JavaExec javaExecTask = project.getTasks().create(task.getName()
-                        + "AnalyzerTask", JavaExec.class);
+            final String taskName = task.getName() + "AnalyzerTask";
+
+            final JavaExec javaExecTask = project.getTasks().create(taskName, JavaExec.class);
+
+                System.out.println("Run task " + taskName + " to generate graph documents for file " + task.getArchiveName());
 
                 javaExecTask.setMain("-jar");
                 javaExecTask.args(pathToExecJar, path, "./graphs");
