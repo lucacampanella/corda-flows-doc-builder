@@ -157,4 +157,6 @@ subprojects {
         }
     }
     publish.dependsOn bintrayUpload
+
+    bintrayUpload.onlyIf { System.getenv('CI') != null }
 }

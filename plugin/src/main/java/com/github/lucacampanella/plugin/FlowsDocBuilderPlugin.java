@@ -1,29 +1,24 @@
 package com.github.lucacampanella.plugin;
 
 
-import com.github.lucacampanella.callgraphflows.staticanalyzer.JarAnalyzer;
-import groovy.lang.Closure;
+import org.apache.commons.io.FileUtils;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
-import org.gradle.api.artifacts.Configuration;
-import org.gradle.api.artifacts.Dependency;
-import org.gradle.api.artifacts.PublishArtifact;
-import org.gradle.api.artifacts.query.ArtifactResolutionQuery;
-import org.gradle.api.artifacts.result.ArtifactResolutionResult;
-import org.gradle.api.component.SoftwareComponent;
+import org.gradle.api.artifacts.repositories.ArtifactRepository;
 import org.gradle.api.tasks.JavaExec;
 import org.gradle.api.tasks.TaskCollection;
+import org.gradle.internal.impldep.org.junit.After;
 import org.gradle.jvm.tasks.Jar;
-import org.gradle.language.base.artifact.SourcesArtifact;
-import org.gradle.platform.base.Application;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class FlowsDocBuilderPlugin implements Plugin<Project> {
 
@@ -66,13 +61,65 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
 //            );
 //        });
 
-        final File jarExecutable = project.getBuildscript().getConfigurations().getByName("classpath").getFiles()
-                .stream().filter((file) -> file.getName().startsWith("graph-builder")).findFirst().orElseThrow(() -> new RuntimeException());
 
-        System.out.println("Found plugin file in: " + jarExecutable.getPath());
+        /*project.getDependencies().create("runtime \"com.github.lucacampanella:graph-builder:0.59.0:all\"");
+        System .out.println(project.getConfigurations().getByName("runtime").getFiles().size());
+        project.getConfigurations().getByName("runtime").getFiles().forEach(System.out::println);*/
+
+//        final File jarExecutable = project.getBuildscript().getConfigurations().getByName("classpath").getFiles()
+//                .stream().filter((file) -> file.getName().startsWith("graph-builder")).findFirst()
+//                .orElseThrow(() -> new RuntimeException("Could not find executable jar"));
+
+        String version = "0.53.0";
+        String jarName = "graph-builder-" + version + "-all.jar";
+        String url = "https://dl.bintray.com/lucacampanella/mvn-release/com/github/lucacampanella/graph-builder/0.53.0/"
+                + jarName;
+
+        System.out.println(url);
+
+        File executableFolder = new File("tmp/");
+        executableFolder.mkdirs();
+        File dowloadedJarExecutable = Paths.get(executableFolder.getPath(), jarName).toFile();
+
+        System.out.println(executableFolder.getAbsolutePath());
+        System.out.println(dowloadedJarExecutable.getAbsolutePath());
+
+        try {
+            FileUtils.copyURLToFile(
+                    new URL(url),
+                    dowloadedJarExecutable,
+                    100000,
+                    100000);
+        } catch (IOException e) {
+            System.out.println("could not download file: \n");
+            e.printStackTrace();
+            new RuntimeException(e);
+        }
+
+
+//        ReadableByteChannel readChannel = null;
+//        try {
+//            readChannel = Channels.newChannel(new URL(url).openStream());
+//        } catch (IOException e) {
+//            System.out.println("could not open channel");
+//            new RuntimeException(e);
+//        }
+//
+//        FileOutputStream fileOS = null;
+//        try {
+//            fileOS = new FileOutputStream(dowloadedJarExecutable.getAbsolutePath());
+//            FileChannel writeChannel = fileOS.getChannel();
+//            writeChannel.transferFrom(readChannel, 0, Long.MAX_VALUE);
+//        } catch (IOException e) {
+//            System.out.println("could not write on file");
+//            new RuntimeException(e);
+//        }
+        System.out.println(System.getProperty("user.dir"));
+
+        //System.out.println("Found plugin file in: " + jarExecutable.getPath());
 
         final TaskCollection<Jar> jarTasks = project.getTasks().withType(Jar.class);
-        String pathToExecJar = jarExecutable.getPath();
+        String pathToExecJar = dowloadedJarExecutable.getAbsolutePath(); ///jarExecutable.getPath();
 
         System.out.println("Found " + jarTasks.size() + " jar tasks");
 
