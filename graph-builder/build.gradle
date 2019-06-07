@@ -130,6 +130,7 @@ dependencies {
 //        it.isDirectory() ? it : zipTree(it)
 //    }
 //}
+mainClassName = 'com.github.lucacampanella.callgraphflows.Main'
 
 application {
     mainClassName = 'com.github.lucacampanella.callgraphflows.Main'
