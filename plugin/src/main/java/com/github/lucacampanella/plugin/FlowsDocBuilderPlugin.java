@@ -122,6 +122,10 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
         String pathToExecJar = dowloadedJarExecutable.getAbsolutePath(); ///jarExecutable.getPath();
 
         System.out.println("Found " + jarTasks.size() + " jar tasks");
+        for(Jar task : jarTasks) {
+            System.out.println(task.getName());
+        }
+
 
         for(Jar task : jarTasks) {
             System.out.println("Task " + task.getName());
