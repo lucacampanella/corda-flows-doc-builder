@@ -124,6 +124,7 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
         System.out.println("Found " + jarTasks.size() + " jar tasks");
         for(Jar task : jarTasks) {
             System.out.println(task.getName());
+            final JavaExec javaExecTask = project.getTasks().create(task.getName(), JavaExec.class);
         }
 
 
