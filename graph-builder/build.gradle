@@ -157,3 +157,11 @@ processResources {
 }
 
 copyTestJarToResources.dependsOn(createTestJar)
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact shadowJar
+        }
+    }
+}
