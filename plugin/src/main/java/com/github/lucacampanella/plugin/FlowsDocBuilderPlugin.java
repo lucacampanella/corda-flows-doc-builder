@@ -1,6 +1,7 @@
 package com.github.lucacampanella.plugin;
 
 
+import groovy.lang.Closure;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.Action;
 import org.gradle.api.Plugin;
@@ -130,6 +131,8 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
         project.getRepositories().maven(
                 mavenArtifactRepository ->
                         mavenArtifactRepository.setUrl("https://dl.bintray.com/lucacampanella/mvn-release"));
+
+        config.setTransitive(false);
 
         final String dependency = "com.github.lucacampanella:graph-builder:0.231.0:all";
         System.out.println(dependency);
