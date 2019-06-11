@@ -39,7 +39,7 @@ gradlePlugin {
     plugins {
         cordaFlowsDocBuilder {
             id = 'com.github.lucacampanella.plugin.flows-doc-builder-plugin'
-//            displayName = 'corda flows doc builder plugin'  todo: change fro gradle 5
+            displayName = 'corda flows doc builder plugin' // todo: change fro gradle 5
             description = 'Gradle plugin to automatically generate graph that represent Corda flows interactions'
             implementationClass = 'com.github.lucacampanella.plugin.FlowsDocBuilderPlugin'
         }
