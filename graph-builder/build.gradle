@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.1'//5.0.0' todo: change fro gradle 5
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.0.0'//4.0.1'// todo: change fro gradle 5
 //--------------------------------------- Added for publishing on sonartype
 //        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
     }
@@ -96,7 +96,7 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 //-------------------------------
 
-//build.dependsOn(publish) //todo: change for gradle 5
+build.dependsOn(publish) //todo: change for gradle 5
 
 repositories {
     mavenCentral()
@@ -158,10 +158,10 @@ processResources {
 
 copyTestJarToResources.dependsOn(createTestJar)
 
-//publishing {
-//    publications {
-//        mavenJava(MavenPublication) {
-//            artifact shadowJar
-//        }
-//    }
-//} todo: change fro gradle 5
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact shadowJar
+        }
+    }
+} //todo: change fro gradle 5
