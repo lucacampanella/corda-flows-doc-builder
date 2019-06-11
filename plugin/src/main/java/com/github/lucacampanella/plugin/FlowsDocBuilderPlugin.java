@@ -126,7 +126,7 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
                 .setVisible(false)
                 .setDescription("The jar file needed to run the corda flows doc builder plugin");
 
-        final String dependency = "com.github.lucacampanella:graph-builder:0.0.0-SNAPSHOT:all";
+        final String dependency = "com.github.lucacampanella:graph-builder:0.231.0:all";
         System.out.println(dependency);
         config.defaultDependencies(dependencies ->
                 dependencies.add(project.getDependencies().create(dependency)));
