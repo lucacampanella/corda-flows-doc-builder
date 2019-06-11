@@ -2,15 +2,15 @@ buildscript {
     repositories {
         // Use jcenter for resolving your dependencies.
         // You can declare any Maven/Ivy/file repository here.
-        mavenLocal()
-        mavenCentral()
-        jcenter()
-//        maven {
-//            url "https://dl.bintray.com/lucacampanella/mvn-release"
-//        }
+//        mavenLocal()
+//        mavenCentral()
+//        jcenter()
+        maven {
+            url "https://dl.bintray.com/lucacampanella/mvn-release"
+        }
     }
     dependencies {
-        classpath "net.corda:corda-core:4.0"
+//        classpath "net.corda:corda-core:4.0"
         classpath "com.github.lucacampanella:plugin:+"
     }
 }
