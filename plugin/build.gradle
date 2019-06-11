@@ -16,7 +16,7 @@ dependencies {
 
     implementation gradleApi()
     implementation group: 'commons-io', name: 'commons-io', version: '2.6'
-    //api project(":graph-builder")
+    api project(":graph-builder")
     //compile project(path: ':graph-builder', configuration: 'shadow')
 
     //compile "com.github.lucacampanella:graph-builder:0.59.0:all"
@@ -39,7 +39,7 @@ gradlePlugin {
     plugins {
         cordaFlowsDocBuilder {
             id = 'com.github.lucacampanella.plugin.flows-doc-builder-plugin'
-            displayName = 'corda flows doc builder plugin'
+//            displayName = 'corda flows doc builder plugin'  todo: change fro gradle 5
             description = 'Gradle plugin to automatically generate graph that represent Corda flows interactions'
             implementationClass = 'com.github.lucacampanella.plugin.FlowsDocBuilderPlugin'
         }

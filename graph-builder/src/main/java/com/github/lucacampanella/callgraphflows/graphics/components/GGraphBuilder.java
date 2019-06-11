@@ -28,10 +28,10 @@ public class GGraphBuilder {
     public static GGraphBuilder fromAnalysisResult(AnalysisResult analysisResult) {
         GGraphBuilder graphBuilder = new GGraphBuilder();
 
-        graphBuilder.addSession(analysisResult.getClassName(), analysisResult.getStatements());
+        graphBuilder.addSession(analysisResult.getClassSimpleName(), analysisResult.getStatements());
         final AnalysisResult initiatedClassResult = analysisResult.getCounterpartyClassResult();
         if(initiatedClassResult != null) {
-            graphBuilder.addSession(initiatedClassResult.getClassName(), initiatedClassResult.getStatements());
+            graphBuilder.addSession(initiatedClassResult.getClassSimpleName(), initiatedClassResult.getStatements());
         }
 
         return graphBuilder;

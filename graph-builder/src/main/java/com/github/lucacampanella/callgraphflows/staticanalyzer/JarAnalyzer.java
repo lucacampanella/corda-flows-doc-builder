@@ -26,6 +26,8 @@ public class JarAnalyzer extends AnalyzerWithModel { //TODO: not all the flows a
 
     public JarAnalyzer(String pathToJar, String... additionalJars) {
 
+        analysisName = pathToJar.substring(pathToJar.lastIndexOf(System.getProperty("file.separator"))+1);
+
         //printClasspath();
 
         List<String> jarsList =

@@ -153,7 +153,7 @@ public class StaticAnalyzerUtilsTest {
             final File file = new File(Drawer.DEFAULT_OUT_DIR + toBeAnalyzed.getSimpleName() + ".svg");
             System.out.println(file.getAbsolutePath());
             System.out.println(file.exists());
-            Drawer.drawFromClass(analyzer, clazz, Drawer.DEFAULT_OUT_DIR + toBeAnalyzed.getSimpleName() + ".svg");
+            Drawer.drawFromClass(analyzer, clazz, Drawer.DEFAULT_OUT_DIR);
         }
     }
 

@@ -10,6 +10,10 @@ import java.util.List;
 
 public class SimpleFlowTestFlow {
 
+    /**
+     * These are javadoc comments that will appear in the asciidoc file and should describe the
+     * behaviour of the class
+     */
     @InitiatingFlow
     @StartableByRPC
     public static class Initiator extends FlowLogic<Void> {

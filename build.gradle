@@ -9,15 +9,15 @@ buildscript {
 }
 
 plugins {
-    id 'com.gradle.build-scan' version '2.3'
+    //id 'com.gradle.build-scan' version '2.3'
     id 'com.github.ben-manes.versions' version '0.21.0' // task: dependencyUpdates
     id 'org.ajoberstar.reckon' version '0.11.0'
 }
 
-buildScan {
-    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
-    termsOfServiceAgree = 'yes'
-}
+//buildScan {
+//    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+//    termsOfServiceAgree = 'yes'
+//}
 
 reckon {
     scopeFromProp()
@@ -80,83 +80,83 @@ allprojects {
 
 
 // releases
-subprojects {
-    if (sourceSets.main.allSource.isEmpty()) {
-        println "returned empty from subproject " + project.name
-        return // excluding test-only subprojects
-    }
-
-    apply plugin: 'maven-publish'
-
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
-
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        classifier = 'javadoc'
-        from javadoc.destinationDir
-    }
-
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-                artifact sourcesJar
-                artifact javadocJar
-                pom {
-                    name = project.name
-                    description = project.short_description
-                    url = project.url
-                    licenses {
-                        license {
-                            name = 'The Apache License, Version 2.0'
-                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // bintray
-    apply plugin: 'com.jfrog.bintray'
-    def isReleaseBuild = project.version.toString().matches("[0-9.]+") // no "rc" or "snapshot"
-    bintray {
-        user = 'lucacampanella'
-        key = System.getenv('BINTRAY_TOKEN')
-        publications = project.publishing.publications.collect{ it.name }
-        publish = isReleaseBuild //todo: fix
-
-        override = true
-        
-        pkg {
-            repo = isReleaseBuild ? 'mvn-release' : 'mvn-snapshot'
-            name = project.name
-            desc = project.short_description
-
-            websiteUrl = project.url
-            vcsUrl = project.git_url
-            //githubRepo = project.git_url
-            licenses = ['Apache-2.0']
-            labels = ['configuration']
-            version {
-                name = project.version
-                released = new Date()
-                mavenCentralSync {
-                    sync = false
-                }
-            }
-        }
-    }
-
-    bintrayUpload {
-        dependsOn publishToMavenLocal
-        doFirst {
-            Objects.requireNonNull(apiKey, 'missing bintray token')
-        }
-    }
-    publish.dependsOn bintrayUpload
-
-    bintrayUpload.onlyIf { System.getenv('CI') != null }
-}
+//subprojects {
+//    if (sourceSets.main.allSource.isEmpty()) {
+//        println "returned empty from subproject " + project.name
+//        return // excluding test-only subprojects
+//    }
+//
+//    apply plugin: 'maven-publish'
+//
+//    task sourcesJar(type: Jar, dependsOn: classes) {
+//        classifier = 'sources'
+//        from sourceSets.main.allSource
+//    }
+//
+//    task javadocJar(type: Jar, dependsOn: javadoc) {
+//        classifier = 'javadoc'
+//        from javadoc.destinationDir
+//    }
+//
+////    publishing {
+////        publications {
+////            mavenJava(MavenPublication) {
+////                from components.java
+////                artifact sourcesJar
+////                artifact javadocJar
+////                pom {
+////                    //name = project.name todo: change fro gradle 5
+////                    description = project.short_description
+////                    url = project.url
+////                    licenses {
+////                        license {
+////                            name = 'The Apache License, Version 2.0'
+////                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+////                        }
+////                    }
+////                }
+////            }
+////        }
+////    }
+//
+//    // bintray
+//    apply plugin: 'com.jfrog.bintray'
+//    def isReleaseBuild = project.version.toString().matches("[0-9.]+") // no "rc" or "snapshot"
+//    bintray {
+//        user = 'lucacampanella'
+//        key = System.getenv('BINTRAY_TOKEN')
+//        publications = project.publishing.publications.collect{ it.name }
+//        publish = isReleaseBuild //todo: fix
+//
+//        override = true
+//        
+//        pkg {
+//            repo = isReleaseBuild ? 'mvn-release' : 'mvn-snapshot'
+//            name = project.name
+//            desc = project.short_description
+//
+//            websiteUrl = project.url
+//            vcsUrl = project.git_url
+//            //githubRepo = project.git_url
+//            licenses = ['Apache-2.0']
+//            labels = ['configuration']
+//            version {
+//                name = project.version
+//                released = new Date()
+//                mavenCentralSync {
+//                    sync = false
+//                }
+//            }
+//        }
+//    }
+//
+//    bintrayUpload {
+//        dependsOn publishToMavenLocal
+//        doFirst {
+//            Objects.requireNonNull(apiKey, 'missing bintray token')
+//        }
+//    }
+//    publish.dependsOn bintrayUpload
+//
+//    bintrayUpload.onlyIf { System.getenv('CI') != null }
+//}

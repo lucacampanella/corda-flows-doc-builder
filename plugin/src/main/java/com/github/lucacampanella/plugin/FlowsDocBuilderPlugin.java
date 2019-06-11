@@ -118,17 +118,16 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
 //        }
         System.out.println(System.getProperty("user.dir"));
 
+//        System.out.println(project.getConfigurations().getByName("runtime").getFiles().size());
+//        project.getConfigurations().getByName("runtime").getFiles().forEach(System.out::println);
+
         //System.out.println("Found plugin file in: " + jarExecutable.getPath());
 
         final TaskCollection<Jar> jarTasks = project.getTasks().withType(Jar.class);
         String pathToExecJar = dowloadedJarExecutable.getAbsolutePath(); ///jarExecutable.getPath();
 
-        List<Jar> jarTasksList = new ArrayList<>(jarTasks.size());
+        List<Jar> jarTasksList = new ArrayList<>(jarTasks);
         System.out.println("Found " + jarTasks.size() + " jar tasks");
-        for(Jar task : jarTasks) {
-            System.out.println(task.getName());
-            jarTasksList.add(task);
-        }
         System.out.println("List created");
 
         for(Jar task : jarTasksList) {
@@ -144,10 +143,14 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
 
              javaExecTask.setMain("-jar");
              System.out.println("after set jar");
+             pathToExecJar = "/Users/camp/projects/corda-flows-doc-builder/graph-builder/build/libs/graph-builder-0.0.0-SNAPSHOT-all.jar"; //todo: remove
              javaExecTask.args(pathToExecJar, path, "./graphs");
              System.out.println("after set path");
              javaExecTask.dependsOn(task);
              System.out.println("after set dependOn");
+
+//            final RunnerTask runnerTask = project.getTasks().create(taskName, RunnerTask.class);
+//            runnerTask.setPathToJar(path);
         }
     }
 
