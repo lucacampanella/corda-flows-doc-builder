@@ -134,7 +134,7 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
 
         config.setTransitive(false);
 
-        final String dependency = "com.github.lucacampanella:graph-builder:0.231.0:all";
+        final String dependency = "com.github.lucacampanella:graph-builder:+:all";
         System.out.println(dependency);
         config.defaultDependencies(dependencies ->
                 dependencies.add(project.getDependencies().create(dependency)));
