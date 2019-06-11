@@ -34,9 +34,9 @@ class AnalyzerWithModelTest {
         assertThat(initiatingClasses).hasSize(1);
         final CtClass ctClass = initiatingClasses.get(0);
         final AnalysisResult analysisResult = analyzerWithModel.analyzeFlowLogicClass(ctClass);
-        assertThat(analysisResult.getClassName()).isEqualTo("InitiatorBaseFlow");
+        assertThat(analysisResult.getClassSimpleName()).isEqualTo("InitiatorBaseFlow");
         assertThat(analysisResult.getStatements()).hasSize(2);
-        assertThat(analysisResult.getCounterpartyClassResult().getClassName()).isEqualTo("Acceptor");
+        assertThat(analysisResult.getCounterpartyClassResult().getClassSimpleName()).isEqualTo("Acceptor");
         assertThat(analysisResult.getCounterpartyClassResult().getStatements()).hasSize(3);
     }
 

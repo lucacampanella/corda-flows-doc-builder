@@ -51,9 +51,9 @@ class FlowsDocBuilderPluginTest {
     }
 
     @Test
-    void outputIsCorrect() throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
+    void outputSVGIsCorrect() throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
 
-       //we check directly the XML file
+        //we check directly the XML file
         final List<String> nodeContents = TestUtils.parseXMLFile(outputDir.toString()
                 + "/com.github.lucacampanella.testclasses.SimpleFlowTest$Initiator.svg");
 
@@ -62,5 +62,15 @@ class FlowsDocBuilderPluginTest {
                 "[53] ==><== sendAndReceive(<== <<String>>, ==> <<Boolean>>)==><==",
                 "[32] <== receive(<<Boolean>>) <==", "[33] ==> send(<<String>>) ==>");
 
+    }
+
+    @Test
+    void outputAsciiDocIsCorrect() throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
+
+        //we check directly the XML file
+        final File outFile = new File(outputDir.toString()
+                + "/com.github.lucacampanella.testclasses.SimpleFlowTest$Initiator.adoc");
+
+        assertThat(outFile).exists();
     }
 }

@@ -4,16 +4,23 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.Stat
 
 public class AnalysisResult {
 
-    String className;
+    String classSimpleName;
+    String classFullyQualifiedName;
+    String classCommentForDocumentation;
     Branch statements = new Branch();
     AnalysisResult counterpartyClassResult = null;
 
-    public AnalysisResult(String className) {
-        this.className = className;
+    public AnalysisResult(String classSimpleName, String classFullyQualifiedName) {
+        this.classSimpleName = classSimpleName;
+        this.classFullyQualifiedName = classFullyQualifiedName;
+    }
+
+    public AnalysisResult(String classSimpleName) {
+        this.classSimpleName = classSimpleName;
     }
 
     public AnalysisResult() {
-        this.className = "No class";
+        this.classSimpleName = "No class";
     }
 
     public Branch getStatements() {
@@ -36,8 +43,8 @@ public class AnalysisResult {
         this.statements = statements;
     }
 
-    public String getClassName() {
-        return className;
+    public String getClassSimpleName() {
+        return classSimpleName;
     }
 
     public boolean containsValidProtocol() {
@@ -57,5 +64,17 @@ public class AnalysisResult {
             }
         }
         return false;
+    }
+
+    public void setClassCommentForDocumentation(String classCommentForDocumentation) {
+        this.classCommentForDocumentation = classCommentForDocumentation;
+    }
+
+    public String getClassCommentForDocumentation() {
+        return classCommentForDocumentation;
+    }
+
+    public String getClassFullyQualifiedName() {
+        return classFullyQualifiedName;
     }
 }

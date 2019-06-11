@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 public class AnalyzerWithModel {
     protected CtModel model;
+    protected String analysisName;
 
     public CtModel getModel() {
         return model;
@@ -43,7 +44,10 @@ public class AnalyzerWithModel {
             return null;
         }
 
-        AnalysisResult res = new AnalysisResult(klass.getSimpleName());
+        AnalysisResult res = new AnalysisResult(klass.getSimpleName(), klass.getQualifiedName());
+
+        res.setClassCommentForDocumentation(klass.getDocComment());
+
         final Branch interestingStatements = MatcherHelper.fromCtStatementsToStatements(
                 callMethod.getBody().getStatements(), this);
         res.setStatements(interestingStatements);
@@ -170,5 +174,9 @@ public class AnalyzerWithModel {
 
         return allClasses.stream().filter(klass -> klass.isSubtypeOf(superClass.getReference()))
                 .collect(Collectors.toList());
+    }
+
+    public String getAnalysisName() {
+        return analysisName;
     }
 }
