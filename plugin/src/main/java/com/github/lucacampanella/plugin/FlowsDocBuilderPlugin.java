@@ -2,8 +2,11 @@ package com.github.lucacampanella.plugin;
 
 
 import org.apache.commons.io.FileUtils;
+import org.gradle.api.Action;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.artifacts.repositories.ArtifactRepository;
 import org.gradle.api.tasks.JavaExec;
 import org.gradle.api.tasks.TaskCollection;
@@ -21,6 +24,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class FlowsDocBuilderPlugin implements Plugin<Project> {
 
@@ -72,31 +76,31 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
 //                .stream().filter((file) -> file.getName().startsWith("graph-builder")).findFirst()
 //                .orElseThrow(() -> new RuntimeException("Could not find executable jar"));
 
-        String version = "0.53.0";
-        String jarName = "graph-builder-" + version + "-all.jar";
-        String url = "https://dl.bintray.com/lucacampanella/mvn-release/com/github/lucacampanella/graph-builder/0.53.0/"
-                + jarName;
-
-        System.out.println(url);
-
-        File executableFolder = new File("tmp/");
-        executableFolder.mkdirs();
-        File dowloadedJarExecutable = Paths.get(executableFolder.getPath(), jarName).toFile();
-
-        System.out.println(executableFolder.getAbsolutePath());
-        System.out.println(dowloadedJarExecutable.getAbsolutePath());
-
-        try {
-            FileUtils.copyURLToFile(
-                    new URL(url),
-                    dowloadedJarExecutable,
-                    100000,
-                    100000);
-        } catch (IOException e) {
-            System.out.println("could not download file: \n");
-            e.printStackTrace();
-            new RuntimeException(e);
-        }
+//        String version = "0.53.0";
+//        String jarName = "graph-builder-" + version + "-all.jar";
+//        String url = "https://dl.bintray.com/lucacampanella/mvn-release/com/github/lucacampanella/graph-builder/0.53.0/"
+//                + jarName;
+//
+//        System.out.println(url);
+//
+//        File executableFolder = new File("tmp/");
+//        executableFolder.mkdirs();
+//        File dowloadedJarExecutable = Paths.get(executableFolder.getPath(), jarName).toFile();
+//
+//        System.out.println(executableFolder.getAbsolutePath());
+//        System.out.println(dowloadedJarExecutable.getAbsolutePath());
+//
+//        try {
+//            FileUtils.copyURLToFile(
+//                    new URL(url),
+//                    dowloadedJarExecutable,
+//                    100000,
+//                    100000);
+//        } catch (IOException e) {
+//            System.out.println("could not download file: \n");
+//            e.printStackTrace();
+//            new RuntimeException(e);
+//        }
 
 
 //        ReadableByteChannel readChannel = null;
@@ -118,13 +122,31 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
 //        }
         System.out.println(System.getProperty("user.dir"));
 
+        final Configuration config = project.getConfigurations().create("analyzerExecutable")
+                .setVisible(false)
+                .setDescription("The jar file needed to run the corda flows doc builder plugin");
+
+        final String dependency = "com.github.lucacampanella:graph-builder:0.0.0-SNAPSHOT:all";
+        System.out.println(dependency);
+        config.defaultDependencies(dependencies ->
+                dependencies.add(project.getDependencies().create(dependency)));
+
+        final Set<File> configFiles = config.getFiles();
+        System.out.println("configFiles = " + configFiles.size());
+        configFiles.forEach(System.out::println);
+
 //        System.out.println(project.getConfigurations().getByName("runtime").getFiles().size());
 //        project.getConfigurations().getByName("runtime").getFiles().forEach(System.out::println);
 
-        //System.out.println("Found plugin file in: " + jarExecutable.getPath());
 
         final TaskCollection<Jar> jarTasks = project.getTasks().withType(Jar.class);
-        String pathToExecJar = dowloadedJarExecutable.getAbsolutePath(); ///jarExecutable.getPath();
+        String pathToExecJar = configFiles.stream().map(file -> file.getPath()).filter(
+                path -> path.contains("graph-builder")).findFirst()
+                .orElseThrow(() -> new RuntimeException("Could not find executable jar"));
+        //dowloadedJarExecutable.getAbsolutePath(); ///jarExecutable.getPath();
+
+        System.out.println("Found plugin file in: " + pathToExecJar);
+
 
         List<Jar> jarTasksList = new ArrayList<>(jarTasks);
         System.out.println("Found " + jarTasks.size() + " jar tasks");
@@ -143,7 +165,7 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
 
              javaExecTask.setMain("-jar");
              System.out.println("after set jar");
-             pathToExecJar = "/Users/camp/projects/corda-flows-doc-builder/graph-builder/build/libs/graph-builder-0.0.0-SNAPSHOT-all.jar"; //todo: remove
+             //pathToExecJar = "/Users/camp/projects/corda-flows-doc-builder/graph-builder/build/libs/graph-builder-0.0.0-SNAPSHOT-all.jar"; //todo: remove
              javaExecTask.args(pathToExecJar, path, "./graphs");
              System.out.println("after set path");
              javaExecTask.dependsOn(task);
