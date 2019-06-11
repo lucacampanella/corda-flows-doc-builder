@@ -8,6 +8,7 @@ import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.artifacts.repositories.ArtifactRepository;
+import org.gradle.api.artifacts.repositories.MavenArtifactRepository;
 import org.gradle.api.tasks.JavaExec;
 import org.gradle.api.tasks.TaskCollection;
 import org.gradle.internal.impldep.org.junit.After;
@@ -125,6 +126,10 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
         final Configuration config = project.getConfigurations().create("analyzerExecutable")
                 .setVisible(false)
                 .setDescription("The jar file needed to run the corda flows doc builder plugin");
+
+        project.getRepositories().maven(
+                mavenArtifactRepository ->
+                        mavenArtifactRepository.setUrl("https://dl.bintray.com/lucacampanella/mvn-release"));
 
         final String dependency = "com.github.lucacampanella:graph-builder:0.231.0:all";
         System.out.println(dependency);
