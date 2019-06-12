@@ -4,6 +4,7 @@ import com.github.lucacampanella.TestUtils;
 import org.apache.commons.io.FileUtils;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -28,10 +29,10 @@ class FlowsDocBuilderPluginTest {
 
     private static final File sampleProjectDirectory = Paths.get(upperDir.toString(), "simple-flow-project").toFile();
     private static final File outputDir = Paths.get(sampleProjectDirectory.toString(),
-            "build", "reports", "flowsdocbuilder").toFile();
+            "build", "reports", "differentdir", "flowsdocbuilder").toFile();
 
-    @BeforeEach
-    void setUp() throws IOException {
+    @BeforeAll
+    static void setUp() throws IOException {
 //        tmpDir = Files.createTempDirectory("testTempDir").toFile();
 //        LOGGER.info(tmpDir);
 //

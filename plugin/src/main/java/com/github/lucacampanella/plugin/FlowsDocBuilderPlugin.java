@@ -35,13 +35,21 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
         LOGGER.info("Corda flows doc builder plugin: ");
         LOGGER.error(System.getProperty("user.dir"));
 
-        String pathToExecJar = findPathToExecJar(project);
+        String pathToExecJar;
+        try {
+            pathToExecJar = findPathToExecJar(project);
+        } catch(RuntimeException e) {
+            LOGGER.warn("*** Path to exec jar not found, must be specified in flowsdocbuilder DSL block" +
+                    "for plugin to work");
+            pathToExecJar = null;
+        }
         LOGGER.trace("Found plugin file in: " + pathToExecJar);
 
         final FlowsDocBuilderPluginExtention extension =
                 project.getExtensions().create("flowsdocbuilder", FlowsDocBuilderPluginExtention.class);
 
         final String outPath = extension.getOutPath();
+        extension.setPathToExecJar(pathToExecJar);
 
         final LogLevel gradleLogLevel = project.getLogging().getLevel();
 
@@ -53,12 +61,17 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
             final String path = task.getArchivePath().getAbsolutePath(); //if modified to the non deprecated call it doesn't work this doesn't work for cardossier-cordapp
             final String taskName = task.getName() + "AnalyzerTask";
             final JavaExec javaExecTask = project.getTasks().create(taskName, JavaExec.class);
+            final SetupJavaExecTaskArguments setupJavaExecTask = project.getTasks().create(taskName + "Configurator", SetupJavaExecTaskArguments.class);
+            javaExecTask.setMain("-jar");
+            javaExecTask.dependsOn(task);
+            javaExecTask.dependsOn(setupJavaExecTask);
+
+            setupJavaExecTask.setJavaExecTask(javaExecTask);
+            setupJavaExecTask.setPathToJar(path);
+            setupJavaExecTask.setDefaultPathToExecJar(pathToExecJar);
 
             LOGGER.info("Run task " + taskName + " to generate graph documents for file " + task.getArchiveName()); //idem
 
-            javaExecTask.setMain("-jar");
-            javaExecTask.args(pathToExecJar, path, "-o " + outPath);
-            javaExecTask.dependsOn(task);
         }
     }
 
