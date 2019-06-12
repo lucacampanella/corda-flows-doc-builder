@@ -21,8 +21,6 @@ import java.util.stream.Collectors;
 
 public class StaticAnalyzerUtils {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StaticAnalyzerUtils.class);
-
     private StaticAnalyzerUtils() {
         //private constructor to hide public one
     }

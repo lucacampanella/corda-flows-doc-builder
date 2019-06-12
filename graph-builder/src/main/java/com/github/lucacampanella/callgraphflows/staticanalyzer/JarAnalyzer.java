@@ -1,28 +1,13 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
-import net.corda.core.flows.InitiatedBy;
-import net.corda.core.flows.InitiatingFlow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import spoon.JarLauncher;
-import spoon.reflect.CtModel;
-import spoon.reflect.code.CtExpression;
-import spoon.reflect.declaration.CtAnnotation;
-import spoon.reflect.declaration.CtClass;
-import spoon.reflect.declaration.CtElement;
-import spoon.reflect.path.CtPath;
-import spoon.reflect.path.CtPathStringBuilder;
-import spoon.reflect.visitor.filter.AnnotationFilter;
-import spoon.reflect.visitor.filter.TypeFilter;
-import spoon.support.reflect.code.CtFieldReadImpl;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class JarAnalyzer extends AnalyzerWithModel { //TODO: not all the flows are really recognized, debug
     
@@ -34,9 +19,7 @@ public class JarAnalyzer extends AnalyzerWithModel { //TODO: not all the flows a
 
         //printClasspath();
 
-        List<String> jarsList =
-                new LinkedList<String>();
-        //jarsList.add("./flow-callgraph-drawer/lib/corda-flow-base-0.2.1903271115.jar");
+        List<String> jarsList = new LinkedList<>();
 
         jarsList.add(pathToJar);
         if(additionalJars.length > 0) {
@@ -45,21 +28,17 @@ public class JarAnalyzer extends AnalyzerWithModel { //TODO: not all the flows a
 
         CustomJarLauncher jr = new CustomJarLauncher(jarsList);
 
-//        final InputStream dependenciesTxt = JarAnalyzer.class.getClassLoader().getResourceAsStream("DependenciesToBeAdded.txt");
-//
+//        final InputStream dependenciesTxt = JarAnalyzer.class.getClassLoader().getResourceAsStream("DependenciesToBeAdded.txt");//
 //        final String[] paths = new BufferedReader(new InputStreamReader(dependenciesTxt)).lines()
 //                .filter(str -> str.contains(".jar"))
-//                .toArray(String[]::new);
-//
+//                .toArray(String[]::new);//
 //        for(String path : paths) {
 //           LOGGER.trace("|" + path + "|");
-//        }
-//
+//        }//
 //        jr.getEnvironment().setSourceClasspath(paths);
 
 
         //LOGGER.trace("CLASSPATH = " + jr.getEnvironment().getSourceClasspath());
-
         //jr.getEnvironment().setNoClasspath(false);
 
         jr.buildModel();

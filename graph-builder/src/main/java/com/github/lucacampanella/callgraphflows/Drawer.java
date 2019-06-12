@@ -16,6 +16,10 @@ import java.util.List;
 
 public class Drawer {
 
+    private Drawer() {
+        //private constuctor to hide public one
+    }
+
     private static final Logger LOGGER = LoggerFactory.getLogger(Drawer.class);
 
     private static final String FILE_SEP = System.getProperty("file.separator");

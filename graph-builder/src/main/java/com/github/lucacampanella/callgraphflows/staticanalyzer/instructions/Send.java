@@ -11,7 +11,7 @@ import spoon.reflect.declaration.CtTypedElement;
 import java.util.Optional;
 
 public class Send extends InstructionStatement implements StatementWithCompanionInterface {
-    private static final String SYMBOL = "==>";//"==>";
+    private static final String SYMBOL = "==>";
 
 
     String sentType;

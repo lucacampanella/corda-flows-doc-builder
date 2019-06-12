@@ -39,7 +39,7 @@ public class GSubFlowWithCounterparty extends GBaseGraphicComponent {
         Dimension dim = new Dimension();
         dim.height = mainSubFlow.getDimensions(g2).height;
         if(hasCounterpartySubFlow()) {
-            //todo: this is a bit of an hack, we draw it somewhere else, just to understand where the
+            //this is a bit of an hack, we draw it somewhere else, just to understand where the
             //initiating statement would be placed
 
             int startXBackup = mainSubFlow.getStartX();
