@@ -10,6 +10,8 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUti
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import net.corda.core.flows.FlowLogic;
 import net.corda.core.flows.FlowSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spoon.reflect.code.*;
 import spoon.reflect.cu.position.NoSourcePosition;
 import spoon.reflect.declaration.CtParameter;
@@ -17,6 +19,8 @@ import spoon.reflect.declaration.CtParameter;
 import java.util.*;
 
 public class MethodInvocation extends InstructionStatement {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodInvocation.class);
 
     Branch body = new Branch();
     Map<String, String> callerSessionNameToCalleeSessionName = new HashMap<>();
@@ -37,7 +41,7 @@ public class MethodInvocation extends InstructionStatement {
             CtAbstractInvocation inv = (CtAbstractInvocation) statement;
 
             if (StaticAnalyzerUtils.isCordaMethod(inv)) { //this should never happen
-                System.out.println("Error"); //todo: this happens
+                LOGGER.warn("Error, a method invocation is created using a corda method"); //todo: this happens
                 return null;
             }
 
@@ -65,7 +69,7 @@ public class MethodInvocation extends InstructionStatement {
                     }
                 }
                 else {
-                    System.out.println("expr: " + expr +" of type " + expr.getType() + " " + expr.getShortRepresentation());
+                    LOGGER.trace("expr: {} of type {} {}", expr, expr.getType(), expr.getShortRepresentation());
                     if(expr.getType() != null) { //todo: I think this just means void, but test
                         if (expr.getType().isSubtypeOf(MatcherHelper.getTypeReference(FlowSession.class))) {
                             addToMapIfNoException(methodInvocation.callerSessionNameToCalleeSessionName, inv, i);
@@ -85,7 +89,7 @@ public class MethodInvocation extends InstructionStatement {
                         inv.getExecutable().getDeclaration().getBody().getStatements(), analyzer);
                 methodInvocation.body.addIfRelevant(bodyStatements);
             } catch (NullPointerException e) {
-                System.out.println("Couldn't retrieve the body of method" + inv.toString() + ", adding an empty one");
+                LOGGER.warn("Couldn't retrieve the body of method {} adding an empty one", inv.toString(), e);
             }
             methodInvocation.buildGraphElem();
         }
@@ -115,7 +119,7 @@ public class MethodInvocation extends InstructionStatement {
                     ((CtParameter) inv.getExecutable().getDeclaration().getParameters().get(i))
                             .getSimpleName());
         }catch (NullPointerException e) {
-            System.out.println("Error while retrieving parameter name for method: " + inv);
+            LOGGER.warn("Error while retrieving parameter name for method: {}", inv.toString(), e);
         }
     }
 

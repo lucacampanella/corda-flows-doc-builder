@@ -9,6 +9,8 @@ import net.corda.core.flows.StartableByRPC;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spoon.Launcher;
 import spoon.compiler.SpoonResourceHelper;
 import spoon.reflect.code.CtInvocation;
@@ -30,6 +32,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class StaticAnalyzerUtilsTest {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(StaticAnalyzerUtilsTest.class);
 
     @BeforeAll
     static void setUp() {
@@ -149,10 +153,10 @@ public class StaticAnalyzerUtilsTest {
 
         final List<CtClass> startableClasses = analyzer.getClassesByAnnotation(StartableByRPC.class);
         for (CtClass clazz : startableClasses) {
-            System.out.println(Drawer.DEFAULT_OUT_DIR + toBeAnalyzed.getSimpleName() + ".svg");
+            LOGGER.info("{}{}.svg", Drawer.DEFAULT_OUT_DIR, toBeAnalyzed.getSimpleName());
             final File file = new File(Drawer.DEFAULT_OUT_DIR + toBeAnalyzed.getSimpleName() + ".svg");
-            System.out.println(file.getAbsolutePath());
-            System.out.println(file.exists());
+            LOGGER.info("{}", file.getAbsolutePath());
+            LOGGER.info("{}", file.exists());
             Drawer.drawFromClass(analyzer, clazz, Drawer.DEFAULT_OUT_DIR);
         }
     }
@@ -163,7 +167,7 @@ public class StaticAnalyzerUtilsTest {
 //                .get(SubFlowInitializationTest.class);
 //        final Map<CtClass, CtClass> initiatedClassToInitiatingMap =
 //                SourceClassAnalyzer.getInitiatedClassToInitiatingMap(toBeTestedClass);
-//        System.out.println(initiatedClassToInitiatingMap);
+//        LOGGER.trace(initiatedClassToInitiatingMap);
 //
 //        initiatedClassToInitiatingMap.forEach((initiatedClass, initiatingClass) ->
 //                StaticAnalyzer.checkTwoClassesAndBuildGraphs(
@@ -175,7 +179,7 @@ public class StaticAnalyzerUtilsTest {
 //        CtClass<?> toBeTestedClass = getFactory(Arrays.asList(klass)).Class().get(klass);
 //        final Map<CtClass, CtClass> initiatedClassToInitiatingMap =
 //                SourceClassAnalyzer.getInitiatedClassToInitiatingMap(toBeTestedClass);
-//        System.out.println(initiatedClassToInitiatingMap);
+//        LOGGER.trace(initiatedClassToInitiatingMap);
 //
 //        initiatedClassToInitiatingMap.forEach((initiatedClass, initiatingClass) ->
 //                assertEquals(expectedRes, StaticAnalyzer.checkTwoClassesAndBuildGraphs(

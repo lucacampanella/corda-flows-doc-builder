@@ -3,6 +3,8 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer;
 import com.github.lucacampanella.callgraphflows.graphics.components.GGraphBuilder;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import net.corda.core.flows.InitiatedBy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spoon.reflect.CtModel;
 import spoon.reflect.code.CtExpression;
 import spoon.reflect.declaration.CtAnnotation;
@@ -21,6 +23,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class AnalyzerWithModel {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AnalyzerWithModel.class);
+
     protected CtModel model;
     protected String analysisName;
 
@@ -38,7 +43,7 @@ public class AnalyzerWithModel {
 
 
     public AnalysisResult analyzeFlowLogicClass(CtClass klass) {
-        System.out.println("*** analyzing sub-class " + klass.getQualifiedName());
+        LOGGER.info("*** analyzing sub-class " + klass.getQualifiedName());
         final CtMethod callMethod = StaticAnalyzerUtils.findCallMethod(klass);
         if(callMethod == null) {
             return null;
@@ -56,7 +61,7 @@ public class AnalyzerWithModel {
         final boolean isInitiatingFlow =
                 interestingStatements.getInitiateFlowStatementAtThisLevel().isPresent();
 
-        System.out.println("Contains initiate call? " + isInitiatingFlow);
+        LOGGER.debug("Contains initiate call? " + isInitiatingFlow);
         if(isInitiatingFlow) {
             CtClass initiatedFlowClass = getDeeperClassInitiatedBy(klass);
 
@@ -83,7 +88,7 @@ public class AnalyzerWithModel {
 //
 //        List<CtClass> wrongDoubleAnnotatedClasses = StaticAnalyzer.getAllWronglyDoubleAnnotatedClasses(initiatingClasses);
 //
-//        wrongDoubleAnnotatedClasses.forEach(klass -> System.out.println("*** WARNING: the class " +
+//        wrongDoubleAnnotatedClasses.forEach(klass -> LOGGER.warn("*** WARNING: the class " +
 //                klass.getSimpleName() + " contains the annotation @InitiatingFlow, but is already subclass" +
 //                " of a class containing such annotation, please remove it."));
 //

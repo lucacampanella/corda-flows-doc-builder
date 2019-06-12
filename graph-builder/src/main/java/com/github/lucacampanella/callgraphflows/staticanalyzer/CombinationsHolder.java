@@ -1,12 +1,17 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
 public class CombinationsHolder {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(CombinationsHolder.class);
+    
     private List<Branch> allCombinations = new LinkedList<>();
 
     public CombinationsHolder(boolean addEmptyCombination) {
@@ -140,9 +145,9 @@ public class CombinationsHolder {
             StatementWithCompanionInterface statementLeft = (StatementWithCompanionInterface) instrLeft;
             StatementWithCompanionInterface statementRight = (StatementWithCompanionInterface) instrRight;
 
-            System.out.println("\n Round " + i++);
-            System.out.println(statementLeft);
-            System.out.println(statementRight);
+            LOGGER.trace("\n Round {}", i++);
+            LOGGER.trace("{}", statementLeft);
+            LOGGER.trace("{}", statementRight);
 
             if(!(statementLeft instanceof SendAndReceive) || ((SendAndReceive) statementLeft).isSentConsumed()) {
                 initiatingQueue.remove(); //we remove the statement of the queue
@@ -153,7 +158,7 @@ public class CombinationsHolder {
             }
 
             if(!statementLeft.acceptCompanion(statementRight)) {
-                System.out.println("**** ERROR in flow logic!");
+                LOGGER.warn("**** ERROR in flow logic!");
 
                 return false;
             }

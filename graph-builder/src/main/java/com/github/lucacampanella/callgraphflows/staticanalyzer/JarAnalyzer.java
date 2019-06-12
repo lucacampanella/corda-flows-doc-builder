@@ -2,6 +2,8 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
 import net.corda.core.flows.InitiatedBy;
 import net.corda.core.flows.InitiatingFlow;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spoon.JarLauncher;
 import spoon.reflect.CtModel;
 import spoon.reflect.code.CtExpression;
@@ -23,6 +25,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class JarAnalyzer extends AnalyzerWithModel { //TODO: not all the flows are really recognized, debug
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(JarAnalyzer.class);
 
     public JarAnalyzer(String pathToJar, String... additionalJars) {
 
@@ -48,13 +52,13 @@ public class JarAnalyzer extends AnalyzerWithModel { //TODO: not all the flows a
 //                .toArray(String[]::new);
 //
 //        for(String path : paths) {
-//            System.out.println("|" + path + "|");
+//           LOGGER.trace("|" + path + "|");
 //        }
 //
 //        jr.getEnvironment().setSourceClasspath(paths);
 
 
-        //System.out.println("CLASSPATH = " + jr.getEnvironment().getSourceClasspath());
+        //LOGGER.trace("CLASSPATH = " + jr.getEnvironment().getSourceClasspath());
 
         //jr.getEnvironment().setNoClasspath(false);
 
@@ -71,7 +75,7 @@ public class JarAnalyzer extends AnalyzerWithModel { //TODO: not all the flows a
         URL[] urls = ((URLClassLoader)cl).getURLs();
 
         for(URL url: urls){
-            System.out.println(url.getFile());
+            LOGGER.trace(url.getFile());
         }
     }
 }

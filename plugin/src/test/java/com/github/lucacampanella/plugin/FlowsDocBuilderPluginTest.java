@@ -6,6 +6,8 @@ import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -20,6 +22,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class FlowsDocBuilderPluginTest {
 
+    private static Logger LOGGER = LoggerFactory.getLogger(FlowsDocBuilderPluginTest.class);
+
     private static final Path upperDir = Paths.get(System.getProperty("user.dir")).getParent();
 
     private static final File sampleProjectDirectory = Paths.get(upperDir.toString(), "simple-flow-project").toFile();
@@ -28,11 +32,10 @@ class FlowsDocBuilderPluginTest {
     @BeforeEach
     void setUp() throws IOException {
 //        tmpDir = Files.createTempDirectory("testTempDir").toFile();
-//        System.out.println(tmpDir);
+//        LOGGER.info(tmpDir);
 //
 //        FileUtils.copyDirectory(sampleProjectDirectory, tmpDir);
 
-        //System.out.println(System.getProperty("user.dir"));
         FileUtils.deleteDirectory(outputDir);
 
         final BuildResult buildResult = GradleRunner.create().withProjectDir(sampleProjectDirectory)
@@ -40,8 +43,8 @@ class FlowsDocBuilderPluginTest {
         //todo: copy only the important files, not caches and so on, this may also allow to fire up different gradle
         //versions
 
-        System.out.println(buildResult.getOutput());
-        System.out.println(buildResult);
+        LOGGER.info("{}", buildResult.getOutput());
+        LOGGER.info("{}", buildResult);
     }
 
     @Test

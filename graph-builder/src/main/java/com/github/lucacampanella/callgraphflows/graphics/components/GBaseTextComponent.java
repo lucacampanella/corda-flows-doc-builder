@@ -52,7 +52,7 @@ public class GBaseTextComponent extends GBaseGraphicComponent {
         Dimension res = new Dimension(
                 GUtils.doubleToInt(stringBounds.getWidth()/1.02) + 2*getBorderDim(),
                 GUtils.doubleToInt(stringBounds.getHeight()) + 2*getBorderDim());
-        //System.out.println(stringBounds + " : " + res);
+        //LOGGER.trace(stringBounds + " : " + res);
         return res;
     }
 
