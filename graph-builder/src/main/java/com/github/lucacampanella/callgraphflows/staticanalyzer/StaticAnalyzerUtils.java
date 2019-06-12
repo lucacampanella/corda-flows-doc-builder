@@ -3,6 +3,8 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import net.corda.core.flows.FlowSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spoon.reflect.code.CtAbstractInvocation;
 import spoon.reflect.code.CtLiteral;
 import spoon.reflect.code.CtStatement;
@@ -18,6 +20,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class StaticAnalyzerUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(StaticAnalyzerUtils.class);
 
     private StaticAnalyzerUtils() {
         //private constructor to hide public one
@@ -264,24 +268,24 @@ public class StaticAnalyzerUtils {
 //    public static boolean checkTwoClassesAndBuildGraphs(CtClass initiatingClass, CtClass initiatedClass,
 //                                                      String pathToOutFolder) {
 //
-//        System.out.println(initiatedClass);
+//        LOGGER.trace(initiatedClass);
 //
 //        CtMethod callMethodInitiating = StaticAnalyzer.findCallMethod(initiatingClass);
 //        if(callMethodInitiating == null) {//TODO: is this fine? Why is there the tag but then no method?
-//            System.out.println("Didn't find a call method in class " + initiatingClass.getSimpleName());
+//            LOGGER.trace("Didn't find a call method in class " + initiatingClass.getSimpleName());
 //            return false;
 //        }
 //
 //        List<CtStatement> initiatingInterestingCalls =
 //                MatcherHelper.findInterestingCtStatements(callMethodInitiating);
-////        System.out.println("Initiating class: " + initiatingClass.getQualifiedName());
+////        LOGGER.trace("Initiating class: " + initiatingClass.getQualifiedName());
 ////        for(int i = 0; i < initiatingInterestingCalls.size(); ++i) {
-////            System.out.println("[" + i + "] " + initiatingInterestingCalls.get(i));
+////            LOGGER.trace("[" + i + "] " + initiatingInterestingCalls.get(i));
 ////        }
 //
 //        CtMethod callMethodInitiated = StaticAnalyzer.findCallMethod(initiatedClass);
 //        if(callMethodInitiated == null) { //TODO: is this fine? Why is there the tag but then no method?
-//            System.out.println("Didn't find a call method in class " + initiatedClass.getSimpleName());
+//            LOGGER.trace("Didn't find a call method in class " + initiatedClass.getSimpleName());
 //            return false;
 //        }
 //
@@ -295,14 +299,14 @@ public class StaticAnalyzerUtils {
 //        final List<List<StatementInterface>> allCombinationsLeft = createAllCombinations(branchLeft.getStatements());
 //
 //        for(List<StatementInterface> comb : allCombinationsLeft) {
-//            System.out.println("**** New combination ****");
-//            comb.forEach(System.out::println);
+//            LOGGER.trace("**** New combination ****");
+//            comb.forEach(LOGGER::trace);
 //        }
 //
 //        final List<CombinationWithSessions> combinationWithSessionsLeft = allCombinationsLeft.stream()
 //                .map(CombinationWithSessions::new).collect(Collectors.toList());
 //
-//        System.out.println(combinationWithSessionsLeft);
+//        LOGGER.trace(combinationWithSessionsLeft);
 //
 //
 //        final List<StatementInterface> statementsRight = Utils.fromCtStatementsToBaseStatementsNoNulls(initiatedInterestingCalls);
@@ -313,13 +317,13 @@ public class StaticAnalyzerUtils {
 //        final List<CombinationWithSessions> combinationWithSessionsRight = allCombinationsRight.stream()
 //                .map(CombinationWithSessions::new).collect(Collectors.toList());
 //
-//        System.out.println(combinationWithSessionsRight);
+//        LOGGER.trace(combinationWithSessionsRight);
 //
-//        System.out.println("\n**** Right ****\n");
+//        LOGGER.trace("\n**** Right ****\n");
 //
 //        for(List<StatementInterface> comb : allCombinationsRight) {
-//            System.out.println("**** New combination ****");
-//            comb.forEach(System.out::println);
+//            LOGGER.trace("**** New combination ****");
+//            comb.forEach(LOGGER::trace);
 //        }
 //
 //        boolean foundOneCombination = false;
@@ -345,7 +349,7 @@ public class StaticAnalyzerUtils {
 //            }
 //        }
 //        if(foundOneCombination) {
-//            System.out.println("found one combination");
+//            LOGGER.trace("found one combination");
 //            GGraphBuilder gb = new GGraphBuilder();
 //            gb.addSession(initiatingClass.getQualifiedName(), branchLeft);
 //            gb.addSession(initiatedClass.getQualifiedName(), branchRight);
@@ -356,7 +360,7 @@ public class StaticAnalyzerUtils {
 //                e.printStackTrace();
 //            }
 //        } else {
-//            System.out.println("No combination found");
+//            LOGGER.trace("No combination found");
 //        }
 //
 //        return foundOneCombination;
@@ -450,9 +454,9 @@ public class StaticAnalyzerUtils {
 //            StatementWithCompanionInterface statementLeft = (StatementWithCompanionInterface) instrLeft;
 //            StatementWithCompanionInterface statementRight = (StatementWithCompanionInterface) instrRight;
 //
-//            System.out.println("\n Round " + i++);
-//            System.out.println(statementLeft);
-//            System.out.println(statementRight);
+//            LOGGER.trace("\n Round " + i++);
+//            LOGGER.trace(statementLeft);
+//            LOGGER.trace(statementRight);
 //
 //            if(!(statementLeft instanceof SendAndReceive) || ((SendAndReceive) statementLeft).isSentConsumed()) {
 //                initiatingQueue.remove(); //we remove the statement of the queue
@@ -463,7 +467,7 @@ public class StaticAnalyzerUtils {
 //            }
 //
 //            if(!statementLeft.acceptCompanion(statementRight)) {
-//                System.out.println("**** ERROR in flow logic!");
+//                LOGGER.trace("**** ERROR in flow logic!");
 //
 //                return false;
 //            }

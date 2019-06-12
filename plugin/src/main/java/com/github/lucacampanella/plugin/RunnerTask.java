@@ -12,12 +12,12 @@ public class RunnerTask extends DefaultTask {
 //
 //    @TaskAction
 //    public void analyzeJar() {
-//        System.out.println("Runner task");
+//        LOGGER.trace("Runner task");
 //
-//        System.out.println(getProject().getConfigurations().getByName("runtime").getFiles().size());
+//        LOGGER.trace(getProject().getConfigurations().getByName("runtime").getFiles().size());
 //        getProject().getConfigurations().getByName("runtime").getFiles().forEach(System.out::println);
 //
-//        System.out.println("Before task running");
+//        LOGGER.trace("Before task running");
 //
 //        JarAnalyzer analyzer = new JarAnalyzer(pathToJar);
 //        try {

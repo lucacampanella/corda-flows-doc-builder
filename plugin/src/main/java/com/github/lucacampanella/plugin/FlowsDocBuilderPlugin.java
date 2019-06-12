@@ -8,6 +8,8 @@ import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.tasks.JavaExec;
 import org.gradle.api.tasks.TaskCollection;
 import org.gradle.jvm.tasks.Jar;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,10 +18,12 @@ import java.util.Set;
 
 public class FlowsDocBuilderPlugin implements Plugin<Project> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(FlowsDocBuilderPlugin.class);
+
     @Override
     public void apply(Project project) {
 
-        System.out.println("Corda flows doc builder plugin: ");
+        LOGGER.info("Corda flows doc builder plugin: ");
 
         final Configuration config = project.getConfigurations().create("analyzerExecutable")
                 .setVisible(false)
@@ -42,7 +46,7 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
                 path -> path.contains("graph-builder")).findFirst()
                 .orElseThrow(() -> new RuntimeException("Could not find executable jar"));
 
-        System.out.println("Found plugin file in: " + pathToExecJar);
+        LOGGER.trace("Found plugin file in: " + pathToExecJar);
 
 
         List<Jar> jarTasksList = new ArrayList<>(jarTasks);
@@ -53,7 +57,7 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
             final String taskName = task.getName() + "AnalyzerTask";
             final JavaExec javaExecTask = project.getTasks().create(taskName, JavaExec.class);
 
-            System.out.println("Run task " + taskName + " to generate graph documents for file " + task.getArchiveName()); //idem
+            LOGGER.info("Run task " + taskName + " to generate graph documents for file " + task.getArchiveName()); //idem
 
             javaExecTask.setMain("-jar");
             javaExecTask.args(pathToExecJar, path, "./build/generated/graphs");
