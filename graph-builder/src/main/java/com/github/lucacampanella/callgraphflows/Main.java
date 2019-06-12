@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
 
 public class Main implements Callable<Integer> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    private static Logger LOGGER;
 
     @CommandLine.Parameters(arity = "1", index="0", paramLabel = "JarFile", description = "Jar file to process.")
     private String inputJarPath;
@@ -32,6 +32,12 @@ public class Main implements Callable<Integer> {
 
     @Override
     public Integer call() throws IOException {
+        final String loggerLevel = System.getProperty("org.slf4j.simpleLogger.defaultLogLevel");
+        if(loggerLevel == null) {
+            System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "error");
+            LOGGER = LoggerFactory.getLogger(Main.class);
+        }
+        LOGGER.debug("Logger level = {}", loggerLevel);
         JarAnalyzer analyzer;
 
         if(additionalJarsPath == null) {
