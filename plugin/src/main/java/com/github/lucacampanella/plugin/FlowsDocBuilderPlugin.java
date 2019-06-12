@@ -17,16 +17,6 @@ import java.util.*;
 
 public class FlowsDocBuilderPlugin implements Plugin<Project> {
 
-    private static Map<LogLevel, String> gradleLogLevelToSLF4JLevel = new HashMap<>(6);
-    static {
-        gradleLogLevelToSLF4JLevel.put(LogLevel.ERROR, "error");
-        gradleLogLevelToSLF4JLevel.put(LogLevel.QUIET, "error");
-        gradleLogLevelToSLF4JLevel.put(LogLevel.WARN, "warn");
-        gradleLogLevelToSLF4JLevel.put(LogLevel.LIFECYCLE, "info");
-        gradleLogLevelToSLF4JLevel.put(LogLevel.INFO, "debug");
-        gradleLogLevelToSLF4JLevel.put(LogLevel.DEBUG, "trace");
-    }
-
     private static final Logger LOGGER = LoggerFactory.getLogger(FlowsDocBuilderPlugin.class);
 
     @Override
@@ -48,10 +38,7 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
         final FlowsDocBuilderPluginExtention extension =
                 project.getExtensions().create("flowsdocbuilder", FlowsDocBuilderPluginExtention.class);
 
-        final String outPath = extension.getOutPath();
         extension.setPathToExecJar(pathToExecJar);
-
-        final LogLevel gradleLogLevel = project.getLogging().getLevel();
 
         final TaskCollection<Jar> jarTasks = project.getTasks().withType(Jar.class);
         List<Jar> jarTasksList = new ArrayList<>(jarTasks);
