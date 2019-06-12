@@ -27,7 +27,8 @@ class FlowsDocBuilderPluginTest {
     private static final Path upperDir = Paths.get(System.getProperty("user.dir")).getParent();
 
     private static final File sampleProjectDirectory = Paths.get(upperDir.toString(), "simple-flow-project").toFile();
-    private static final File outputDir = Paths.get(sampleProjectDirectory.toString(), "graphs").toFile();
+    private static final File outputDir = Paths.get(sampleProjectDirectory.toString(),
+            "build", "reports", "cordaflowdocs").toFile();
 
     @BeforeEach
     void setUp() throws IOException {
