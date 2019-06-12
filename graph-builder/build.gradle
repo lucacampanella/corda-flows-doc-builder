@@ -120,6 +120,8 @@ dependencies {
 
     implementation "org.slf4j:slf4j-simple:1.7.26"
 
+    implementation "info.picocli:picocli:3.9.6"
+
     testImplementation "org.junit.jupiter:junit-jupiter:$junit5_version"
     testImplementation "org.assertj:assertj-core:$assertj_version"
     testImplementation "org.slf4j:slf4j-simple:1.7.26"

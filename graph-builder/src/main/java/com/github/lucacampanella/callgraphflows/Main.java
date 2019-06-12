@@ -3,31 +3,45 @@ package com.github.lucacampanella.callgraphflows;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.JarAnalyzer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import picocli.CommandLine;
 
 import java.io.IOException;
+import java.util.concurrent.Callable;
 
-public class Main {
+
+public class Main implements Callable<Integer> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
+    @CommandLine.Parameters(arity = "1", index="0", paramLabel = "JarFile", description = "Jar file to process.")
+    private String inputJarPath;
+
+    @CommandLine.Parameters(arity = "0..*", index="1..*", paramLabel = "AdditionalJarFiles", description = "Additional jars to be added to classpath")
+    private String[] additionalJarsPath;
+
+    @CommandLine.Option(names = {"-o", "--output"}, defaultValue = "./graphs", description = "Output folder path")
+    private String outputPath;
+
     public static void main(String []args) throws IOException {
 
+        final Main app = CommandLine.populateCommand(new Main(), args);
+        final int exitCode = app.call();
+
+        System.exit(exitCode);
+    }
+
+    @Override
+    public Integer call() throws IOException {
         JarAnalyzer analyzer;
 
-        if(args.length > 0) {
-            analyzer = new JarAnalyzer(args[0]);
+        if(additionalJarsPath == null) {
+            analyzer = new JarAnalyzer(inputJarPath);
         }
         else {
-            LOGGER.error("Please provide " +
-                    "jar parth as first argument and optionally out folder for graphs as second");
-            return;
+            analyzer = new JarAnalyzer(inputJarPath, additionalJarsPath);
         }
 
-        if(args.length > 1) {
-            Drawer.drawAllStartableClasses(analyzer, args[1]);
-        }
-        else {
-            Drawer.drawAllStartableClasses(analyzer);
-        }
+        Drawer.drawAllStartableClasses(analyzer, outputPath);
+        return 0;
     }
 }
