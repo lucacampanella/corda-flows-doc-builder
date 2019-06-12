@@ -130,3 +130,6 @@ gradle-app.setting
 **/build/
 
 secret-keys.gpg
+
+# avoid generated .adoc s files
+simple-flow-project/**/*.adoc
