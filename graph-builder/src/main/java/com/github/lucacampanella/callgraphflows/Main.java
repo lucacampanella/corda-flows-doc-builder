@@ -19,7 +19,7 @@ public class Main implements Callable<Integer> {
     @CommandLine.Parameters(arity = "0..*", index="1..*", paramLabel = "AdditionalJarFiles", description = "Additional jars to be added to classpath")
     private String[] additionalJarsPath;
 
-    @CommandLine.Option(names = {"-o", "--output"}, defaultValue = "./graphs", description = "Output folder path")
+    @CommandLine.Option(names = {"-o", "--output"}, defaultValue = "graphs", description = "Output folder path")
     private String outputPath;
 
     public static void main(String []args) throws IOException {
@@ -35,8 +35,8 @@ public class Main implements Callable<Integer> {
         final String loggerLevel = System.getProperty("org.slf4j.simpleLogger.defaultLogLevel");
         if(loggerLevel == null) {
             System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "error");
-            LOGGER = LoggerFactory.getLogger(Main.class);
         }
+        LOGGER = LoggerFactory.getLogger(Main.class);
         LOGGER.debug("Logger level = {}", loggerLevel);
         JarAnalyzer analyzer;
 
