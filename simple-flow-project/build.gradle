@@ -1,14 +1,14 @@
 buildscript {
-    repositories {
-        // Use jcenter for resolving your dependencies.
-        // You can declare any Maven/Ivy/file repository here.
-//        mavenLocal()
-//        mavenCentral()
-//        jcenter()
-        maven {
-            url "https://dl.bintray.com/lucacampanella/mvn-release"
-        }
-    }
+//    repositories {
+//        // Use jcenter for resolving your dependencies.
+//        // You can declare any Maven/Ivy/file repository here.
+////        mavenLocal()
+////        mavenCentral()
+////        jcenter()
+//        maven {
+//            url "https://dl.bintray.com/lucacampanella/mvn-release"
+//        }
+//    }
     dependencies {
 //        classpath "net.corda:corda-core:4.0"
         classpath "com.github.lucacampanella:plugin:+"
@@ -24,7 +24,8 @@ plugins {
 apply plugin: 'com.github.lucacampanella.plugin.flows-doc-builder-plugin'
 
 flowsdocbuilder {
-    outPath = project.buildDir.path + "/reports/flowsdocbuilder"
+    outPath = project.buildDir.path + "/reports/differentdir/flowsdocbuilder"
+    pathToExecJar = "../graph-builder/build/libs/graph-builder-0.0.0-SNAPSHOT-all.jar"
 }
 
 ext {
