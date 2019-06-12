@@ -29,6 +29,7 @@ public interface TypeTransformer {
 	/**
 	 * User defined filter to discard type that will not be transformed by the SpoonClassFileTransformer.
 	 * @param type type considered for transformation
+	 * @return true if accepted
 	 */
 	default boolean accept(CtType type) {
 		return true;
