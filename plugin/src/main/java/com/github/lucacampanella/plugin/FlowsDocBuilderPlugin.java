@@ -60,7 +60,7 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
             LOGGER.info("Run task " + taskName + " to generate graph documents for file " + task.getArchiveName()); //idem
 
             javaExecTask.setMain("-jar");
-            javaExecTask.args(pathToExecJar, path, "./build/generated/graphs");
+            javaExecTask.args(pathToExecJar, path, "-o ./build/reports/cordaflowdocs");
             javaExecTask.dependsOn(task);
         }
     }
