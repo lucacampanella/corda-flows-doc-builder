@@ -16,6 +16,7 @@ import java.util.Map;
 
 
 public class SetupJavaExecTaskArguments extends DefaultTask {
+
     String pathToJar = null;
     String defaultPathToExecJar = null;
     JavaExec javaExecTask = null;
@@ -24,8 +25,8 @@ public class SetupJavaExecTaskArguments extends DefaultTask {
     static {
         gradleLogLevelToSLF4JLevel.put(LogLevel.ERROR, "error");
         gradleLogLevelToSLF4JLevel.put(LogLevel.QUIET, "error");
-        gradleLogLevelToSLF4JLevel.put(LogLevel.WARN, "warn");
-        gradleLogLevelToSLF4JLevel.put(LogLevel.LIFECYCLE, "info");
+        gradleLogLevelToSLF4JLevel.put(LogLevel.WARN, "error");
+        gradleLogLevelToSLF4JLevel.put(LogLevel.LIFECYCLE, "error");
         gradleLogLevelToSLF4JLevel.put(LogLevel.INFO, "debug");
         gradleLogLevelToSLF4JLevel.put(LogLevel.DEBUG, "trace");
     }
@@ -43,9 +44,10 @@ public class SetupJavaExecTaskArguments extends DefaultTask {
 
         javaExecTask.args(pathToExecJar, pathToJar, "-o", outPath);
 
-        final LogLevel gradleLogLevel = project.getLogging().getLevel();
+        final LogLevel gradleLogLevel = getCurrentLogLevel();
         javaExecTask.setJvmArgs(Collections.singletonList("-Dorg.slf4j.simpleLogger.defaultLogLevel=" +
                 gradleLogLevelToSLF4JLevel.get(gradleLogLevel)));
+
     }
 
     public void setPathToJar(String pathToJar) {
@@ -58,5 +60,15 @@ public class SetupJavaExecTaskArguments extends DefaultTask {
 
     public void setDefaultPathToExecJar(String defaultPathToExecJar) {
         this.defaultPathToExecJar = defaultPathToExecJar;
+    }
+
+    private LogLevel getCurrentLogLevel() {
+        for(LogLevel logLevel : LogLevel.values()) {
+            if(this.getLogger().isEnabled(logLevel)) {
+                return logLevel;
+            }
+        }
+
+        return LogLevel.ERROR;
     }
 }
