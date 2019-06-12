@@ -4,8 +4,6 @@ package com.github.lucacampanella.plugin;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
-import org.gradle.api.file.DirectoryProperty;
-import org.gradle.api.logging.LogLevel;
 import org.gradle.api.tasks.JavaExec;
 import org.gradle.api.tasks.TaskCollection;
 import org.gradle.jvm.tasks.Jar;
@@ -13,7 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class FlowsDocBuilderPlugin implements Plugin<Project> {
 
@@ -33,7 +33,7 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
                     "for plugin to work");
             pathToExecJar = null;
         }
-        LOGGER.trace("Found plugin file in: " + pathToExecJar);
+        LOGGER.trace("Found plugin file in: {}", pathToExecJar);
 
         final FlowsDocBuilderPluginExtention extension =
                 project.getExtensions().create("flowsdocbuilder", FlowsDocBuilderPluginExtention.class);
@@ -57,7 +57,7 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
             setupJavaExecTask.setPathToJar(path);
             setupJavaExecTask.setDefaultPathToExecJar(pathToExecJar);
 
-            LOGGER.info("Run task " + taskName + " to generate graph documents for file " + task.getArchiveName()); //idem
+            LOGGER.info("Run task {} to generate graph documents for file {}", taskName, task.getArchiveName()); //idem
 
         }
     }

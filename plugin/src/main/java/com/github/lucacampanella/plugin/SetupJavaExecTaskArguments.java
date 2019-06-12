@@ -1,17 +1,13 @@
 package com.github.lucacampanella.plugin;
 
-import org.gradle.api.Action;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
-import org.gradle.api.Task;
 import org.gradle.api.logging.LogLevel;
 import org.gradle.api.tasks.JavaExec;
 import org.gradle.api.tasks.TaskAction;
-import org.gradle.internal.impldep.com.google.common.collect.Lists;
-import org.gradle.process.JavaExecSpec;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 
@@ -21,7 +17,7 @@ public class SetupJavaExecTaskArguments extends DefaultTask {
     String defaultPathToExecJar = null;
     JavaExec javaExecTask = null;
 
-    private static Map<LogLevel, String> gradleLogLevelToSLF4JLevel = new HashMap<>(6);
+    private static Map<LogLevel, String> gradleLogLevelToSLF4JLevel = new EnumMap<>(LogLevel.class);
     static {
         gradleLogLevelToSLF4JLevel.put(LogLevel.ERROR, "error");
         gradleLogLevelToSLF4JLevel.put(LogLevel.QUIET, "error");

@@ -89,7 +89,7 @@ public class MethodInvocation extends InstructionStatement {
                         inv.getExecutable().getDeclaration().getBody().getStatements(), analyzer);
                 methodInvocation.body.addIfRelevant(bodyStatements);
             } catch (NullPointerException e) {
-                LOGGER.warn("Couldn't retrieve the body of method {} adding an empty one", inv.toString());
+                LOGGER.warn("Couldn't retrieve the body of method {} adding an empty one", inv);
             }
             methodInvocation.buildGraphElem();
         }
@@ -119,7 +119,7 @@ public class MethodInvocation extends InstructionStatement {
                     ((CtParameter) inv.getExecutable().getDeclaration().getParameters().get(i))
                             .getSimpleName());
         }catch (NullPointerException e) {
-            LOGGER.warn("Error while retrieving parameter name for method: {}", inv.toString());
+            LOGGER.warn("Error while retrieving parameter name for method: {}", inv);
         }
     }
 

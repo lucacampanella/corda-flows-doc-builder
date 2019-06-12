@@ -81,7 +81,7 @@ public class MatcherHelper {
      * @return the matcher corresponding to the first line of the method with that name in {@link MatcherContainer}
      */
     public static TemplateMatcher getMatcher(String name) {
-        return matchersMap.computeIfAbsent(name, (key) -> {
+        return matchersMap.computeIfAbsent(name, key -> {
             CtMethod<?> method = (CtMethod<?>) model.getElements(
                     new NamedElementFilter(CtMethod.class, name)).get(0);
             CtElement templateRoot = method.getBody().getStatement(0);
@@ -90,7 +90,7 @@ public class MatcherHelper {
     }
 
     public static CtTypeReference getTypeReference(Class klass) {
-        return typesMap.computeIfAbsent(klass, (key) -> {
+        return typesMap.computeIfAbsent(klass, key -> {
             CtMethod<?> method = (CtMethod<?>) model.getElements(
                     new NamedElementFilter(CtMethod.class, "typeTemplateFor" + klass.getSimpleName())).get(0);
 
@@ -339,70 +339,4 @@ public class MatcherHelper {
         }
         return null;
     }
-
-    /*public static StatementInterface instantiateStatement(CtStatement statement) {
-        if(statement instanceof CtIf) {
-            return IfElse.fromCtStatement(statement);
-        }
-        else if(statement instanceof CtWhile) {
-            return While.fromStatement(statement);
-        }
-        else if(statement instanceof CtFor) {
-            return For.fromCtStatement(statement);
-        }
-        else if(statement instanceof CtForEach) {
-            return ForEach.fromCtStatement(statement);
-        }
-        else if(statement instanceof CtDo) {
-            return DoWhile.fromCtStatement(statement); //this will later be desugared into a while
-        }
-        else if (matchesAnyChildren(statement, "transactionBuilderMatcher")) {
-            return TransactionBuilder.fromStatement(statement);
-        } else if (matchesAnyChildren(statement, "initiateFlowMatcher")) {
-            return InitiateFlow.fromCtStatement(statement);
-        } else if (matchesAnyChildren(statement, "sendMatcher") ||
-        matchesAnyChildren(statement, "sendWithBoolMatcher")) { //TODO: test the second line
-            return Send.fromCtStatement(statement);
-        } else if (matchesAnyChildren(statement, "receiveMatcher") ||
-        matchesAnyChildren(statement, "receiveWithBoolMatcher")) { //TODO: test the second line
-            return Receive.fromCtStatement(statement);
-        } else if (matchesAnyChildren(statement, "sendAndReceiveMatcher") ||
-        matchesAnyChildren(statement, "sendAndReceiveWithBoolMatcher")) { //TODO: test the second line
-            return SendAndReceive.fromCtStatement(statement);
-        }
-        else if (matchesAnyChildren(statement, "subFlowMatcher")) {
-            return SubFlow.fromCtStatement(statement);
-        }
-        else if(statement instanceof CtAssignment) {
-            CtAssignment assignment = (CtAssignment) statement;
-            if(assignment.getType().isSubtypeOf(getTypeReference(FlowSession.class))) {
-                return SessionAssignment.fromCtStatement(statement);
-            }
-            else if (assignment.getType().isSubtypeOf(getTypeReference(FlowLogic.class))) {
-                if(!assignment.getElements(new TypeFilter<>(CtAbstractInvocation.class)).isEmpty()) {
-                    return FlowConstructor.fromStatement(statement);
-                }
-                else {
-                    return FlowAssignment.fromCtStatement(statement);
-                }
-            }
-            return null;
-        }
-        else if(statement instanceof CtLocalVariable) {
-            CtLocalVariable localVariable = (CtLocalVariable) statement;
-            if(localVariable.getType().isSubtypeOf(getTypeReference(FlowSession.class))) {
-                return SessionAssignment.fromCtStatement(statement);
-            }
-            else if (localVariable.getType().isSubtypeOf(getTypeReference(FlowLogic.class))) {
-                if(!localVariable.getElements(new TypeFilter<>(CtAbstractInvocation.class)).isEmpty()) {
-                    return FlowConstructor.fromStatement(statement);
-                }
-                else {
-                    return FlowAssignment.fromCtStatement(statement);
-                }
-            }
-            return null;
-        }
-        return null;
-    }*/
 }

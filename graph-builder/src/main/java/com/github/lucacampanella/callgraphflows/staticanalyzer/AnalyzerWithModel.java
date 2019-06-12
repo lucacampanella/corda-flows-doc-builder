@@ -1,6 +1,5 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
-import com.github.lucacampanella.callgraphflows.graphics.components.GGraphBuilder;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import net.corda.core.flows.InitiatedBy;
 import org.slf4j.Logger;
@@ -18,7 +17,6 @@ import spoon.reflect.visitor.filter.NamedElementFilter;
 import spoon.reflect.visitor.filter.TypeFilter;
 import spoon.support.reflect.code.CtFieldReadImpl;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,7 +41,7 @@ public class AnalyzerWithModel {
 
 
     public AnalysisResult analyzeFlowLogicClass(CtClass klass) {
-        LOGGER.info("*** analyzing sub-class " + klass.getQualifiedName());
+        LOGGER.info("*** analyzing sub-class {}", klass.getQualifiedName());
         final CtMethod callMethod = StaticAnalyzerUtils.findCallMethod(klass);
         if(callMethod == null) {
             return null;
@@ -61,7 +59,7 @@ public class AnalyzerWithModel {
         final boolean isInitiatingFlow =
                 interestingStatements.getInitiateFlowStatementAtThisLevel().isPresent();
 
-        LOGGER.debug("Contains initiate call? " + isInitiatingFlow);
+        LOGGER.debug("Contains initiate call? {}", isInitiatingFlow);
         if(isInitiatingFlow) {
             CtClass initiatedFlowClass = getDeeperClassInitiatedBy(klass);
 
