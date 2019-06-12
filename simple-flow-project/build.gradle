@@ -23,6 +23,10 @@ plugins {
 
 apply plugin: 'com.github.lucacampanella.plugin.flows-doc-builder-plugin'
 
+flowsdocbuilder {
+    outPath = project.buildDir.path + "/reports/flowsdocbuilder"
+}
+
 ext {
     corda_release_group = 'net.corda'
     corda_release_version = '4.0'
