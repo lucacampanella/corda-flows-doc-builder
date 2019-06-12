@@ -32,6 +32,6 @@ public class CFRDecompiler implements Decompiler {
 
 	@Override
 	public void decompile(String jarPath) {
-		Main.main(new String[]{jarPath, "--outputdir", outputDir.getPath()});
+		Main.main(new String[]{jarPath, "--outputdir", outputDir.getPath(), "--silent", "true"});
 	}
 }
