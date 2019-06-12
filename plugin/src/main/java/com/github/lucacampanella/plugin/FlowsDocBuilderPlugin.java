@@ -4,6 +4,7 @@ package com.github.lucacampanella.plugin;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.tasks.JavaExec;
 import org.gradle.api.tasks.TaskCollection;
 import org.gradle.jvm.tasks.Jar;
@@ -47,7 +48,8 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
         List<Jar> jarTasksList = new ArrayList<>(jarTasks);
 
         for(Jar task : jarTasksList) {
-            final String path = task.getArchiveFile().get().getAsFile().getAbsolutePath();
+
+            final String path = task.getArchivePath().getAbsolutePath(); //if modified to the non deprecated call it doesn't work this doesn't work for cardossier-cordapp
             final String taskName = task.getName() + "AnalyzerTask";
             final JavaExec javaExecTask = project.getTasks().create(taskName, JavaExec.class);
 
