@@ -1,3 +1,5 @@
+import org.slf4j.event.Level
+
 buildscript {
     dependencies {
         classpath "com.github.lucacampanella:plugin:+"
@@ -48,6 +50,8 @@ jarAnalyzerTask {
             .filter {it.getName().startsWith("graph-builder") && it.getName().endsWith("-all.jar") }
             .map { it.getAbsolutePath() }.findFirst()
             .orElseThrow { new RuntimeException("Could not find local executable jar") }
+    
+    logLevel = Level.TRACE
     
     //removeJavaAgents = false
 }
