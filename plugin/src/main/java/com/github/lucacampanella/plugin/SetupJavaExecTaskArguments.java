@@ -43,7 +43,6 @@ public class SetupJavaExecTaskArguments extends DefaultTask {
         final LogLevel gradleLogLevel = getCurrentLogLevel();
         javaExecTask.setJvmArgs(Collections.singletonList("-Dorg.slf4j.simpleLogger.defaultLogLevel=" +
                 gradleLogLevelToSLF4JLevel.get(gradleLogLevel)));
-
     }
 
     public void setPathToJar(String pathToJar) {
