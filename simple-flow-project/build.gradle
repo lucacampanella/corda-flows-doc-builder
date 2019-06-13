@@ -25,7 +25,15 @@ apply plugin: 'com.github.lucacampanella.plugin.flows-doc-builder-plugin'
 
 flowsdocbuilder {
     outPath = project.buildDir.path + "/reports/differentdir/flowsdocbuilder"
-    pathToExecJar = "../graph-builder/build/libs/graph-builder-0.0.0-SNAPSHOT-all.jar"
+
+    pathToExecJar = Arrays.stream(project.file("../graph-builder/build/libs").listFiles())
+            .filter {it.getName().startsWith("graph-builder") && it.getName().endsWith(".jar") }
+            .map { it.getAbsolutePath() }.findFirst()
+            .orElseThrow { new RuntimeException("Could not find local executable jar") }
+
+    println pathToExecJar
+
+    //pathToExecJar = "../graph-builder/build/libs/graph-builder-0.0.0-SNAPSHOT-all.jar"
 }
 
 ext {
