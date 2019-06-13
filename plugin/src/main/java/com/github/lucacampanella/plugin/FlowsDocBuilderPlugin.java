@@ -34,11 +34,6 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
         }
         LOGGER.trace("Found plugin file in: {}", pathToExecJar);
 
-        final FlowsDocBuilderPluginExtention extension =
-                project.getExtensions().create("flowsdocbuilder", FlowsDocBuilderPluginExtention.class);
-
-        extension.setPathToExecJar(pathToExecJar);
-
         final TaskCollection<Jar> jarTasks = project.getTasks().withType(Jar.class);
         List<Jar> jarTasksList = new ArrayList<>(jarTasks);
 
