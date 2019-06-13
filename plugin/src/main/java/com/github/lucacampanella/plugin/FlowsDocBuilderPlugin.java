@@ -1,8 +1,7 @@
 package com.github.lucacampanella.plugin;
 
 
-import org.gradle.api.Plugin;
-import org.gradle.api.Project;
+import org.gradle.api.*;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.tasks.TaskCollection;
 import org.gradle.jvm.tasks.Jar;
@@ -36,6 +35,16 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
 
         final TaskCollection<Jar> jarTasks = project.getTasks().withType(Jar.class);
         List<Jar> jarTasksList = new ArrayList<>(jarTasks);
+
+        final DefaultTask listFlowAnalysisTask = project.getTasks()
+                .create("listFlowAnalysisTasks", DefaultTask.class);
+
+        listFlowAnalysisTask.doLast(task -> {
+            System.out.println("Available tasks to create corda flow docs: ");
+            for(Jar jarTask : jarTasksList) {
+                System.out.println(jarTask.getName() + "AnalyzerTask" + " for file " + jarTask.getArchiveName());
+            }
+        });
 
         for(Jar task : jarTasksList) {
 
