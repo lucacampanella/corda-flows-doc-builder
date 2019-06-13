@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 
 public class JarAnalyzerJavaExec extends JavaExec {
 
-    String pathToJar = "build/reports/flowsdocbuilder";;
-    String outPath = null;
+    String pathToJar = null;
+    String outPath = "build/reports/flowsdocbuilder";
     String pathToExecJar = null;
     boolean removeJavaAgents = true; //remove agents like quasar that might be pluggen in to any javaexec task by the quasar plugin
 
