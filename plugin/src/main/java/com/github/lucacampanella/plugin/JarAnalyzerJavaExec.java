@@ -31,17 +31,6 @@ public class JarAnalyzerJavaExec extends JavaExec {
     @TaskAction
     @Override
     public void exec() {
-        final Project project = getProject();
-
-        final FlowsDocBuilderPluginExtention extension =
-                project.getExtensions().getByType(FlowsDocBuilderPluginExtention.class);
-        if(outPath == null) {
-            outPath = extension.getOutPath();
-        }
-        if(pathToExecJar == null) {
-            pathToExecJar = extension.getPathToExecJar();
-        }
-
         this.args(pathToExecJar, pathToJar, "-o", outPath);
 
         final LogLevel gradleLogLevel = getCurrentLogLevel();
