@@ -4,7 +4,6 @@ package com.github.lucacampanella.plugin;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
-import org.gradle.api.tasks.JavaExec;
 import org.gradle.api.tasks.TaskCollection;
 import org.gradle.jvm.tasks.Jar;
 import org.slf4j.Logger;
@@ -47,15 +46,12 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
 
             final String path = task.getArchivePath().getAbsolutePath(); //if modified to the non deprecated call it doesn't work this doesn't work for cardossier-cordapp
             final String taskName = task.getName() + "AnalyzerTask";
-            final JavaExec javaExecTask = project.getTasks().create(taskName, JavaExec.class);
-            final SetupJavaExecTaskArguments setupJavaExecTask = project.getTasks().create(taskName + "Configurator", SetupJavaExecTaskArguments.class);
+            final JarAnalyzerJavaExec javaExecTask = project.getTasks().create(taskName, JarAnalyzerJavaExec.class);
             javaExecTask.setMain("-jar");
             javaExecTask.dependsOn(task);
-            javaExecTask.dependsOn(setupJavaExecTask);
 
-            setupJavaExecTask.setJavaExecTask(javaExecTask);
-            setupJavaExecTask.setPathToJar(path);
-            setupJavaExecTask.setDefaultPathToExecJar(pathToExecJar);
+            javaExecTask.setPathToJar(path);
+            javaExecTask.setPathToExecJar(pathToExecJar);
 
             LOGGER.info("Run task {} to generate graph documents for file {}", taskName, task.getArchiveName()); //idem
 
