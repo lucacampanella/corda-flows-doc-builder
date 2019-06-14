@@ -7,7 +7,7 @@ compareJarsModule/src/main/*
 compareJarsModule/tmpJarContainer/*
 
 ### Intellij ###
-.idea/*
+**/.idea/*
 target/
 **/*.iml
 
