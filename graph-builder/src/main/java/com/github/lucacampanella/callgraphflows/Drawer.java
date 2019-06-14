@@ -13,6 +13,8 @@ import spoon.reflect.declaration.CtClass;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class Drawer {
@@ -23,15 +25,11 @@ public class Drawer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Drawer.class);
 
-    private static final String FILE_SEP = System.getProperty("file.separator");
-    public static final String DEFAULT_OUT_DIR = "build" + FILE_SEP + "graphs" + FILE_SEP;
+    public static final String DEFAULT_OUT_DIR = Paths.get("build", "graphs").toString();
 
     public static void drawAllStartableClasses(AnalyzerWithModel analyzerWithModel, String outPath) throws IOException {
         if(outPath == null) {
             outPath = DEFAULT_OUT_DIR;
-        }
-        else if(!outPath.endsWith(FILE_SEP)) {
-            outPath = outPath + FILE_SEP;
         }
 
         AsciiDocIndexBuilder asciiDocIndexBuilder = new AsciiDocIndexBuilder(analyzerWithModel.getAnalysisName());
@@ -44,7 +42,7 @@ public class Drawer {
             drawFromClass(analyzerWithModel, klass, outPath);
             asciiDocIndexBuilder.addFile(klass.getQualifiedName() + ".adoc");
         }
-        asciiDocIndexBuilder.writeToFile(outPath + "index.adoc");
+        asciiDocIndexBuilder.writeToFile(Paths.get(outPath, "index.adoc").toString());
     }
 
     public static void drawAllStartableClasses(AnalyzerWithModel analyzerWithModel) throws IOException {
@@ -63,9 +61,9 @@ public class Drawer {
         if(initiatedClassResult != null) {
             graphBuilder.addSession(initiatedClassResult.getClassDescription().getSimpleName(), initiatedClassResult.getStatements());
         }
-        graphBuilder.drawToFile(outPath + classDescription.getFullyQualifiedName() + ".svg");
+        graphBuilder.drawToFile(Paths.get(outPath, classDescription.getFullyQualifiedName() + ".svg").toString());
 
         AsciiDocBuilder asciiDocBuilder = AsciiDocBuilder.fromAnalysisResult(analysisResult);
-        asciiDocBuilder.writeToFile(outPath + classDescription.getFullyQualifiedName() + ".adoc");
+        asciiDocBuilder.writeToFile(Paths.get(outPath, classDescription.getFullyQualifiedName() + ".adoc").toString());
     }
 }
