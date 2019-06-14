@@ -1,5 +1,6 @@
 package com.github.lucacampanella.plugin;
 
+import org.gradle.api.GradleException;
 import org.gradle.api.Project;
 import org.gradle.api.logging.LogLevel;
 import org.gradle.api.tasks.JavaExec;
@@ -32,6 +33,13 @@ public class JarAnalyzerJavaExec extends JavaExec {
     @TaskAction
     @Override
     public void exec() {
+
+        if(pathToExecJar == null) { //not configured by DSL
+            pathToExecJar = JarExecPathFinder.getPathToExecJar(getProject());
+//            throw new GradleException("Could not retrieve jar executor, please add JCenter to your" +
+//                    "repositories or provide a path using pathToJarExec = \"path/to/your.jar\"");
+        }
+
         this.args(pathToExecJar, pathToJar, "-o", outPath);
 
         if(logLevel == null) {
