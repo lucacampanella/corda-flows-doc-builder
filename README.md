@@ -4,8 +4,8 @@ The plugin is intended to help developers automatically build documentation rega
 [Corda](https://www.corda.net/) flows they write. 
 
 The graphs built by the plugin try to
-closely follow the guidelines given by Corda on how to write such documentation.
-//todo: here put link to documentation
+closely follow the guidelines given by Corda on how to write such documentation. 
+(See [Carda modelling notation](https://solutions.corda.net/corda-modelling-notation/views/views-flow-sequence.html))
 The plugin works by decompiling the class files inside the flows jar, looking for
 classes that represent flows and statically analyzing them for `send` and `receive` calls.
 
