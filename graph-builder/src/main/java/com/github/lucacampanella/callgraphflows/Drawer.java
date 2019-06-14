@@ -5,6 +5,7 @@ import com.github.lucacampanella.callgraphflows.asciidoc.AsciiDocIndexBuilder;
 import com.github.lucacampanella.callgraphflows.graphics.components.GGraphBuilder;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.ClassDescriptionContainer;
 import net.corda.core.flows.StartableByRPC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,16 +54,18 @@ public class Drawer {
     public static void drawFromClass(AnalyzerWithModel analyzerWithModel, CtClass klass, String outPath) throws IOException {
         final AnalysisResult analysisResult = analyzerWithModel.analyzeFlowLogicClass(klass);
 
+        final ClassDescriptionContainer classDescription = analysisResult.getClassDescription();
+
         GGraphBuilder graphBuilder = new GGraphBuilder();
 
-        graphBuilder.addSession(analysisResult.getClassSimpleName(), analysisResult.getStatements());
+        graphBuilder.addSession(classDescription.getSimpleName(), analysisResult.getStatements());
         final AnalysisResult initiatedClassResult = analysisResult.getCounterpartyClassResult();
         if(initiatedClassResult != null) {
-            graphBuilder.addSession(initiatedClassResult.getClassSimpleName(), initiatedClassResult.getStatements());
+            graphBuilder.addSession(initiatedClassResult.getClassDescription().getSimpleName(), initiatedClassResult.getStatements());
         }
-        graphBuilder.drawToFile(outPath + analysisResult.getClassFullyQualifiedName() + ".svg");
+        graphBuilder.drawToFile(outPath + classDescription.getFullyQualifiedName() + ".svg");
 
         AsciiDocBuilder asciiDocBuilder = AsciiDocBuilder.fromAnalysisResult(analysisResult);
-        asciiDocBuilder.writeToFile(outPath + analysisResult.getClassFullyQualifiedName() + ".adoc");
+        asciiDocBuilder.writeToFile(outPath + classDescription.getFullyQualifiedName() + ".adoc");
     }
 }

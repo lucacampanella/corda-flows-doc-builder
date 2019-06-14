@@ -33,7 +33,8 @@ public class InitiatingSubFlow extends SubFlowBaseWithAnalysis {
         if(resultOfClassAnalysis.hasCounterpartyResult()) {
             final AnalysisResult counterpartyClassResult = resultOfClassAnalysis.getCounterpartyClassResult();
             GSubFlow counterpartyFlow = new GSubFlow();
-            counterpartyFlow.setEnteringArrowText(new GBaseTextComponent(counterpartyClassResult.getClassSimpleName()));
+            counterpartyFlow.setEnteringArrowText(
+                    new GBaseTextComponent(counterpartyClassResult.getClassDescription().getNameWithParent()));
             counterpartyClassResult.getStatements().forEach(stmt -> counterpartyFlow.addComponent(stmt.getGraphElem()));
             graphElem.setCounterpartySubFlow(counterpartyFlow,
                     (GInstruction) resultOfClassAnalysis.getStatements().getInitiateFlowStatementAtThisLevel()

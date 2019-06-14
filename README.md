@@ -7,7 +7,8 @@ The graphs built by the plugin try to
 closely follow the guidelines given by Corda on how to write such documentation. 
 (See [Carda modelling notation](https://solutions.corda.net/corda-modelling-notation/views/views-flow-sequence.html))
 The plugin works by decompiling the class files inside the flows jar, looking for
-classes that represent flows and statically analyzing them for `send` and `receive` calls.
+classes that represent flows and statically analyzing them for `send` and `receive` calls. Specifically
+the plugin analyzes all the classes tagged with `@StartableByRPC` inside the jar.
 
 With the information obtained from static analysis the .svg images useful for documentation
 are built. They are then integrated into an ascii doc file giving a summary of the analysis of the Jar.
@@ -74,6 +75,7 @@ To analyze a jar just call his corresponding analyzer task. Example, to analyze 
 To see all the available analyzer tasks run: `./gradlew listFlowAnalysisTasks`
 
 By default the documentation graphs are put inside `build/reports/flowsdocbuilder` in .svg and .adoc format.
+If the initiating classes have a top level comment, this is inserted in the ascii doc.
 
 #### Configurable options
 For each analyzer task you can configure various options:

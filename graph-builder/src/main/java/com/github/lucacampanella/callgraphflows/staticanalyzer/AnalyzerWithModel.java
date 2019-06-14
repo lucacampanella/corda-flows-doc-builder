@@ -47,9 +47,7 @@ public class AnalyzerWithModel {
             return null;
         }
 
-        AnalysisResult res = new AnalysisResult(klass.getSimpleName(), klass.getQualifiedName());
-
-        res.setClassCommentForDocumentation(klass.getDocComment());
+        AnalysisResult res = new AnalysisResult(ClassDescriptionContainer.fromClass(klass));
 
         final Branch interestingStatements = MatcherHelper.fromCtStatementsToStatements(
                 callMethod.getBody().getStatements(), this);
