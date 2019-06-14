@@ -16,11 +16,13 @@ import java.util.Set;
 public class FlowsDocBuilderPlugin implements Plugin<Project> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlowsDocBuilderPlugin.class);
+    private static final String buildVersion = getBuildVersion();
 
     @Override
     public void apply(Project project) {
 
         LOGGER.info("Corda flows doc builder plugin: ");
+        LOGGER.info("Version: " + buildVersion);
         LOGGER.error(System.getProperty("user.dir"));
 
         String pathToExecJar;
@@ -67,13 +69,13 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
                 .setVisible(false)
                 .setDescription("The jar file needed to run the corda flows doc builder plugin");
 
-        project.getRepositories().maven(
-                mavenArtifactRepository ->
-                        mavenArtifactRepository.setUrl("https://dl.bintray.com/lucacampanella/mvn-release"));
+//        project.getRepositories().maven(
+//                mavenArtifactRepository ->
+//                        mavenArtifactRepository.setUrl("https://dl.bintray.com/lucacampanella/mvn-release"));
 
         config.setTransitive(false);
 
-        final String dependency = "com.github.lucacampanella:graph-builder:+:all";
+        final String dependency = "com.github.lucacampanella:graph-builder:" + buildVersion + ":all"; //"com.github.lucacampanella:graph-builder:+:all";
         config.defaultDependencies(dependencies ->
                 dependencies.add(project.getDependencies().create(dependency)));
 
@@ -84,4 +86,7 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
                 .orElseThrow(() -> new RuntimeException("Could not find executable jar"));
     }
 
+    public static String getBuildVersion(){
+        return FlowsDocBuilderPlugin.class.getPackage().getImplementationVersion();
+    }
 }

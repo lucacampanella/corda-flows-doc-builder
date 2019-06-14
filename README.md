@@ -51,6 +51,9 @@ buildscript {
 apply plugin: "com.github.lucacampanella.plugin.flows-doc-builder-plugin"
 ```
 
+Be careful: in any case the plugin should be applied after the Java plugin or any other plugin that creates 
+a Jar task. Otherwise the plugin won't find these tasks and won't analyze the corresponding Jars.
+
 #### As a standalone executable
 Download latest version of the Jar from 
 https://bintray.com/lucacampanella/mvn-release/graph-builder

@@ -52,6 +52,13 @@ pluginBundle {
     tags = ['documentation', 'docs', 'corda', 'cordaledger', 'flow', 'graph']
 }
 
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Corda flows doc builder Gardle plugin',
+                'Implementation-Version': version
+    }
+}
+
 
 //uploadArchives {
 //    repositories {
