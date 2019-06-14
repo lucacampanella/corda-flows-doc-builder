@@ -19,7 +19,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestUtils {
+public final class TestUtils {
     public static List<String> parseXMLFile(String path) throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         List<String> res = new ArrayList<>();
 

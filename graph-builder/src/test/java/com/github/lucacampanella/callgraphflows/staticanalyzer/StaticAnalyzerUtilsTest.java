@@ -1,12 +1,11 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
 import com.github.lucacampanella.TestUtils;
-import com.github.lucacampanella.callgraphflows.Drawer;
+import com.github.lucacampanella.callgraphflows.DrawerUtil;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.ExtendingSuperclassTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.InitiatorBaseFlow;
 import net.corda.core.flows.StartableByRPC;
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -37,7 +36,7 @@ public class StaticAnalyzerUtilsTest {
 
     @BeforeAll
     static void setUp() {
-        final boolean mkdirs = Paths.get(System.getProperty("user.dir"), Drawer.DEFAULT_OUT_DIR).toFile().mkdirs();
+        final boolean mkdirs = Paths.get(System.getProperty("user.dir"), DrawerUtil.DEFAULT_OUT_DIR).toFile().mkdirs();
     }
 
     @Test
@@ -153,11 +152,11 @@ public class StaticAnalyzerUtilsTest {
 
         final List<CtClass> startableClasses = analyzer.getClassesByAnnotation(StartableByRPC.class);
         for (CtClass clazz : startableClasses) {
-            LOGGER.info("{}{}.svg", Drawer.DEFAULT_OUT_DIR, toBeAnalyzed.getSimpleName());
-            final File file = new File(Drawer.DEFAULT_OUT_DIR + toBeAnalyzed.getSimpleName() + ".svg");
+            LOGGER.info("{}{}.svg", DrawerUtil.DEFAULT_OUT_DIR, toBeAnalyzed.getSimpleName());
+            final File file = new File(DrawerUtil.DEFAULT_OUT_DIR + toBeAnalyzed.getSimpleName() + ".svg");
             LOGGER.info("{}", file.getAbsolutePath());
             LOGGER.info("{}", file.exists());
-            Drawer.drawFromClass(analyzer, clazz, Drawer.DEFAULT_OUT_DIR);
+            DrawerUtil.drawFromClass(analyzer, clazz, DrawerUtil.DEFAULT_OUT_DIR);
         }
     }
 

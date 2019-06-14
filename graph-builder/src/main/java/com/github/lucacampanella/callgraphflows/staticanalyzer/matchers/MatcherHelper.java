@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 /**
  * Helper class that handles patterns
  */
-public class MatcherHelper {
+public final class MatcherHelper {
 
     private static final Map<String, TemplateMatcher> matchersMap = new HashMap<>();
 
