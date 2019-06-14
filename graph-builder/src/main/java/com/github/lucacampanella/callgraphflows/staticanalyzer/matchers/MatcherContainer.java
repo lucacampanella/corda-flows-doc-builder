@@ -103,6 +103,10 @@ public class MatcherContainer extends FlowLogic {
         CollectSignaturesFlow var;
     }
 
+    private void typeTemplateForCollectSignatureFlow() {
+        CollectSignatureFlow var;
+    }
+
     private void typeTemplateForSignTransactionFlow() {
         SignTransactionFlow var;
     }

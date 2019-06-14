@@ -76,6 +76,9 @@ public class SubFlowBuilder {
         cordaSpecialFlows.put(MatcherHelper.getTypeReference(CollectSignaturesFlow.class),
                 MatcherHelper.getTypeReference(SignTransactionFlow.class));
 
+        cordaSpecialFlows.put(MatcherHelper.getTypeReference(CollectSignatureFlow.class),
+                MatcherHelper.getTypeReference(SignTransactionFlow.class));
+
         cordaSpecialFlows.put(MatcherHelper.getTypeReference(FinalityFlow.class),
                 MatcherHelper.getTypeReference(ReceiveFinalityFlow.class));
     }
