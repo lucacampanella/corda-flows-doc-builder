@@ -13,17 +13,16 @@ import spoon.reflect.declaration.CtClass;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class Drawer {
+public final class DrawerUtil {
 
-    private Drawer() {
+    private DrawerUtil() {
         //private constuctor to hide public one
     }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Drawer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DrawerUtil.class);
 
     public static final String DEFAULT_OUT_DIR = Paths.get("build", "graphs").toString();
 

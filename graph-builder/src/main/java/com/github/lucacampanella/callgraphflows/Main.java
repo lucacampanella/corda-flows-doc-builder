@@ -45,7 +45,7 @@ public class Main implements Callable<Integer> {
             analyzer = new JarAnalyzer(inputJarPath, additionalJarsPath);
         }
 
-        Drawer.drawAllStartableClasses(analyzer, outputPath);
+        DrawerUtil.drawAllStartableClasses(analyzer, outputPath);
         return 0;
     }
 }

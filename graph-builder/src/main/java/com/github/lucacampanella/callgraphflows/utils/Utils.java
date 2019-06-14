@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Utils {
+public final class Utils {
 
     public static final boolean REMOVE_PKG_INFO = true;
     public static final boolean REMOVE_UNWRAP = true;
