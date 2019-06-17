@@ -1,1 +1,5 @@
 sourceCompatibility = 1.8
+
+dependencies {
+    testImplementation "fr.inria.gforge.spoon:spoon-core:$spoon_version"
+}

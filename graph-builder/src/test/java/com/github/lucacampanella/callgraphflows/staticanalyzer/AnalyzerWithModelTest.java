@@ -1,5 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
+import com.github.lucacampanella.callgraphflows.AnalysisErrorException;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.DoubleExtendingSuperclassTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.ExtendingSuperclassTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.InitiatorBaseFlow;
@@ -29,7 +30,7 @@ class AnalyzerWithModelTest {
     }
 
     @Test
-    void analyzeFlowLogicClass() {
+    void analyzeFlowLogicClass() throws AnalysisErrorException {
         final List<CtClass> initiatingClasses = analyzerWithModel.getClassesByAnnotation(InitiatingFlow.class);
         assertThat(initiatingClasses).hasSize(1);
         final CtClass ctClass = initiatingClasses.get(0);

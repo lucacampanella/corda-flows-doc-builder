@@ -4,8 +4,10 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subcl
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.ExtendingSuperclassTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.InitiatorBaseFlow;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static com.github.lucacampanella.TestUtils.fromClassSrcToPath;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 class SourceClassAnalyzerTest extends AnalyzerWithModelTest {
@@ -17,4 +19,9 @@ class SourceClassAnalyzerTest extends AnalyzerWithModelTest {
                 fromClassSrcToPath(DoubleExtendingSuperclassTestFlow.class));
     }
 
+    @Test
+    void getAnalysisName() {
+        assertThat(analyzerWithModel.getAnalysisName()).isEqualTo(
+                "InitiatorBaseFlow.java, ExtendingSuperclassTestFlow.java, DoubleExtendingSuperclassTestFlow.java");
+    }
 }
