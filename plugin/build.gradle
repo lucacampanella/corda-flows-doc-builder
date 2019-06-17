@@ -15,19 +15,8 @@ repositories {
 dependencies {
 
     implementation gradleApi()
-    implementation group: 'commons-io', name: 'commons-io', version: '2.6'
-    //api project(":graph-builder")
-    //compile project(path: ':graph-builder', configuration: 'shadow')
 
-    //compile "com.github.lucacampanella:graph-builder:0.59.0:all"
-
-    //api "$corda_release_group:corda-core:$corda_release_version"
-    //implementation "$corda_release_group:corda-core:$corda_release_version"
-
-//    // https://mvnrepository.com/artifact/com.mxgraph/jgraphx
-//    compile group: 'com.mxgraph', name: 'jgraphx', version: '3.7.4'
-
-    //testImplementation group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'commons-io', name: 'commons-io', version: '2.6'
     testImplementation("org.junit.jupiter:junit-jupiter:$junit5_version")
     testImplementation("org.assertj:assertj-core:$assertj_version")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:$junit5_version")
