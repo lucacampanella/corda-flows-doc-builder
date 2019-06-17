@@ -3,6 +3,7 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer;
 import com.github.lucacampanella.TestUtils;
 import com.github.lucacampanella.callgraphflows.DrawerUtil;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.*;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.DoubleExtendingSuperclassTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.ExtendingSuperclassTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.InitiatorBaseFlow;
 import net.corda.core.flows.StartableByRPC;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.github.lucacampanella.TestUtils.fromClassSrcToPath;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -118,7 +120,11 @@ public class StaticAnalyzerUtilsTest {
 
     @Test
     public void testExtendingSuperclassStartable() throws IOException {
-        testAnalyzeStartableByRPCWithClass(ExtendingSuperclassTestFlow.class); //todo: we need to get the methods and analyze their body too
+        final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(fromClassSrcToPath(InitiatorBaseFlow.class),
+                fromClassSrcToPath(ExtendingSuperclassTestFlow.class),
+                fromClassSrcToPath(DoubleExtendingSuperclassTestFlow.class));
+
+        testStartableRPCFromAnalyzer(analyzer); //todo: thin about how to get the methods of statically dispatche methods
     }
 
 
@@ -150,10 +156,14 @@ public class StaticAnalyzerUtilsTest {
     private void testAnalyzeStartableByRPCWithClass(Class toBeAnalyzed) throws IOException {
         final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(TestUtils.fromClassSrcToPath(toBeAnalyzed));
 
+        testStartableRPCFromAnalyzer(analyzer);
+    }
+
+    private void testStartableRPCFromAnalyzer(AnalyzerWithModel analyzer) throws IOException {
         final List<CtClass> startableClasses = analyzer.getClassesByAnnotation(StartableByRPC.class);
         for (CtClass clazz : startableClasses) {
-            LOGGER.info("{}{}.svg", DrawerUtil.DEFAULT_OUT_DIR, toBeAnalyzed.getSimpleName());
-            final File file = new File(DrawerUtil.DEFAULT_OUT_DIR + toBeAnalyzed.getSimpleName() + ".svg");
+            LOGGER.info("{}{}.svg", DrawerUtil.DEFAULT_OUT_DIR, clazz.getSimpleName());
+            final File file = new File(DrawerUtil.DEFAULT_OUT_DIR + clazz.getSimpleName() + ".svg");
             LOGGER.info("{}", file.getAbsolutePath());
             LOGGER.info("{}", file.exists());
             DrawerUtil.drawFromClass(analyzer, clazz, DrawerUtil.DEFAULT_OUT_DIR);
