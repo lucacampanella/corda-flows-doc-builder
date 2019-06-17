@@ -2,23 +2,19 @@ package com.github.lucacampanella.plugin;
 
 
 import org.gradle.api.*;
-import org.gradle.api.artifacts.Configuration;
-import org.gradle.api.artifacts.UnknownConfigurationException;
 import org.gradle.api.tasks.TaskCollection;
 import org.gradle.jvm.tasks.Jar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class FlowsDocBuilderPlugin implements Plugin<Project> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlowsDocBuilderPlugin.class);
 
-    private static final String buildVersion = JarExecPathFinder.getBuildVersion();
+    private static final String buildVersion = JarExecPathFinderUtils.getBuildVersion();
 
     @Override
     public void apply(Project project) {

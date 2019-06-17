@@ -7,7 +7,7 @@ import org.gradle.api.artifacts.UnknownConfigurationException;
 import java.io.File;
 import java.util.Set;
 
-public class JarExecPathFinder {
+public final class JarExecPathFinderUtils {
 
     private static final String CONFIGURATION_NAME = "analyzerExecutable";
     private static String pathToExecJar = null;

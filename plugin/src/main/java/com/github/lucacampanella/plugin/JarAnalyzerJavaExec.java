@@ -1,9 +1,9 @@
 package com.github.lucacampanella.plugin;
 
-import org.gradle.api.GradleException;
-import org.gradle.api.Project;
 import org.gradle.api.logging.LogLevel;
+import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.JavaExec;
+import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 import org.slf4j.event.Level;
 
@@ -35,7 +35,7 @@ public class JarAnalyzerJavaExec extends JavaExec {
     public void exec() {
 
         if(pathToExecJar == null) { //not configured by DSL
-            pathToExecJar = JarExecPathFinder.getPathToExecJar(getProject());
+            pathToExecJar = JarExecPathFinderUtils.getPathToExecJar(getProject());
 //            throw new GradleException("Could not retrieve jar executor, please add JCenter to your" +
 //                    "repositories or provide a path using pathToJarExec = \"path/to/your.jar\"");
         }
@@ -79,6 +79,26 @@ public class JarAnalyzerJavaExec extends JavaExec {
 
     public void setLogLevel(Level logLevel) {
         this.logLevel = logLevel;
+    }
+
+    @Input
+    public String getPathToJar() {
+        return pathToJar;
+    }
+
+    @Input
+    public String getPathToExecJar() {
+        return pathToExecJar;
+    }
+
+    @Input
+    public boolean isRemoveJavaAgents() {
+        return removeJavaAgents;
+    }
+
+    @OutputDirectory
+    public String getOutPath() {
+        return outPath;
     }
 
     private LogLevel getCurrentLogLevel() {
