@@ -86,6 +86,38 @@ subprojects {
     }
 }
 
+apply plugin: 'base'
+apply plugin: 'jacoco'
+task jacocoMerge(type: JacocoMerge) {
+    subprojects.each { subproject ->
+        executionData subproject.tasks.withType(Test)
+    }
+    doFirst {
+        executionData = files(executionData.findAll { it.exists() })
+    }
+}
+
+task jacocoRootReport(type: JacocoReport, group: 'verification') {
+    description = 'Generates an aggregate report from all subprojects'
+    dependsOn subprojects.test, jacocoMerge
+
+    additionalSourceDirs.from(subprojects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories.from(subprojects.sourceSets.main.allSource.srcDirs)
+    classDirectories.from(subprojects.sourceSets.main.output)
+    executionData jacocoMerge.destinationFile
+    doLast {
+        logger.lifecycle("report at: " + reports.html.entryPoint.toURI())
+    }
+}
+
+allprojects {
+    sonarqube {
+        properties {
+            property 'sonar.jacoco.reportPaths', jacocoMerge.destinationFile
+        }
+    }
+}
+
 //releases
 subprojects {
     if (sourceSets.main.allSource.isEmpty()) {
