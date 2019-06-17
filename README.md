@@ -140,6 +140,11 @@ Default: `graphs`
 
 After cloning the repo, run `./gradlew test`
 
+## Example output
+This is an example of how the produced .svg image looks like. The file is generated from the analysis of 
+[GraphForDocsFlow.java](graph-builder/src/test/java/com/github/lucacampanella/callgraphflows/staticanalyzer/testclasses/GraphForDocsFlow.java)
+![Example flow](resources/com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.MethodInvocationTestFlow$Initiator.svg) 
+
 ## Built With
 
 * [Gradle](https://gradle.org/) - Gradle build tool
@@ -160,7 +165,7 @@ see the [tags on this repository](https://github.com/lucacampanella/corda-flows-
 
 * **Luca Campanella** - *Initial work* - [GitHub](https://github.com/lucacampanella)
 
-<!-- See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project. -->
+<!-- See also the transactionList of [contributors](https://github.com/your/project/contributors) who participated in this project. -->
 
 This project was developed for [AdNovum](https://www.adnovum.ch/) in the scope of the projects
 [SB4B](https://www.adnovum.ch/en/company/media/media_releases/2018/adnovum_launches_secure_blockchain_for_business.html) 

@@ -134,6 +134,11 @@ public class StaticAnalyzerUtilsTest {
     }
 
     @Test
+    public void graphForDocsFlowStartable() throws IOException {
+        testAnalyzeStartableByRPCWithClass(GraphForDocsFlow.class);
+    }
+
+    @Test
     public void simpleFlowTestStartable() throws IOException {
         testAnalyzeStartableByRPCWithClass(SimpleFlowTestFlow.class);
     }
