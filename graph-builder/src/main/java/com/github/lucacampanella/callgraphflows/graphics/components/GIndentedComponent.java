@@ -76,7 +76,7 @@ public abstract class GIndentedComponent extends GBaseGraphicComponent {
         }
 
         if(exitingArrowText != null) {
-            g2.draw(new Line2D.Double(getStartX() + WIDTH, currStartY, arrowRightBorderX, currStartY));
+            g2.draw(new Line2D.Double((double) (getStartX()) + WIDTH, currStartY, arrowRightBorderX, currStartY));
             g2.draw(new Line2D.Double(arrowRightBorderX, currStartY, arrowRightBorderX,
                     (double) (currStartY) + SPACE_BETWEEN_COMPONENTS * 2));
             GUtils.drawArrow(g2, new Line2D.Double(arrowRightBorderX, (double) (currStartY) + SPACE_BETWEEN_COMPONENTS * 2,
@@ -107,8 +107,7 @@ public abstract class GIndentedComponent extends GBaseGraphicComponent {
         res.width = Math.max(res.width, INDENTATION + components.stream()
                 .mapToInt(comp -> comp.getDimensions(g2).width).max().orElse(0));
 
-        return res; //todo: consider that some stuff might need to be on the same height as
-        //the other flow
+        return res;
     }
 
     private Dimension getRectDimensions(SVGGraphics2D g2) {

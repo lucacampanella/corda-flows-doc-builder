@@ -22,11 +22,6 @@ public class Receive extends InstructionStatement implements StatementWithCompan
         super();
     }
 
-//    private static final Color BACKGROUND_COLOR = new Color(255, 250, 173); //Yellowish
-//    protected Color getBackgroundColor() {
-//        return BACKGROUND_COLOR;
-//    }
-
     public static Receive fromCtStatement(CtStatement statement, AnalyzerWithModel analyzer) {
         Receive receive = new Receive();
         receive.line = statement.getPosition().getLine();

@@ -4,8 +4,6 @@ public class DefaultPreferences implements PreferencesInterface {
 
     private static final double BRIGHTER_FACTOR = 1.2;
 
-//    public static final Color LESS_IMPORTANT_TEXT_COLOR = Color.GRAY;
-
     // static variable singleInstance of type Singleton
     private static DefaultPreferences singleInstance = null;
 
@@ -27,9 +25,4 @@ public class DefaultPreferences implements PreferencesInterface {
     public double getBrighterFactor() {
         return BRIGHTER_FACTOR;
     }
-
-//    @Override
-//    public Color getLessImportantTextColor() {
-//        return LESS_IMPORTANT_TEXT_COLOR;
-//    }
 }

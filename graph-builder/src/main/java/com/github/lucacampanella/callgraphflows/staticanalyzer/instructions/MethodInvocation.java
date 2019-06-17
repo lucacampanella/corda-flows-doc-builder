@@ -94,22 +94,6 @@ public class MethodInvocation extends InstructionStatement {
             methodInvocation.buildGraphElem();
         }
 
-//        Object firstArgument = arguments.get(0);
-//
-//        //maybe there is a more rubust way to do this, for example with a while
-//        if(firstArgument instanceof CtFieldRead) {
-//            CtTypeAccess fieldRead = (CtTypeAccess) ((CtFieldRead) (firstArgument)).getTarget();
-//            receive.receivedType = fieldRead.getAccessedType().box().getSimpleName();
-//        }
-//        else if(firstArgument instanceof CtLambda) {
-//            invocation = (CtInvocation) invocation.getTarget();
-//            //receivedType = invocation.getArguments().get(0).getTarget().getAccessedType()
-//            receive.receivedType = ((CtTypeAccess) ((CtFieldRead) (arguments.get(0))).getTarget())
-//                    .getAccessedType().box().getSimpleName();
-//        }
-//
-//        receive.targetSessionName = Optional.ofNullable(invocation.getTarget().toString());
-
         return methodInvocation;
     }
 
@@ -143,10 +127,8 @@ public class MethodInvocation extends InstructionStatement {
     public boolean isRelevantForAnalysis() {
         return internalMethodInvocations.isRelevant() ||
                 body.getStatements().stream().anyMatch(stmt -> {
-                    if(!stmt.isRelevantForAnalysis()) {
-                        return false;
-                    }
-                    if(stmt instanceof FlowAssignment ||
+                    if((!stmt.isRelevantForAnalysis()) ||
+                        stmt instanceof FlowAssignment ||
                             stmt instanceof FlowConstructor ||
                             stmt instanceof SessionAssignment) {
                         return false;

@@ -24,10 +24,7 @@ public class SimpleFlowTest {
         @Override
         public Void call() throws FlowException {
 
-            List<SignedTransaction> list = new LinkedList<>();
-
             FlowSession session = initiateFlow(otherParty);
-
             session.sendAndReceive(String.class, false);
             return null;
         }
@@ -45,9 +42,6 @@ public class SimpleFlowTest {
         @Suspendable
         @Override
         public Void call() throws FlowException {
-
-            boolean condition = true;
-
             otherSession.receive(Boolean.class);
             otherSession.send("Test");
             return null;

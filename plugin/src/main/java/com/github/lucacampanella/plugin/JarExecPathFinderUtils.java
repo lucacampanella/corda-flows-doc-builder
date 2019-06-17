@@ -25,11 +25,7 @@ public final class JarExecPathFinderUtils {
                 config.setTransitive(false);
             }
 
-//        project.getRepositories().maven(
-//                mavenArtifactRepository ->
-//                        mavenArtifactRepository.setUrl("https://dl.bintray.com/lucacampanella/mvn-release"));
-
-            final String dependency = "com.github.lucacampanella:graph-builder:" + buildVersion + ":all"; //"com.github.lucacampanella:graph-builder:+:all";
+            final String dependency = "com.github.lucacampanella:graph-builder:" + buildVersion + ":all";
             config.defaultDependencies(dependencies ->
                     dependencies.add(project.getDependencies().create(dependency)));
 

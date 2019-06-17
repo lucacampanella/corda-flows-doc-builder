@@ -37,22 +37,11 @@ public class GBaseTextComponent extends GBaseGraphicComponent {
 
     @Override
     public Dimension computeDimensions(SVGGraphics2D g2) {
-
-//        TextLayout textLayout = new TextLayout(
-//                new AttributedString(text).getIterator(),
-//                g2.getFontRenderContext()
-//        );
-//        Rectangle2D.Float stringBounds = ( Rectangle2D.Float ) textLayout.getBounds();
-
-//        TextLayout layout = new TextLayout(text, g2.getFont(), g2.getFontRenderContext());
-//        Rectangle stringBounds = layout.getPixelBounds(null, 0, 0);
-
         //todo: find better way to compute this, just the length of the string is wrong
         final Rectangle2D stringBounds = g2.getFont().getStringBounds(getDisplayText(), g2.getFontRenderContext());
         Dimension res = new Dimension(
-                GUtils.doubleToInt(stringBounds.getWidth()/1.02) + 2*getBorderDim(),
+                GUtils.doubleToInt(stringBounds.getWidth()) + 2*getBorderDim(),
                 GUtils.doubleToInt(stringBounds.getHeight()) + 2*getBorderDim());
-        //LOGGER.trace(stringBounds + " : " + res);
         return res;
     }
 

@@ -5,7 +5,4 @@ import java.awt.*;
 public interface PreferencesInterface {
 
     double getBrighterFactor();
-
-//    Color getLessImportantTextColor();
-
 }

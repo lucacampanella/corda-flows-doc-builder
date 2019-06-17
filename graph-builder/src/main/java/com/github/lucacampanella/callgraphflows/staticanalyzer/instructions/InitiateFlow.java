@@ -18,11 +18,6 @@ public class InitiateFlow extends InstructionStatement {
         super();
     }
 
-//    private static final Color BACKGROUND_COLOR = new Color(155, 193, 255); //Blueish
-//    protected Color getBackgroundColor() {
-//        return BACKGROUND_COLOR;
-//    }
-
     public static InitiateFlow fromCtStatement(CtStatement statement, AnalyzerWithModel analyzer) {
         InitiateFlow initiateFlow = new InitiateFlow();
         initiateFlow.line = statement.getPosition().getLine();

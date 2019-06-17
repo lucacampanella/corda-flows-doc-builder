@@ -14,24 +14,14 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlowsDocBuilderPlugin.class);
 
-    private static final String buildVersion = JarExecPathFinderUtils.getBuildVersion();
+    private static final String BUILD_VERSION = JarExecPathFinderUtils.getBuildVersion();
 
     @Override
     public void apply(Project project) {
 
         LOGGER.info("Corda flows doc builder plugin: ");
-        LOGGER.info("Version: " + buildVersion);
+        LOGGER.info("Version: {}", BUILD_VERSION);
         LOGGER.error(System.getProperty("user.dir"));
-
-//        String pathToExecJar;
-//        try {
-//            pathToExecJar = findPathToExecJar(project);
-//        } catch(RuntimeException e) {
-//            LOGGER.warn("*** Path to exec jar not found, must be specified in flowsdocbuilder DSL block" +
-//                    "for plugin to work");
-//            pathToExecJar = null;
-//        }
-//        LOGGER.trace("Found plugin file in: {}", pathToExecJar);
 
         final TaskCollection<Jar> jarTasks = project.getTasks().withType(Jar.class);
         List<Jar> jarTasksList = new ArrayList<>(jarTasks);
@@ -55,7 +45,6 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
             javaExecTask.dependsOn(task);
 
             javaExecTask.setPathToJar(path);
-//            javaExecTask.setPathToExecJar(pathToExecJar);
 
             LOGGER.info("Run task {} to generate graph documents for file {}", taskName, task.getArchiveName()); //idem
 

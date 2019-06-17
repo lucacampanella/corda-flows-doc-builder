@@ -3,8 +3,6 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import net.corda.core.flows.FlowSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import spoon.reflect.code.CtAbstractInvocation;
 import spoon.reflect.code.CtLiteral;
 import spoon.reflect.code.CtStatement;

@@ -24,11 +24,6 @@ public class Send extends InstructionStatement implements StatementWithCompanion
         super();
     }
 
-//    private static final Color BACKGROUND_COLOR = new Color(173, 255, 175); //Greenish
-//    protected Color getBackgroundColor() {
-//        return BACKGROUND_COLOR;
-//    }
-
     public static Send fromCtStatement(CtStatement statement, AnalyzerWithModel analyzer) {
         Send send = new Send();
         send.line = statement.getPosition().getLine();

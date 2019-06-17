@@ -5,7 +5,6 @@ import com.github.lucacampanella.callgraphflows.graphics.preferences.Preferences
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 
 public class GUtils {
@@ -46,14 +45,14 @@ public class GUtils {
     private static void drawArrowLine(Graphics g, int x1, int y1, int x2, int y2, int d, int h) {
         int dx = x2 - x1;
         int dy = y2 - y1;
-        double D = Math.sqrt((double) (dx*dx) + dy*dy);
-        double xm = D - d;
+        double f = Math.sqrt((double) (dx*dx) + dy*dy);
+        double xm = f - d;
         double xn = xm;
         double ym = h;
         double yn = -h;
         double x;
-        double sin = dy / D;
-        double cos = dx / D;
+        double sin = dy / f;
+        double cos = dx / f;
 
         x = xm*cos - ym*sin + x1;
         ym = xm*sin + ym*cos + y1;

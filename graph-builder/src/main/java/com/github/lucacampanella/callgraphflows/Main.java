@@ -34,8 +34,7 @@ public class Main implements Callable<Integer> {
         if(loggerLevel == null) {
             System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "error");
         }
-        final Logger LOGGER = LoggerFactory.getLogger(Main.class);
-        LOGGER.debug("Logger level = {}", loggerLevel);
+        LoggerFactory.getLogger(Main.class).debug("Logger level = {}", loggerLevel);
         JarAnalyzer analyzer;
 
         if(additionalJarsPath == null) {

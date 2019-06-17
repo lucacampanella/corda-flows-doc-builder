@@ -39,7 +39,7 @@ public class GNote extends GBaseTextComponent {
         g2.draw(new Line2D.Double(getStartX(), getStartY(), foldingPointTopX, foldingPointTopY));
         g2.draw(new Line2D.Double(getStartX(), getStartY(), getStartX(), (double) (getStartY()) + dim.height));
         g2.draw(new Line2D.Double(getStartX(), (double) (getStartY()) + dim.height,
-                getStartX() + dim.width, (double) (getStartY()) + dim.height));
+                (double) (getStartX()) + dim.width, (double) (getStartY()) + dim.height));
         g2.draw(new Line2D.Double((double) (getStartX()) + dim.width, (double) (getStartY()) + dim.height,
                 foldingPointRightX, foldingPointRightY));
 

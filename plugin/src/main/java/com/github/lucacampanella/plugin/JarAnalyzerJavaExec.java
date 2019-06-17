@@ -36,8 +36,6 @@ public class JarAnalyzerJavaExec extends JavaExec {
 
         if(pathToExecJar == null) { //not configured by DSL
             pathToExecJar = JarExecPathFinderUtils.getPathToExecJar(getProject());
-//            throw new GradleException("Could not retrieve jar executor, please add JCenter to your" +
-//                    "repositories or provide a path using pathToJarExec = \"path/to/your.jar\"");
         }
 
         this.args(pathToExecJar, pathToJar, "-o", outPath);
@@ -102,9 +100,9 @@ public class JarAnalyzerJavaExec extends JavaExec {
     }
 
     private LogLevel getCurrentLogLevel() {
-        for(LogLevel logLevel : LogLevel.values()) {
-            if(this.getLogger().isEnabled(logLevel)) {
-                return logLevel;
+        for(LogLevel logLevelIt : LogLevel.values()) {
+            if(this.getLogger().isEnabled(logLevelIt)) {
+                return logLevelIt;
             }
         }
 

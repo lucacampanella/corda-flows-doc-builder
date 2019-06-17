@@ -73,28 +73,7 @@ public class AnalyzerWithModel {
     //    ** A new responder written to override an existing responder must _still_ be annotated with `@InitiatedBy`
     //    referencing the base initiator.
     //    ** A new initiator written to override an existing initiator must _not_ have the @InitiatingFlow annotation.
-
-    //todo: better way to find the classes to analyze in a jar, also classes with no corresponding "initiated"
-    // flow should be analyzed
     public Map<CtClass, CtClass> getInitiatedClassToInitiatingMap() {
-
-        //find all initiating classes inside the jar and keep only the ones in the extention graph that are
-        //furthest away from the base class
-
-//        List<CtClass> initiatingClasses = getClassesByAnnotation(InitiatingFlow.class);
-//
-//        List<CtClass> wrongDoubleAnnotatedClasses = StaticAnalyzer.getAllWronglyDoubleAnnotatedClasses(initiatingClasses);
-//
-//        wrongDoubleAnnotatedClasses.forEach(klass -> LOGGER.warn("*** WARNING: the class " +
-//                klass.getSimpleName() + " contains the annotation @InitiatingFlow, but is already subclass" +
-//                " of a class containing such annotation, please remove it."));
-//
-//        initiatingClasses.removeAll(wrongDoubleAnnotatedClasses);
-//
-//        Map<CtClass, CtClass> superClassToFurthestAway = new HashMap<>(initiatingClasses.size());
-//        for(CtClass klass : initiatingClasses) {
-//            superClassToFurthestAway.put(klass, getFurthestAwaySubclass(klass));
-//        }
 
         //find all classes that are initiated by flows
         List<CtClass> initiatedClasses = getClassesByAnnotation(InitiatedBy.class);

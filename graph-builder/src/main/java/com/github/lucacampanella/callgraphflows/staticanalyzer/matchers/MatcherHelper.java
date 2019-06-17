@@ -19,6 +19,7 @@ import spoon.support.compiler.VirtualFile;
 import spoon.template.TemplateMatcher;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
@@ -38,21 +39,19 @@ public final class MatcherHelper {
 
     private static Set<String> allMatchersName = null;
 
-    private static final String[] matchersWithCompanion = {"sendMatcher", "sendWithBoolMatcher", "receiveMatcher",
-            "receiveWithBoolMatcher", "sendAndReceiveMatcher", "sendAndReceiveWithBoolMatcher", "subFlowMatcher"};
+    private static final String SEND_MATCHER = "sendMatcher";
+    private static final String SEND_WITH_BOOL_MATCHER = "sendWithBoolMatcher";
+    private static final String RECEIVE_MATCHER = "receiveMatcher";
+    private static final String RECEIVE_WITH_BOOL_MATCHER = "receiveWithBoolMatcher";
+    private static final String SEND_AND_RECEIVE_MATCHER = "sendAndReceiveMatcher";
+    private static final String SEND_AND_RECEIVE_WITH_BOOL_MATCHER = "sendAndReceiveWithBoolMatcher";
+    private static final String SUB_FLOW_MATCHER = "subFlowMatcher";
+
+    private static final String[] matchersWithCompanion = {SEND_MATCHER, SEND_WITH_BOOL_MATCHER, RECEIVE_MATCHER,
+            RECEIVE_WITH_BOOL_MATCHER, SEND_AND_RECEIVE_MATCHER, SEND_AND_RECEIVE_WITH_BOOL_MATCHER, SUB_FLOW_MATCHER};
 
     static {
         Launcher launcher = new Launcher();
-
-        //adds the jars needed to understand the corda imports
-
-
-//        final InputStream dependenciesTxt = MatcherHelper.class.getClassLoader().getResourceAsStream("AllPossibleClassPaths.txt");
-//        final String[] paths = new BufferedReader(new InputStreamReader(dependenciesTxt)).lines()
-//                .filter(str -> str.contains(".jar"))
-//                .toArray(String[]::new);
-//
-//        launcher.getEnvironment().setSourceClasspath(paths);
 
         final InputStream matcherContainerStream =
                 MatcherHelper.class.getClassLoader().getResourceAsStream("MatcherContainer.java");
@@ -189,17 +188,17 @@ public final class MatcherHelper {
             return TransactionBuilder.fromStatement(statement, analyzer);
         } else if (matchesAnyChildren(statement, "initiateFlowMatcher")) {
             return InitiateFlow.fromCtStatement(statement, analyzer);
-        } else if (matchesAnyChildren(statement, "sendMatcher") ||
-                matchesAnyChildren(statement, "sendWithBoolMatcher")) { //TODO: test the second line
+        } else if (matchesAnyChildren(statement, SEND_MATCHER) ||
+                matchesAnyChildren(statement, SEND_WITH_BOOL_MATCHER)) { //TODO: test the second line
             return Send.fromCtStatement(statement, analyzer);
-        } else if (matchesAnyChildren(statement, "receiveMatcher") ||
-                matchesAnyChildren(statement, "receiveWithBoolMatcher")) { //TODO: test the second line
+        } else if (matchesAnyChildren(statement, RECEIVE_MATCHER) ||
+                matchesAnyChildren(statement, RECEIVE_WITH_BOOL_MATCHER)) { //TODO: test the second line
             return Receive.fromCtStatement(statement, analyzer);
-        } else if (matchesAnyChildren(statement, "sendAndReceiveMatcher") ||
-                matchesAnyChildren(statement, "sendAndReceiveWithBoolMatcher")) { //TODO: test the second line
+        } else if (matchesAnyChildren(statement, SEND_AND_RECEIVE_MATCHER) ||
+                matchesAnyChildren(statement, SEND_AND_RECEIVE_WITH_BOOL_MATCHER)) { //TODO: test the second line
             return SendAndReceive.fromCtStatement(statement, analyzer);
         }
-        else if (matchesAnyChildren(statement, "subFlowMatcher")) {
+        else if (matchesAnyChildren(statement, SUB_FLOW_MATCHER)) {
             return SubFlowBuilder.fromCtStatement(statement, analyzer);
         }
 
@@ -271,70 +270,20 @@ public final class MatcherHelper {
         return res;
     }
 
-    public static List<CtStatement> findInterestingCtStatements(CtMethod method) {
-
-        Set<TemplateMatcher> allMatchers = getAllMatchers();
-
-        List<CtStatement> result = new ArrayList<>();
-
-        List<CtStatement> statements = method.getBody().getStatements();
-
-        boolean matched = false;
-        for(CtStatement statement : statements) {
-            matched = false;
-            for (TemplateMatcher matcher : allMatchers) {
-                if (!statement.filterChildren(matcher).list().isEmpty()) {
-                    result.add(statement);
-                    matched = true;
-                    break;
-                }
-            }
-//            if(!matched && statement instanceof CtAbstractInvocation) {
-//                result.add(statement);
-//                matched = true;
-//            }
-            final List<CtLocalVariable> localVars = statement.getElements(new TypeFilter<>(CtLocalVariable.class));
-            if (!matched && !localVars.isEmpty()) {
-                for (CtLocalVariable localVariable : localVars) {
-                    if (localVariable.getType().isSubtypeOf(getTypeReference(FlowSession.class))
-                            || localVariable.getType().isSubtypeOf(getTypeReference(FlowLogic.class))) {
-                        result.add(statement);
-                        matched = true;
-                        break;
-                    }
-                }
-            }
-            final List<CtAssignment> assigments = statement.getElements(new TypeFilter<>(CtAssignment.class));
-            if (!matched && !assigments.isEmpty()) {
-                for (CtAssignment assignment : assigments) {
-                    if (assignment.getType().isSubtypeOf(getTypeReference(FlowSession.class))
-                            || assignment.getType().isSubtypeOf(getTypeReference(FlowLogic.class))) {
-                        result.add(statement);
-                        matched = true;
-                        break;
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
-
-
     public static StatementInterface instantiateStatementIfQueryableMatches(CtQueryable queryable,
                                                                                          CtStatement statement,
                                                                                          AnalyzerWithModel analyzer) {
-        if (matchesAnyChildren(queryable, "sendMatcher") ||
-                matchesAnyChildren(statement, "sendWithBoolMatcher")) { //TODO: test the second line
+        if (matchesAnyChildren(queryable, SEND_MATCHER) ||
+                matchesAnyChildren(statement, SEND_WITH_BOOL_MATCHER)) { //TODO: test the second line
             return Send.fromCtStatement(statement, analyzer);
-        } else if (matchesAnyChildren(queryable, "receiveMatcher") ||
-                matchesAnyChildren(statement, "receiveWithBoolMatcher")) { //TODO: test the second line
+        } else if (matchesAnyChildren(queryable, RECEIVE_MATCHER) ||
+                matchesAnyChildren(statement, RECEIVE_WITH_BOOL_MATCHER)) { //TODO: test the second line
             return Receive.fromCtStatement(statement, analyzer);
-        } else if (matchesAnyChildren(queryable, "sendAndReceiveMatcher") ||
-                matchesAnyChildren(statement, "sendAndReceiveWithBoolMatcher")) { //TODO: test the second line
+        } else if (matchesAnyChildren(queryable, SEND_AND_RECEIVE_MATCHER) ||
+                matchesAnyChildren(statement, SEND_AND_RECEIVE_WITH_BOOL_MATCHER)) { //TODO: test the second line
             return SendAndReceive.fromCtStatement(statement, analyzer);
         }
-        else if (matchesAnyChildren(queryable, "subFlowMatcher")) {
+        else if (matchesAnyChildren(queryable, SUB_FLOW_MATCHER)) {
             return SubFlowBuilder.fromCtStatement(statement, analyzer);
         }
         return null;

@@ -43,8 +43,6 @@ public class SpoonClassFileTransformer implements ClassFileTransformer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SpoonClassFileTransformer.class);
 
 	protected String pathToDecompiled;
-	//protected String pathToRecompile;
-	/*protected String pathToCache;*/
 
 	//Field filled by Constructor
 	protected File cache;

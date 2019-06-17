@@ -166,8 +166,4 @@ public class CombinationsHolder {
 
         return true;
     }
-
-//    public boolean hasOneMatchWith(CombinationsHolder holder) {
-//
-//    }
 }

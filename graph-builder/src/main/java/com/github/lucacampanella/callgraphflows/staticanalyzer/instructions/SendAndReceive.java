@@ -17,11 +17,6 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
 
     boolean isSentConsumed = false;
 
-//    private static final Color BACKGROUND_COLOR = new Color(226, 255, 173); //Greenish and Yellowish
-//    protected Color getBackgroundColor() {
-//        return BACKGROUND_COLOR;
-//    }
-
     protected SendAndReceive(CtStatement statement) {
         super(statement);
     }

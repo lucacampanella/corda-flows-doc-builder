@@ -34,8 +34,7 @@ public class GComponentsList extends GBaseGraphicComponent {
         res.width = Math.max(res.width, components.stream()
                 .mapToInt(comp -> comp.getDimensions(g2).width).max().orElse(0));
 
-        return res; //todo: consider that some stuff might need to be on the same height as
-        //the other flow
+        return res;
     }
 
 
