@@ -46,7 +46,7 @@ public class GUtils {
     private static void drawArrowLine(Graphics g, int x1, int y1, int x2, int y2, int d, int h) {
         int dx = x2 - x1;
         int dy = y2 - y1;
-        double D = Math.sqrt(dx*dx + dy*dy);
+        double D = Math.sqrt((double) (dx*dx) + dy*dy);
         double xm = D - d;
         double xn = xm;
         double ym = h;

@@ -17,6 +17,7 @@ import spoon.reflect.visitor.filter.NamedElementFilter;
 import spoon.reflect.visitor.filter.TypeFilter;
 import spoon.support.reflect.code.CtFieldReadImpl;
 
+import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -107,18 +108,23 @@ public class AnalyzerWithModel {
         Map<CtClass, CtClass> initiatedClassToInitiating = new HashMap<>(initiatedClasses.size());
 
         for(CtClass klass : furthestInitiatedClasses) {
-            CtAnnotation initiatedByAnnotation = klass.getAnnotations().stream().filter(ctAnnotation ->
-                    ctAnnotation.getActualAnnotation().annotationType() == InitiatedBy.class).findFirst().get();
+            final Optional<CtAnnotation<? extends Annotation>> initiatedByAnnotationOptional = klass.getAnnotations().stream()
+                    .filter(ctAnnotation ->
+                    ctAnnotation.getActualAnnotation().annotationType() == InitiatedBy.class).findFirst();
 
-            final CtExpression referenceToClass = (CtExpression) initiatedByAnnotation.getAllValues().get("value");
+            if(initiatedByAnnotationOptional.isPresent()) {
+                final CtAnnotation<? extends Annotation> initiatedByAnnotation = initiatedByAnnotationOptional.get();
 
-            //maybe not the best way to get the class, but the only one I found
-            CtPath path = new CtPathStringBuilder().fromString("." +
-                    ((CtFieldReadImpl) referenceToClass).getTarget().toString());
+                final CtExpression referenceToClass = (CtExpression) initiatedByAnnotation.getAllValues().get("value");
 
-            final CtClass initiatingClass = (CtClass) path.evaluateOn(model.getRootPackage()).get(0);
+                //maybe not the best way to get the class, but the only one I found
+                CtPath path = new CtPathStringBuilder().fromString("." +
+                        ((CtFieldReadImpl) referenceToClass).getTarget().toString());
 
-            initiatedClassToInitiating.put(klass, initiatingClass);
+                final CtClass initiatingClass = (CtClass) path.evaluateOn(model.getRootPackage()).get(0);
+
+                initiatedClassToInitiating.put(klass, initiatingClass);
+            }
 
         }
 
@@ -137,18 +143,23 @@ public class AnalyzerWithModel {
         CtClass deeperInitiatedByClass = null;
         final List<CtClass> generalInitiatedByList = getClassesByAnnotation(InitiatedBy.class);
         for(CtClass klass : generalInitiatedByList) {
-            CtAnnotation initiatedByAnnotation = klass.getAnnotations().stream().filter(ctAnnotation ->
-                    ctAnnotation.getActualAnnotation().annotationType() == InitiatedBy.class).findFirst().get();
-            final CtExpression referenceToClass = (CtExpression) initiatedByAnnotation.getAllValues().get("value");
 
-            final CtClass correspondingInitiatingClass = (CtClass) ((CtFieldReadImpl) referenceToClass).getVariable()
-                    .getDeclaringType().getTypeDeclaration();
+            Optional<CtAnnotation<? extends Annotation>> initiatedByAnnotationOptional =
+                    klass.getAnnotations().stream().filter(ctAnnotation ->
+                    ctAnnotation.getActualAnnotation().annotationType() == InitiatedBy.class).findFirst();
+            if(initiatedByAnnotationOptional.isPresent()) {
+                final CtExpression referenceToClass = (CtExpression)
+                        initiatedByAnnotationOptional.get().getAllValues().get("value");
 
-            if(correspondingInitiatingClass.getReference().isSubtypeOf(initiatingClass.getReference()) &&
-                (deeperInitiatedByClass == null ||
-                        klass.getReference().isSubtypeOf(deeperInitiatedByClass.getReference()))) {
+                final CtClass correspondingInitiatingClass = (CtClass) ((CtFieldReadImpl) referenceToClass).getVariable()
+                        .getDeclaringType().getTypeDeclaration();
+
+                if (correspondingInitiatingClass.getReference().isSubtypeOf(initiatingClass.getReference()) &&
+                        (deeperInitiatedByClass == null ||
+                                klass.getReference().isSubtypeOf(deeperInitiatedByClass.getReference()))) {
                     deeperInitiatedByClass = klass;
                 }
+            }
 
         }
 

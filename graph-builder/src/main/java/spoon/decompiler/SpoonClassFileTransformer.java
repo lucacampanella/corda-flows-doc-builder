@@ -18,6 +18,7 @@ package spoon.decompiler;
 
 import org.benf.cfr.reader.Main;
 import spoon.IncrementalLauncher;
+import spoon.SpoonException;
 import spoon.SpoonModelBuilder;
 import spoon.reflect.CtModel;
 import spoon.reflect.declaration.CtType;
@@ -152,7 +153,9 @@ public class SpoonClassFileTransformer implements ClassFileTransformer {
 			launcher.saveCache();
 
 			//Get class model
-			CtType toBeTransformed =  model.getAllTypes().stream().filter(t -> t.getQualifiedName().equals(className.replace("/", "."))).findAny().get();
+			CtType toBeTransformed =  model.getAllTypes().stream().filter(t -> t.getQualifiedName()
+					.equals(className.replace("/", "."))).findAny()
+					.orElseThrow(() -> new SpoonException("Cannot transform class " + className));
 
 			//If the class model is not modified by user, resume unmodified loading
 			if (!transformer.accept(toBeTransformed)) {

@@ -52,9 +52,9 @@ public abstract class GIndentedComponent extends GBaseGraphicComponent {
         if(enteringArrowText != null) {
             g2.draw(new Line2D.Double(parentRightBorderX, getStartY(), arrowRightBorderX, getStartY()));
             g2.draw(new Line2D.Double(arrowRightBorderX, getStartY(), arrowRightBorderX,
-                    getStartY() + SPACE_BETWEEN_COMPONENTS * 2));
-            GUtils.drawArrow(g2, new Line2D.Double(arrowRightBorderX, getStartY() + SPACE_BETWEEN_COMPONENTS * 2,
-                    getStartX() + WIDTH, getStartY() + SPACE_BETWEEN_COMPONENTS * 2));
+                    (double) (getStartY()) + SPACE_BETWEEN_COMPONENTS * 2));
+            GUtils.drawArrow(g2, new Line2D.Double(arrowRightBorderX, (double) (getStartY()) + SPACE_BETWEEN_COMPONENTS * 2,
+                    (double) (getStartX()) + WIDTH, (double) (getStartY()) + SPACE_BETWEEN_COMPONENTS * 2));
             enteringArrowText.setStart(arrowRightBorderX + INDENTATION/2,
                     getStartY() + SPACE_BETWEEN_COMPONENTS - enteringArrowText.getDimensions(g2).height/2);
             enteringArrowText.draw(g2);
@@ -78,9 +78,9 @@ public abstract class GIndentedComponent extends GBaseGraphicComponent {
         if(exitingArrowText != null) {
             g2.draw(new Line2D.Double(getStartX() + WIDTH, currStartY, arrowRightBorderX, currStartY));
             g2.draw(new Line2D.Double(arrowRightBorderX, currStartY, arrowRightBorderX,
-                    currStartY + SPACE_BETWEEN_COMPONENTS * 2));
-            GUtils.drawArrow(g2, new Line2D.Double(arrowRightBorderX, currStartY + SPACE_BETWEEN_COMPONENTS * 2,
-                    parentRightBorderX, currStartY + SPACE_BETWEEN_COMPONENTS * 2));
+                    (double) (currStartY) + SPACE_BETWEEN_COMPONENTS * 2));
+            GUtils.drawArrow(g2, new Line2D.Double(arrowRightBorderX, (double) (currStartY) + SPACE_BETWEEN_COMPONENTS * 2,
+                    parentRightBorderX, (double) (currStartY) + SPACE_BETWEEN_COMPONENTS * 2));
 
             exitingArrowText.setStart( arrowRightBorderX+INDENTATION/2,
                     currStartY + SPACE_BETWEEN_COMPONENTS - exitingArrowText.getDimensions(g2).height/2);

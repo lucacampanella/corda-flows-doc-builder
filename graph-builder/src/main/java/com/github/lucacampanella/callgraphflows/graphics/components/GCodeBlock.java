@@ -60,7 +60,7 @@ public class GCodeBlock extends GBaseGraphicComponent {
         }
 
         GUtils.drawColoredShapeWithStroke(g2, new Line2D.Double(getStartX(), startingLineY,
-                getStartX(), currY - SPACE_BETWEEN_COMPONENTS), Color.WHITE, new BasicStroke(2));
+                getStartX(), (double) (currY) - SPACE_BETWEEN_COMPONENTS), Color.WHITE, new BasicStroke(2));
     }
 
     @Override

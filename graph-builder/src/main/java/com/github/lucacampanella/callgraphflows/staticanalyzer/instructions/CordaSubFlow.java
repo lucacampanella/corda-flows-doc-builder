@@ -26,7 +26,7 @@ public class CordaSubFlow extends SubFlowBase implements StatementWithCompanionI
     public boolean acceptCompanion(StatementWithCompanionInterface companion) {
         if(companion instanceof CordaSubFlow) {
             CordaSubFlow otherFlow = (CordaSubFlow) companion;
-            if (isInitiatingFlow()  == otherFlow.isInitiatingFlow()) {
+            if (isInitiatingFlow().equals(otherFlow.isInitiatingFlow())) {
                 return false; //they are both either initiating or initiated
             }
             CordaSubFlow initiatingFlow = this.isInitiatingFlow() ? this : otherFlow;

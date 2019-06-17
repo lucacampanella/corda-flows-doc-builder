@@ -29,24 +29,24 @@ public class GNote extends GBaseTextComponent {
         path.moveTo(getStartX(), getStartY());
         path.lineTo(foldingPointTopX, foldingPointTopY);
         path.lineTo(foldingPointRightX, foldingPointRightY);
-        path.lineTo(getStartX() + dim.width, getStartY() + dim.height);
-        path.lineTo(getStartX(), getStartY() + dim.height);
+        path.lineTo((double) (getStartX()) + dim.width, (double) (getStartY()) + dim.height);
+        path.lineTo(getStartX(), (double) (getStartY()) + dim.height);
         path.closePath();
 
         GUtils.fillWithColor(g2, path, Color.WHITE);
 
 
         g2.draw(new Line2D.Double(getStartX(), getStartY(), foldingPointTopX, foldingPointTopY));
-        g2.draw(new Line2D.Double(getStartX(), getStartY(), getStartX(), getStartY() + dim.height));
-        g2.draw(new Line2D.Double(getStartX(), getStartY() + dim.height,
-                getStartX() + dim.width, getStartY() + dim.height));
-        g2.draw(new Line2D.Double(getStartX() + dim.width, getStartY() + dim.height,
+        g2.draw(new Line2D.Double(getStartX(), getStartY(), getStartX(), (double) (getStartY()) + dim.height));
+        g2.draw(new Line2D.Double(getStartX(), (double) (getStartY()) + dim.height,
+                getStartX() + dim.width, (double) (getStartY()) + dim.height));
+        g2.draw(new Line2D.Double((double) (getStartX()) + dim.width, (double) (getStartY()) + dim.height,
                 foldingPointRightX, foldingPointRightY));
 
         g2.draw(new Line2D.Double(foldingPointTopX, foldingPointTopY,
-                foldingPointTopX, foldingPointTopY + FOLD_DIM));
+                foldingPointTopX, (double) (foldingPointTopY) + FOLD_DIM));
         g2.draw(new Line2D.Double(foldingPointRightX, foldingPointRightY,
-                foldingPointRightX - FOLD_DIM, foldingPointRightY));
+                (double) (foldingPointRightX) - FOLD_DIM, foldingPointRightY));
         g2.draw(new Line2D.Double(foldingPointRightX, foldingPointRightY,
                 foldingPointTopX, foldingPointTopY));
 
