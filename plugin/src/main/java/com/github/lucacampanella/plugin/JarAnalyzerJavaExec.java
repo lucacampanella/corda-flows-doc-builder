@@ -1,10 +1,7 @@
 package com.github.lucacampanella.plugin;
 
 import org.gradle.api.logging.LogLevel;
-import org.gradle.api.tasks.Input;
-import org.gradle.api.tasks.JavaExec;
-import org.gradle.api.tasks.OutputDirectory;
-import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.*;
 import org.slf4j.event.Level;
 
 import java.util.EnumMap;
@@ -85,6 +82,7 @@ public class JarAnalyzerJavaExec extends JavaExec {
     }
 
     @Input
+    @Optional
     public String getPathToExecJar() {
         return pathToExecJar;
     }
