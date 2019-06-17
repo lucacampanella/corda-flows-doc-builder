@@ -1,5 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
+import com.github.lucacampanella.callgraphflows.AnalysisErrorException;
 import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
@@ -7,6 +8,8 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import net.corda.core.flows.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtMethod;
@@ -18,6 +21,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public class SubFlowBuilder {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubFlowBuilder.class);
 
     private SubFlowBuilder() {
         //private constructor to hide public one
@@ -136,17 +141,22 @@ public class SubFlowBuilder {
             result = new CordaSubFlow();
         }
         else { //is not a corda flow
-            final AnalysisResult resultOfClassAnalysis = analyzer.analyzeFlowLogicClass(
-                    (CtClass) subFlowInfo.subFlowType.getDeclaration());
+            try {
+                AnalysisResult resultOfClassAnalysis = resultOfClassAnalysis = analyzer.analyzeFlowLogicClass(
+                        (CtClass) subFlowInfo.subFlowType.getDeclaration());
+                subFlowInfo.isInitiatingFlow = resultOfClassAnalysis.hasCounterpartyResult();
+                if (subFlowInfo.isInitiatingFlow) {
+                    result = new InitiatingSubFlow();
+                } else {
+                    result = new InlinableSubFlow();
+                }
+                ((SubFlowBaseWithAnalysis) result).resultOfClassAnalysis = resultOfClassAnalysis;
 
-            subFlowInfo.isInitiatingFlow = resultOfClassAnalysis.hasCounterpartyResult();
-            if(subFlowInfo.isInitiatingFlow) {
-                result = new InitiatingSubFlow();
+            } catch (AnalysisErrorException e) {
+                LOGGER.error("Could not get contents of subflow {}, inserting empty flow instead",
+                        subFlowInfo.subFlowType.toString(), e);
+                result = new CordaSubFlow();
             }
-            else {
-                result = new InlinableSubFlow();
-            }
-            ((SubFlowBaseWithAnalysis) result).resultOfClassAnalysis = resultOfClassAnalysis;
         }
 
         subFlowInfo.initializeFlow(result);

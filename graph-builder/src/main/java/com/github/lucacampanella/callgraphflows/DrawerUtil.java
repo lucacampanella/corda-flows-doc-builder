@@ -49,7 +49,13 @@ public final class DrawerUtil {
     }
 
     public static void drawFromClass(AnalyzerWithModel analyzerWithModel, CtClass klass, String outPath) throws IOException {
-        final AnalysisResult analysisResult = analyzerWithModel.analyzeFlowLogicClass(klass);
+        final AnalysisResult analysisResult;
+        try {
+            analysisResult = analyzerWithModel.analyzeFlowLogicClass(klass);
+        } catch (AnalysisErrorException e) {
+            LOGGER.error("Could analyze class {}, skipping this class", klass.getQualifiedName(), e);
+            return;
+        }
 
         final ClassDescriptionContainer classDescription = analysisResult.getClassDescription();
 

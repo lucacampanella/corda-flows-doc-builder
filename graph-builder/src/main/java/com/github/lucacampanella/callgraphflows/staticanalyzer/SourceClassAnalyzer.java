@@ -24,7 +24,7 @@ public class SourceClassAnalyzer extends AnalyzerWithModel {
 
         analysisName = Arrays.stream(pathsToClasses).map(
                 pathToJar -> pathToJar.substring(pathToJar.lastIndexOf(System.getProperty("file.separator"))+1)).
-                collect(Collectors.joining(","));
+                collect(Collectors.joining(", "));
 
         Launcher spoon = new Launcher();
         for(String path : pathsToClasses) {
