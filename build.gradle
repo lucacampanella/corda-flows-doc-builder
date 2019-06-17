@@ -86,6 +86,11 @@ subprojects {
     }
 }
 
+// coverage
+subprojects {
+	apply plugin: 'jacoco'
+}
+
 apply plugin: 'base'
 apply plugin: 'jacoco'
 task jacocoMerge(type: JacocoMerge) {
@@ -117,6 +122,7 @@ allprojects {
         }
     }
 }
+project.tasks['sonarqube'].dependsOn jacocoRootReport
 
 //releases
 subprojects {
