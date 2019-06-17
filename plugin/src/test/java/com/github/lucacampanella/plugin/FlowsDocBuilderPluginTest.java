@@ -63,9 +63,10 @@ class FlowsDocBuilderPluginTest {
                 + "/com.github.lucacampanella.testclasses.SimpleFlowTest$Initiator.svg");
 
         assertThat(nodeContents).hasSize(4);
-        assertThat(nodeContents).contains("[52] initiateFlow(session)",
-                "[53] ==><== sendAndReceive(<== <<String>>, ==> <<Boolean>>)==><==",
-                "[32] <== receive(<<Boolean>>) <==", "[33] ==> send(<<String>>) ==>");
+        assertThat(nodeContents).contains("[49] initiateFlow(session)",
+                "[50] ==><== sendAndReceive(<== <<String>>, ==> <<Boolean>>)==><==",
+                "[30] <== receive(<<Boolean>>) <==",
+                "[31] ==> send(<<String>>) ==>");
 
     }
 
