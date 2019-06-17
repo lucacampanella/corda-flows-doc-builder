@@ -1,6 +1,5 @@
 plugins {
     id 'java-library'
-    //id 'maven'
     id 'java-gradle-plugin'
     id "com.gradle.plugin-publish" version "0.10.1"
 }
@@ -17,9 +16,6 @@ dependencies {
     implementation gradleApi()
 
     testImplementation group: 'commons-io', name: 'commons-io', version: '2.6'
-    testImplementation("org.junit.jupiter:junit-jupiter:$junit5_version")
-    testImplementation("org.assertj:assertj-core:$assertj_version")
-    testRuntime("org.junit.jupiter:junit-jupiter-engine:$junit5_version")
     testImplementation project(":test-utils").sourceSets.test.output
 }
 
@@ -28,7 +24,7 @@ gradlePlugin {
     plugins {
         cordaFlowsDocBuilder {
             id = 'com.github.lucacampanella.plugin.flows-doc-builder-plugin'
-            displayName = 'corda flows doc builder plugin' // todo: change fro gradle 5
+            displayName = 'corda flows doc builder plugin'
             description = 'Gradle plugin to automatically generate graph that represent Corda flows interactions'
             implementationClass = 'com.github.lucacampanella.plugin.FlowsDocBuilderPlugin'
         }
@@ -47,13 +43,3 @@ jar {
                 'Implementation-Version': version
     }
 }
-
-
-//uploadArchives {
-//    repositories {
-//        mavenDeployer {
-//            repository(url: mavenLocal().url)
-//            print(mavenLocal().url)
-//        }
-//    }
-//}

@@ -77,6 +77,13 @@ allprojects {
     }
 }
 
+subprojects {
+    dependencies {
+        testImplementation("org.junit.jupiter:junit-jupiter:$junit5_version")
+        testImplementation("org.assertj:assertj-core:$assertj_version")
+        testRuntime("org.junit.jupiter:junit-jupiter-engine:$junit5_version")
+    }
+}
 
 //releases
 subprojects {

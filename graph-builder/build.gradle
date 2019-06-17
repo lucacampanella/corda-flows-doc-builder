@@ -10,93 +10,12 @@ buildscript {
 }
 
 plugins {
-    id 'java'
     id 'application'
 //    id 'maven-publish'
 }
 apply plugin: 'com.github.johnrengelman.shadow'
-//--------------------------------------- Added for publishing on sonartype
-//apply plugin: 'com.bmuschko.nexus'
 
-//artifactory {
-//    contextUrl = "${artifactory_contextUrl}"   //The base Artifactory URL if not overridden by the publisher/resolver
-//    publish {
-//        repository {
-//            repoKey = 'gradle-dev-local'
-//            username = "${artifactory_user}"
-//            password = "${artifactory_password}"
-//            maven = true
-//
-//        }
-//    }
-//    resolve {
-//        repository {
-//            repoKey = 'gradle-dev'
-//            username = "${artifactory_user}"
-//            password = "${artifactory_password}"
-//            maven = true
-//
-//        }
-//    }
-//}
-
-//publishing {
-//    publications {
-//        maven(MavenPublication) {
-////            groupId = group
-////            artifactId = project.getName()
-////            version = project.version
-////
-////            from components.java
-//            artifact file("build/graph-builder-" + project.version + ".jar")
-//            println "publish called"
-//        }
-//    }
-//}
-
-//--------------------------------------- Added for publishing on sonartype
-//archivesBaseName = 'graph-builder'
-//modifyPom {
-//    project {
-//        name 'corda-flows-doc-builder'
-//        description 'Library that builds graphs regarding Croda flows, useful for documentation'
-//        url 'https://bitbucket.org/objdict/objjson'
-//        inceptionYear '2018'
-//        scm {
-//            url 'https://github.com/lucacampanella/corda-flows-doc-builder'
-//            connection 'scm:https://github.com/lucacampanella/corda-flows-doc-builder.git'
-//            developerConnection 'scm:git://github.com/lucacampanella/corda-flows-doc-builder.git'
-//        }
-//        licenses {
-//            license {
-//                name 'The Apache Software License, Version 2.0'
-//                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-//                distribution 'repo'
-//            }
-//        }
-//        developers {
-//            developer {
-//                id 'lucacampanella'
-//                name 'Luca Campanella'
-//                email 'luca.campanella1@gmail.com'
-//            }
-//        }
-//    }
-//}
-//extraArchive {
-//    sources = true
-//    tests = true
-//    javadoc = true
-//}
-//nexus {
-//    sign = true
-//    repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-//    snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
-//}
-
-//-------------------------------
-
-build.dependsOn(publish) //todo: change for gradle 5
+build.dependsOn(publish)
 
 repositories {
     mavenCentral()
@@ -111,21 +30,14 @@ dependencies {
     implementation "$corda_release_group:corda-core:$corda_release_version"
     implementation "fr.inria.gforge.spoon:spoon-core:$spoon_version"
 
-    //FIXME: we should depend on the thing they should publish on the remote repo, bu have not done yet
     implementation "org.jboss.windup.decompiler.fernflower:fernflower:2.5.0.Final"
     implementation "org.benf:cfr:0.135"
-    //implementation name: 'spoon-decompiler-0.1.0-SNAPSHOT'//"fr.inria.gforge.spoon:spoon-decompiler:0.1.0-SNAPSHOT"
 
     implementation "org.jfree:jfreesvg:3.4"
-
     implementation "org.slf4j:slf4j-simple:1.7.26"
-
     implementation "info.picocli:picocli:3.9.6"
 
-    testImplementation "org.junit.jupiter:junit-jupiter:$junit5_version"
-    testImplementation "org.assertj:assertj-core:$assertj_version"
     testImplementation "org.slf4j:slf4j-simple:1.7.26"
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:$junit5_version"
     testImplementation project(":test-utils").sourceSets.test.output
 }
 

@@ -1,14 +1,1 @@
-plugins {
-    id 'java'
-}
-
 sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter:$junit5_version")
-    testImplementation("org.assertj:assertj-core:$assertj_version")
-}
