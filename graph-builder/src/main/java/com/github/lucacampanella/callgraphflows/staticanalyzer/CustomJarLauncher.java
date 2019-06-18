@@ -5,6 +5,7 @@ import spoon.Launcher;
 import spoon.SpoonException;
 import spoon.decompiler.CFRDecompiler;
 import spoon.decompiler.Decompiler;
+import spoon.decompiler.FernflowerDecompiler;
 
 import java.io.File;
 import java.io.IOException;
@@ -90,6 +91,7 @@ public class CustomJarLauncher extends Launcher {
 
     protected Decompiler getDefaultDecompiler() {
         return new CFRDecompiler(this.decompiledSrc);
+        //return new FernflowerDecompiler(this.decompiledSrc);
     }
 }
 

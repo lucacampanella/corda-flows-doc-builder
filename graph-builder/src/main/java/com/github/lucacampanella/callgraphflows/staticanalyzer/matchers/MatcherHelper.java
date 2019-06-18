@@ -13,6 +13,7 @@ import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.declaration.CtTypedElement;
 import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.chain.CtQueryable;
+import spoon.reflect.visitor.filter.InvocationFilter;
 import spoon.reflect.visitor.filter.NamedElementFilter;
 import spoon.reflect.visitor.filter.TypeFilter;
 import spoon.support.compiler.VirtualFile;
@@ -202,6 +203,10 @@ public final class MatcherHelper {
             return SubFlowBuilder.fromCtStatement(statement, analyzer);
         }
 
+//        final CtMethod ctMethod = (CtMethod) MatcherHelper.model.getElements(new NamedElementFilter(CtMethod.class, "subFlowMatcher")).get(0);
+//
+//        new InvocationFilter(ctMethod);
+
         return null;
     }
 
@@ -286,6 +291,7 @@ public final class MatcherHelper {
         else if (matchesAnyChildren(queryable, SUB_FLOW_MATCHER)) {
             return SubFlowBuilder.fromCtStatement(statement, analyzer);
         }
+
         return null;
     }
 }

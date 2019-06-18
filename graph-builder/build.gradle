@@ -37,6 +37,8 @@ dependencies {
     implementation "org.slf4j:slf4j-simple:1.7.26"
     implementation "info.picocli:picocli:3.9.6"
 
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.0.1-2"
+
     testImplementation "org.slf4j:slf4j-simple:1.7.26"
     testImplementation project(":test-utils").sourceSets.test.output
 }

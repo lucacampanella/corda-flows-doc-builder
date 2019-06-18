@@ -32,6 +32,7 @@ public class DoubleExtendingSuperclassTestFlow {
                 otherSession.send(1);
                 otherSession.receive(String.class);
                 SendTransactionFlow stf = new SendTransactionFlow(otherSession, null);
+                stf.getLogger().info("info");
                 return null;
             }
 
