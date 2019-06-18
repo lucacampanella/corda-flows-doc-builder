@@ -123,7 +123,7 @@ gradle-app.setting
 #ignore svg files as they are the result of the analysis
 **/*.svg
 # this one instead is needed for the readme
-!com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.MethodInvocationTestFlow$Initiator.svg
+!resources/com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.GraphForDocsFlow$Initiator.svg
 
 # Cache of project
 .gradletasknamecache

@@ -28,15 +28,14 @@ The doc builder can be used in two ways:
 
 #### As a Gradle plugin
 
-To apply the plugin, in the `build.gradle`:
+To apply the plugin, in the `build.gradle` 
+(see [gradle website](https://plugins.gradle.org/plugin/com.github.lucacampanella.plugin.flows-doc-builder-plugin)):
 
 Using the plugin DSL
 
-<!-- //todo: use final version here, use right repo  -->
-
 ```
 plugins {
-  id "com.github.lucacampanella.plugin.flows-doc-builder-plugin" version "0.0.0-SNAPSHOT"
+  id "com.github.lucacampanella.plugin.flows-doc-builder-plugin" version "0.0.12"
 }
 ```
 
@@ -50,7 +49,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.com.github.lucacampanella:plugin:0.0.0-SNAPSHOT"
+    classpath "com.github.lucacampanella:plugin:0.0.12"
   }
 }
 
@@ -60,10 +59,16 @@ apply plugin: "com.github.lucacampanella.plugin.flows-doc-builder-plugin"
 Be careful: in any case the plugin should be applied after the Java plugin or any other plugin that creates 
 a Jar task. Otherwise the plugin won't find these tasks and won't analyze the corresponding Jars.
 
+The tasks created by the plugin need a dependency part of JCenter, so please include it in your project repositories:
+```
+repositories {
+    jcenter()
+}
+```
+
 #### As a standalone executable
-Download latest version of the Jar from 
-https://bintray.com/lucacampanella/mvn-release/graph-builder
-//todo: check this is the latest link
+Download latest version of the fat Jar (ends in `-all`) from the [Bintray repo](https://bintray.com/lucacampanella/mvn-release/graph-builder)
+ (also uploaded on JCenter).
 
 
 ## Usage
@@ -148,7 +153,7 @@ After cloning the repo, run `./gradlew test`
 ## Example output
 This is an example of how the produced .svg image looks like. The file is generated from the analysis of 
 [GraphForDocsFlow.java](graph-builder/src/test/java/com/github/lucacampanella/callgraphflows/staticanalyzer/testclasses/GraphForDocsFlow.java)
-![Example flow](resources/com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.MethodInvocationTestFlow$Initiator.svg) 
+![Example flow](resources/com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.GraphForDocsFlow$Initiator.svg) 
 
 ## Built With
 
@@ -181,7 +186,6 @@ and [Cardossier](https://www.adnovum.ch/en/innovation/blockchain_car_dossier.htm
 This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details
 
 ## Acknowledgments
-//todo
 * Special and huge thanks goes to Michael von Känel for answering all my questions thoroughly and always with a smile
 * Hat tip to anyone whose code was used
 
