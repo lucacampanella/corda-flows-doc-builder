@@ -1,6 +1,8 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlow;
+import com.github.lucacampanella.callgraphflows.graphics.puml.PBaseComponent;
+import com.github.lucacampanella.callgraphflows.graphics.puml.PSubFlow;
+import com.github.lucacampanella.callgraphflows.graphics.svg.components.GSubFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 
 
@@ -23,6 +25,11 @@ public class CordaSubFlow extends SubFlowBase implements StatementWithCompanionI
     }
 
     @Override
+    protected void buildGraphElem() {
+        graphElem = getMainSubFlowElement();
+    }
+
+    @Override
     public boolean acceptCompanion(StatementWithCompanionInterface companion) {
         if(companion instanceof CordaSubFlow) {
             CordaSubFlow otherFlow = (CordaSubFlow) companion;
@@ -38,10 +45,6 @@ public class CordaSubFlow extends SubFlowBase implements StatementWithCompanionI
             }
         }
         return false;
-    }
-
-    protected void buildGraphElem() {
-        graphElem = getMainSubFlowElement();
     }
 
     @Override

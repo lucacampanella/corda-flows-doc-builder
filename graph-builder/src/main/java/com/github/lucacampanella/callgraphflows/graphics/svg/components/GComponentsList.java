@@ -1,4 +1,4 @@
-package com.github.lucacampanella.callgraphflows.graphics.components;
+package com.github.lucacampanella.callgraphflows.graphics.svg.components;
 
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
@@ -42,6 +42,11 @@ public class GComponentsList extends GBaseGraphicComponent {
     public void drawBrothersAndLinks(SVGGraphics2D g2) {
         super.drawBrothersAndLinks(g2);
         components.forEach(comp -> comp.drawBrothersAndLinks(g2));
+    }
+
+    @Override
+    public String getPUMLString() {
+        return null; //todo if class wants to be used
     }
 
 

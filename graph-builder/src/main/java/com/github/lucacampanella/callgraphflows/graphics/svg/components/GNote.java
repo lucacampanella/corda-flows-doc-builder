@@ -1,6 +1,6 @@
-package com.github.lucacampanella.callgraphflows.graphics.components;
+package com.github.lucacampanella.callgraphflows.graphics.svg.components;
 
-import com.github.lucacampanella.callgraphflows.graphics.utils.GUtils;
+import com.github.lucacampanella.callgraphflows.graphics.svg.utils.GUtils;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
 import java.awt.*;

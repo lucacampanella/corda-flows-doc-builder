@@ -1,7 +1,7 @@
-package com.github.lucacampanella.callgraphflows.graphics.utils;
+package com.github.lucacampanella.callgraphflows.graphics.svg.utils;
 
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseGraphicComponent;
-import com.github.lucacampanella.callgraphflows.graphics.preferences.PreferencesInterface;
+import com.github.lucacampanella.callgraphflows.graphics.svg.components.GBaseGraphicComponent;
+import com.github.lucacampanella.callgraphflows.graphics.svg.preferences.PreferencesInterface;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
 import java.awt.*;
@@ -101,5 +101,9 @@ public class GUtils {
         g = Math.min(255.0,color.getGreen()*pref.getBrighterFactor());
         b = Math.min(255.0, color.getBlue()*pref.getBrighterFactor());
         return new Color((int) r, (int) g, (int) b);
+    }
+
+    public static String fromColorToHex(Color color) {
+        return String.format("#%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue());
     }
 }

@@ -1,6 +1,6 @@
-package com.github.lucacampanella.callgraphflows.graphics.components;
+package com.github.lucacampanella.callgraphflows.graphics.svg.components;
 
-import com.github.lucacampanella.callgraphflows.graphics.utils.GUtils;
+import com.github.lucacampanella.callgraphflows.graphics.svg.utils.GUtils;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
 import java.awt.*;
@@ -84,5 +84,16 @@ public class GBaseTextComponent extends GBaseGraphicComponent {
 
     public void setBackgroundColor(Color backgroundColor) {
         this.backgroundColor = backgroundColor;
+    }
+
+    public String getPUMLString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getSessionName());
+        sb.append("->");
+        sb.append(getSessionName());
+        sb.append(": ");
+        sb.append(getDisplayText());
+        sb.append("\n");
+        return sb.toString();
     }
 }

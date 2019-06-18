@@ -1,4 +1,4 @@
-package com.github.lucacampanella.callgraphflows.graphics.components;
+package com.github.lucacampanella.callgraphflows.graphics.svg.components;
 
 public class GInstruction extends GBaseTextComponent {
 

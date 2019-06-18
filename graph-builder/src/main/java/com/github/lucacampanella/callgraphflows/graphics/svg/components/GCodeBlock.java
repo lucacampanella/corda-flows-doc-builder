@@ -1,6 +1,6 @@
-package com.github.lucacampanella.callgraphflows.graphics.components;
+package com.github.lucacampanella.callgraphflows.graphics.svg.components;
 
-import com.github.lucacampanella.callgraphflows.graphics.utils.GUtils;
+import com.github.lucacampanella.callgraphflows.graphics.svg.utils.GUtils;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
 import java.awt.*;
@@ -88,5 +88,10 @@ public class GCodeBlock extends GBaseGraphicComponent {
     public void drawBrothersAndLinks(SVGGraphics2D g2) {
         super.drawBrothersAndLinks(g2);
         components.forEach(comp -> comp.drawBrothersAndLinks(g2));
+    }
+
+    @Override
+    public String getPUMLString() {
+        return null; //todo if class wants to be used
     }
 }

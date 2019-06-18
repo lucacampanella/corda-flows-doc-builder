@@ -1,8 +1,12 @@
-package com.github.lucacampanella.callgraphflows.graphics.components;
+package com.github.lucacampanella.callgraphflows.graphics.svg.components;
 
+import com.github.lucacampanella.callgraphflows.graphics.svg.utils.GUtils;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
 import java.awt.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class GSubFlowWithCounterparty extends GBaseGraphicComponent {
 
@@ -32,6 +36,46 @@ public class GSubFlowWithCounterparty extends GBaseGraphicComponent {
                     - GSubFlow.INDENTATION-1;
             g2.drawLine(arrowBetweenFlowStartX, arrowBetweenFlowY, arrowBetweenFlowFinishX, arrowBetweenFlowY);
         }
+    }
+
+
+    @Override
+    public String getPUMLString() {
+        if(!hasCounterpartySubFlow()) {
+            return mainSubFlow.getPUMLString();
+        }
+
+        StringBuilder sb = new StringBuilder();
+        //"Member Node" -> "Member Node": ReceiveTransactionFlow()
+        if(mainSubFlow.getEnteringArrowText() != null) {
+            sb.append(mainSubFlow.getEnteringArrowText().getPUMLString());
+        }
+        //activate "Member Node" #Lightblue
+        sb.append("activate ");
+        sb.append(getSessionName());
+        sb.append(" ");
+        sb.append(GUtils.fromColorToHex(mainSubFlow.getAwtColor()));
+        sb.append("\n");
+
+        for(GBaseGraphicComponent comp : mainSubFlow.getComponents()) {
+            if(comp != initiateFlowInstruction) {
+                sb.append(comp.getPUMLString());
+            }else {
+                sb.append(getSessionName());
+                sb.append("->");
+                sb.append(counterpartySubFlow.getSessionName());
+                sb.append(": ");
+                sb.append(initiateFlowInstruction.getDisplayText());
+                sb.append("\n");
+                sb.append(counterpartySubFlow.getPUMLString());
+            }
+        }
+
+        if(mainSubFlow.exitingArrowText != null) {
+            sb.append(mainSubFlow.getExitingArrowText().getPUMLString());
+        }
+
+        return sb.toString();
     }
 
     @Override
@@ -90,5 +134,22 @@ public class GSubFlowWithCounterparty extends GBaseGraphicComponent {
         this.initiateFlowInstruction = initiateFlowInstruction;
         recomputeDimensions = true;
         this.counterpartySubFlow.setParent(this);
+        this.counterpartySubFlow.setSessionName("\"" + counterpartySubFlow.getEnteringArrowText().getText()
+        + "\"");
+    }
+
+    public java.util.List<String> getCounterpartiesSessionNames() {
+        List<String> res = new LinkedList<>();
+        if(hasCounterpartySubFlow()) {
+            res.add(counterpartySubFlow.getSessionName());
+        }
+        res.addAll(mainSubFlow.getCounterpartiesSessionNames());
+        res.addAll(counterpartySubFlow.getCounterpartiesSessionNames());
+        return res;
+    }
+
+    public void setSessionName(String sessionName) {
+        super.setSessionName(sessionName);
+        mainSubFlow.setSessionName(sessionName);
     }
 }

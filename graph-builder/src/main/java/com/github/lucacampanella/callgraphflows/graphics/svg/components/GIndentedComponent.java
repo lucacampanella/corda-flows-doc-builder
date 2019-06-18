@@ -1,14 +1,19 @@
-package com.github.lucacampanella.callgraphflows.graphics.components;
+package com.github.lucacampanella.callgraphflows.graphics.svg.components;
 
-import com.github.lucacampanella.callgraphflows.graphics.utils.GUtils;
+import com.github.lucacampanella.callgraphflows.graphics.svg.utils.GUtils;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class GIndentedComponent extends GBaseGraphicComponent {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GIndentedComponent.class);
+
     public static final int WIDTH = 30;
     static final int INDENTATION = WIDTH/2;
     static final int SPACE_BETWEEN_COMPONENTS = WIDTH/3;
@@ -89,6 +94,36 @@ public abstract class GIndentedComponent extends GBaseGraphicComponent {
     }
 
     @Override
+    public String getPUMLString() {
+        StringBuilder sb = new StringBuilder();
+        //"Member Node" -> "Member Node": ReceiveTransactionFlow()
+        if(enteringArrowText != null) {
+            sb.append(enteringArrowText.getPUMLString());
+        }
+        //activate "Member Node" #Lightblue
+        sb.append("activate ");
+        sb.append(getSessionName());
+        sb.append(" ");
+        sb.append(GUtils.fromColorToHex(getAwtColor()));
+        sb.append("\n");
+
+        for(GBaseGraphicComponent comp : components) {
+            sb.append(comp.getPUMLString());
+        }
+
+        if(exitingArrowText != null) {
+            sb.append(exitingArrowText.getPUMLString());
+        }
+
+        sb.append("deactivate ");
+        sb.append(getSessionName());
+        sb.append(" ");
+        sb.append("\n");
+
+        return sb.toString();
+    }
+
+    @Override
     public Dimension computeDimensions(SVGGraphics2D g2) {
         Dimension res = new Dimension(getRectDimensions(g2));
 
@@ -145,10 +180,16 @@ public abstract class GIndentedComponent extends GBaseGraphicComponent {
 
     public void setEnteringArrowText(GBaseTextComponent enteringArrowText) {
         this.enteringArrowText = enteringArrowText;
+        if(enteringArrowText != null) {
+            this.enteringArrowText.setSessionName(getSessionName());
+        }
     }
 
     public void setExitingArrowText(GBaseTextComponent exitingArrowText) {
         this.exitingArrowText = exitingArrowText;
+        if(exitingArrowText != null) {
+            this.exitingArrowText.setSessionName(getSessionName());
+        }
     }
 
     @Override
@@ -176,5 +217,27 @@ public abstract class GIndentedComponent extends GBaseGraphicComponent {
 
     public GBaseTextComponent getExitingArrowText() {
         return exitingArrowText;
+    }
+
+    public List<GBaseGraphicComponent> getComponents() {
+        return components;
+    }
+
+    public List<String> getCounterpartiesSessionNames() {
+        return components.stream().map(comp -> comp.getCounterpartiesSessionNames()).flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void setSessionName(String sessionName) {
+        super.setSessionName(sessionName);
+        LOGGER.trace("Set session name: " + sessionName);
+        if(enteringArrowText != null) {
+            enteringArrowText.setSessionName(sessionName);
+        }
+        if(exitingArrowText != null) {
+            exitingArrowText.setSessionName(sessionName);
+        }
+        components.forEach(comp -> comp.setSessionName(sessionName));
     }
 }

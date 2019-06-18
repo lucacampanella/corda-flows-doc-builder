@@ -1,4 +1,4 @@
-package com.github.lucacampanella.callgraphflows.graphics.preferences;
+package com.github.lucacampanella.callgraphflows.graphics.svg.preferences;
 
 public class DefaultPreferences implements PreferencesInterface {
 

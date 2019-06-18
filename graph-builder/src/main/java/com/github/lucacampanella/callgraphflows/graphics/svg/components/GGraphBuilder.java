@@ -1,6 +1,6 @@
-package com.github.lucacampanella.callgraphflows.graphics.components;
+package com.github.lucacampanella.callgraphflows.graphics.svg.components;
 
-import com.github.lucacampanella.callgraphflows.graphics.utils.GUtils;
+import com.github.lucacampanella.callgraphflows.graphics.svg.utils.GUtils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.StatementInterface;
@@ -141,5 +141,36 @@ public class GGraphBuilder {
 
         Files.write(Paths.get(path), svgElement.getBytes());
 
+    }
+
+    public void drawPUMLToFile(String path) throws IOException {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("@startuml\n");
+
+        for(Map.Entry<String, GSubFlow> entry : gSessionsMap.entrySet()) {
+            String sessionName = entry.getKey();
+            GSubFlow flowElem = entry.getValue();
+            flowElem.setSessionName("\"" + sessionName + "\"");
+
+            sb.append("participant ");
+            sb.append(flowElem.getSessionName());
+            sb.append("\n");
+
+            flowElem.getCounterpartiesSessionNames().forEach(counterPartyName -> {
+                sb.append("participant ");
+                sb.append(counterPartyName);
+                sb.append("\n");
+            });
+        }
+
+        for(Map.Entry<String, GSubFlow> entry : gSessionsMap.entrySet()) {
+            GSubFlow flowElem = entry.getValue();
+
+            sb.append(flowElem.getPUMLString());
+        }
+
+        sb.append("@enduml");
+        Files.write(Paths.get(path), sb.toString().getBytes());
     }
 }

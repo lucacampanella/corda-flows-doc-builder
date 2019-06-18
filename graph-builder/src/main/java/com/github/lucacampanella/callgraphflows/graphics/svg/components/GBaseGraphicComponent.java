@@ -1,13 +1,15 @@
-package com.github.lucacampanella.callgraphflows.graphics.components;
+package com.github.lucacampanella.callgraphflows.graphics.svg.components;
 
-import com.github.lucacampanella.callgraphflows.graphics.preferences.DefaultPreferences;
-import com.github.lucacampanella.callgraphflows.graphics.preferences.PreferencesInterface;
-import com.github.lucacampanella.callgraphflows.graphics.utils.GUtils;
+import com.github.lucacampanella.callgraphflows.graphics.svg.preferences.DefaultPreferences;
+import com.github.lucacampanella.callgraphflows.graphics.svg.preferences.PreferencesInterface;
+import com.github.lucacampanella.callgraphflows.graphics.svg.utils.GUtils;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
 import java.awt.*;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
+import java.util.List;
 
 /**
  * The base component to represent anything that can be added to a flow in order
@@ -22,7 +24,7 @@ public abstract class GBaseGraphicComponent {
     private int startX = 0;
     private int startY = 0;
     private PreferencesInterface pref = DefaultPreferences.getInstance();
-
+    private String sessionName = null;
 
     public abstract void draw(SVGGraphics2D g2);
 
@@ -133,5 +135,19 @@ public abstract class GBaseGraphicComponent {
 
     public void setPref(PreferencesInterface pref) {
         this.pref = pref;
+    }
+
+    public abstract String getPUMLString();
+
+    public String getSessionName() {
+        return sessionName;
+    }
+
+    public void setSessionName(String sessionName) {
+        this.sessionName = sessionName;
+    }
+
+    public List<String> getCounterpartiesSessionNames() {
+        return new LinkedList<>();
     }
 }

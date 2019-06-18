@@ -2,7 +2,7 @@ package com.github.lucacampanella.callgraphflows;
 
 import com.github.lucacampanella.callgraphflows.asciidoc.AsciiDocBuilder;
 import com.github.lucacampanella.callgraphflows.asciidoc.AsciiDocIndexBuilder;
-import com.github.lucacampanella.callgraphflows.graphics.components.GGraphBuilder;
+import com.github.lucacampanella.callgraphflows.graphics.svg.components.GGraphBuilder;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.ClassDescriptionContainer;
@@ -67,6 +67,8 @@ public final class DrawerUtil {
             graphBuilder.addSession(initiatedClassResult.getClassDescription().getSimpleName(), initiatedClassResult.getStatements());
         }
         graphBuilder.drawToFile(Paths.get(outPath, classDescription.getFullyQualifiedName() + ".svg").toString());
+
+        graphBuilder.drawPUMLToFile(Paths.get(outPath, classDescription.getFullyQualifiedName() + ".puml").toString());
 
         AsciiDocBuilder asciiDocBuilder = AsciiDocBuilder.fromAnalysisResult(analysisResult);
         asciiDocBuilder.writeToFile(Paths.get(outPath, classDescription.getFullyQualifiedName() + ".adoc").toString());

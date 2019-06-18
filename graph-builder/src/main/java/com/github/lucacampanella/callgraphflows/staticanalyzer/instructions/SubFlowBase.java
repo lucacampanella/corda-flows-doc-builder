@@ -1,9 +1,10 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
+import com.github.lucacampanella.callgraphflows.graphics.puml.PSubFlow;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
-import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
-import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlow;
+import com.github.lucacampanella.callgraphflows.graphics.svg.components.GBaseTextComponent;
+import com.github.lucacampanella.callgraphflows.graphics.svg.components.GInstruction;
+import com.github.lucacampanella.callgraphflows.graphics.svg.components.GSubFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import net.corda.core.flows.FlowLogic;
 import spoon.reflect.reference.CtTypeReference;
@@ -113,6 +114,25 @@ abstract class SubFlowBase implements StatementInterface {
             exitingTextComponent.setTextColor(GBaseTextComponent.LESS_IMPORTANT_TEXT_COLOR);
 
             mainSubFlow.setExitingArrowText(exitingTextComponent);
+        }
+
+        return mainSubFlow;
+    }
+
+    protected PSubFlow getMainPUMLSubFlowElement() {
+
+        final PSubFlow mainSubFlow = new PSubFlow();
+
+        mainSubFlow.setEnteringArrowText(getStringDescription());
+
+        StringBuilder returnArrowTextBuilder = new StringBuilder();
+        if(returnType.isPresent() && !returnType.get().equals("java.lang.Void")) {
+            returnArrowTextBuilder.append(" <<");
+            returnArrowTextBuilder.append(Utils.removePackageDescriptionIfWanted(returnType.get()));
+            returnArrowTextBuilder.append(">>");
+        }
+        if(returnArrowTextBuilder.length() > 0) {
+            mainSubFlow.setExitingArrowText(returnArrowTextBuilder.toString());
         }
 
         return mainSubFlow;

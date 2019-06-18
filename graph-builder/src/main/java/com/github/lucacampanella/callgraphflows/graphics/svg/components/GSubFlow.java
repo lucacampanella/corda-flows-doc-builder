@@ -1,7 +1,7 @@
-package com.github.lucacampanella.callgraphflows.graphics.components;
+package com.github.lucacampanella.callgraphflows.graphics.svg.components;
 
-import com.github.lucacampanella.callgraphflows.graphics.utils.SubFlowColor;
-import com.github.lucacampanella.callgraphflows.graphics.utils.SubFlowsColorsEnum;
+import com.github.lucacampanella.callgraphflows.graphics.svg.utils.SubFlowColor;
+import com.github.lucacampanella.callgraphflows.graphics.svg.utils.SubFlowsColorsEnum;
 
 import java.awt.*;
 

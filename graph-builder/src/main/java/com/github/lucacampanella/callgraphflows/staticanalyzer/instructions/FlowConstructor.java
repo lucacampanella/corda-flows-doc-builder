@@ -1,6 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
+import com.github.lucacampanella.callgraphflows.graphics.svg.components.GBaseTextComponent;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
 import spoon.reflect.code.CtAssignment;

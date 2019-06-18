@@ -1,8 +1,9 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseGraphicComponent;
-import com.github.lucacampanella.callgraphflows.graphics.preferences.DefaultPreferences;
-import com.github.lucacampanella.callgraphflows.graphics.preferences.PreferencesInterface;
+import com.github.lucacampanella.callgraphflows.graphics.puml.PBaseComponent;
+import com.github.lucacampanella.callgraphflows.graphics.svg.components.GBaseGraphicComponent;
+import com.github.lucacampanella.callgraphflows.graphics.svg.preferences.DefaultPreferences;
+import com.github.lucacampanella.callgraphflows.graphics.svg.preferences.PreferencesInterface;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 
 import java.util.Optional;

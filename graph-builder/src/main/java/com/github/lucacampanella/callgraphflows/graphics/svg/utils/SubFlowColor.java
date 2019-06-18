@@ -1,4 +1,4 @@
-package com.github.lucacampanella.callgraphflows.graphics.utils;
+package com.github.lucacampanella.callgraphflows.graphics.svg.utils;
 
 import java.awt.*;
 

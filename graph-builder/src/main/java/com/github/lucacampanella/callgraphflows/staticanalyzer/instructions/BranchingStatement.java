@@ -1,10 +1,12 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
+import com.github.lucacampanella.callgraphflows.graphics.puml.PBaseComponent;
+import com.github.lucacampanella.callgraphflows.graphics.puml.PConditionalBranch;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseGraphicComponent;
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
-import com.github.lucacampanella.callgraphflows.graphics.components.GConditionalBranch;
-import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
+import com.github.lucacampanella.callgraphflows.graphics.svg.components.GBaseGraphicComponent;
+import com.github.lucacampanella.callgraphflows.graphics.svg.components.GBaseTextComponent;
+import com.github.lucacampanella.callgraphflows.graphics.svg.components.GConditionalBranch;
+import com.github.lucacampanella.callgraphflows.graphics.svg.components.GInstruction;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;

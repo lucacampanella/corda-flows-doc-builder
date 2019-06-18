@@ -1,4 +1,4 @@
-package com.github.lucacampanella.callgraphflows.graphics.components;
+package com.github.lucacampanella.callgraphflows.graphics.svg.components;
 
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
@@ -6,6 +6,7 @@ import org.jfree.graphics2d.svg.SVGGraphics2D;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Graphical representation of an if-else statement, even with more elses
@@ -40,6 +41,16 @@ public class GIfElse extends GBaseGraphicComponent {
     }
 
     @Override
+    public String getPUMLString() {
+        StringBuilder sb = new StringBuilder();
+        for(GBaseGraphicComponent comp : blocks) {
+            sb.append(comp.getPUMLString());
+        }
+
+        return sb.toString();
+    }
+
+    @Override
     public Dimension computeDimensions(SVGGraphics2D g2) {
         Dimension res = new Dimension();
 
@@ -58,5 +69,15 @@ public class GIfElse extends GBaseGraphicComponent {
     public void drawBrothersAndLinks(SVGGraphics2D g2) {
         super.drawBrothersAndLinks(g2);
         blocks.forEach(comp -> comp.drawBrothersAndLinks(g2));
+    }
+
+    public List<String> getCounterpartiesSessionNames() {
+        return blocks.stream().map(comp -> comp.getCounterpartiesSessionNames()).flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
+    public void setSessionName(String sessionName) {
+        super.setSessionName(sessionName);
+        blocks.forEach(block -> block.setSessionName(sessionName));
     }
 }

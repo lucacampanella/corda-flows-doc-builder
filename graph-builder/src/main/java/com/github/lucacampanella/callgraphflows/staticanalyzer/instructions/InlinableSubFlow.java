@@ -1,6 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlow;
+import com.github.lucacampanella.callgraphflows.graphics.svg.components.GSubFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 
 
