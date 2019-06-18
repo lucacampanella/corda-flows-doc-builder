@@ -19,7 +19,7 @@ With the information obtained from static analysis the .svg images useful for do
 are built. They are then integrated into an ascii doc file giving a summary of the analysis of the Jar.
 
 Since it works by decompiling code, it can be applied to flows written in Java, Kotlin or any other 
-JVM-based language.
+JVM-based language. The plugin was mostly tested on Java code, Kotlin testing is happening right now.
 
 ## Getting Started
 
