@@ -19,6 +19,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import static com.github.lucacampanella.TestUtils.fromClassSrcToPath;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class GeneralTests {
     private static final Logger LOGGER = LoggerFactory.getLogger(StaticAnalyzerUtilsTest.class);
@@ -102,10 +103,6 @@ public class GeneralTests {
     private void testRPCFromAnalyzer(AnalyzerWithModel analyzer) throws IOException {
         final List<CtClass> Classes = analyzer.getClassesByAnnotation(StartableByRPC.class);
         for (CtClass clazz : Classes) {
-            LOGGER.info("{}{}.svg", DrawerUtil.DEFAULT_OUT_DIR, clazz.getSimpleName());
-            final File file = new File(DrawerUtil.DEFAULT_OUT_DIR + clazz.getSimpleName() + ".svg");
-            LOGGER.info("{}", file.getAbsolutePath());
-            LOGGER.info("{}", file.exists());
             DrawerUtil.drawFromClass(analyzer, clazz, DrawerUtil.DEFAULT_OUT_DIR);
         }
     }
@@ -124,8 +121,9 @@ public class GeneralTests {
         for (CtClass clazz : Classes) {
             final AnalysisResult analysisResult = analyzer.analyzeFlowLogicClass(clazz);
             System.out.println(analysisResult.getStatements());
+            assertThat(analysisResult.getStatements()).hasSize(4);
+            assertThat(analysisResult.getCounterpartyClassResult().getStatements()).hasSize(3);
         }
         DrawerUtil.drawAllStartableClasses(analyzer);
-        //testAnalyzeByRPCWithClass(SubFlowInitializationTestFlow.class);
     }
 }
