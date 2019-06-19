@@ -1,11 +1,13 @@
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:5.0.0'//4.0.1'// todo: change fro gradle 5
 //--------------------------------------- Added for publishing on sonartype
-//        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
+//        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'3
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.21'
     }
 }
 
@@ -13,6 +15,7 @@ plugins {
     id 'application'
 //    id 'maven-publish'
 }
+apply plugin: 'kotlin'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 build.dependsOn(publish)
@@ -37,12 +40,11 @@ dependencies {
     implementation "org.slf4j:slf4j-simple:1.7.26"
     implementation "info.picocli:picocli:3.9.6"
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.0.1-2"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.3.21"
 
     testImplementation "org.slf4j:slf4j-simple:1.7.26"
     testImplementation project(":test-utils").sourceSets.test.output
 }
-
 //jar {
 //    from configurations.implementation.collect {
 //
@@ -73,6 +75,34 @@ tasks.withType(Test).each{it -> it.dependsOn(copyTestJarToResources)}
 
 processResources {
     from sourceSets.main.java.filter {it.toString().endsWith("MatcherContainer.java")}.first().toString()
+}
+
+sourceSets {
+    test.java.srcDirs += 'src/test/kotlin'
+}
+task createKotlinTestJar(type: Jar) {
+
+    println file(buildDir.toString() + "/classes/kotlin/test").listFiles({File file -> file.toString().contains("KotlinTestFlow")} as FileFilter)
+    from file(buildDir.toString() + "/classes/kotlin/test").listFiles({File file -> file.toString().contains("KotlinTestFlow")} as FileFilter)
+    setArchiveFileName("KotlinTestJar.jar")
+//    doLast {
+//        println "kotlin test jar"
+//        println sourceSets.test.output.classesDirs
+//        println sourceSets.test.output.classesDirs.asFileTree.filter {
+//            it.toString().contains("KotlinTestFlow")
+//        }.collect()
+//
+//
+//        //println file(sourceSets.test.output.asPath).listFiles()
+//        //println configurations.testRuntimeClasspath.asPath//collect { it.isDirectory() ? it : zipTree(it) }
+//        from sourceSets.test.output.classesDirs.asFileTree.filter { it.toString().contains("KotlinTestFlow")}.collect()
+//    }
+
+}
+
+processTestResources.dependsOn(createKotlinTestJar)
+processTestResources {
+    from file(buildDir.toString() + "/libs/KotlinTestJar.jar")
 }
 
 copyTestJarToResources.dependsOn(createTestJar)

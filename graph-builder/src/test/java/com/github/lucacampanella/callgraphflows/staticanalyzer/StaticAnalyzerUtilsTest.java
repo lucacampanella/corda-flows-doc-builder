@@ -2,11 +2,10 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
 import com.github.lucacampanella.TestUtils;
 import com.github.lucacampanella.callgraphflows.DrawerUtil;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.*;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.DoubleExtendingSuperclassTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.ExtendingSuperclassTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.InitiatorBaseFlow;
-import net.corda.core.flows.StartableByRPC;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -16,14 +15,10 @@ import spoon.reflect.code.CtStatement;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtMethod;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Optional;
 
-import static com.github.lucacampanella.TestUtils.fromClassSrcToPath;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -63,10 +58,10 @@ public class StaticAnalyzerUtilsTest {
         final CtMethod callMethod = StaticAnalyzerUtils.findCallMethod(ctClass);
 
         final CtInvocation initiateMethod = (CtInvocation) callMethod.getBody().getStatements().get(0).getDirectChildren().get(1);//initiateFlow(otherParty);
-        assertThat(StaticAnalyzerUtils.isCordaMethod(initiateMethod)).isEqualTo(true);
+        assertThat(MatcherHelper.isCordaMethod(initiateMethod)).isEqualTo(true);
 
         final CtInvocation nonCordaMethod = (CtInvocation) callMethod.getBody().getStatements().get(1);//realCallMethod(session);
-        assertThat(StaticAnalyzerUtils.isCordaMethod(nonCordaMethod)).isEqualTo(false);
+        assertThat(MatcherHelper.isCordaMethod(nonCordaMethod)).isEqualTo(false);
     }
 
     @Test

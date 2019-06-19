@@ -40,7 +40,7 @@ public class MethodInvocation extends InstructionStatement {
         if(statement instanceof CtAbstractInvocation) {
             CtAbstractInvocation inv = (CtAbstractInvocation) statement;
 
-            if (StaticAnalyzerUtils.isCordaMethod(inv)) { //this should never happen
+            if (MatcherHelper.isCordaMethod(inv)) { //this should never happen
                 LOGGER.warn("Error, a method invocation is created using a corda method"); //todo: this happens
                 return null;
             }

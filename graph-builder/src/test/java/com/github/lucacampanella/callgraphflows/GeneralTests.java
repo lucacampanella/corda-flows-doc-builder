@@ -1,9 +1,7 @@
 package com.github.lucacampanella.callgraphflows;
 
 import com.github.lucacampanella.TestUtils;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.SourceClassAnalyzer;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtilsTest;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.DoubleExtendingSuperclassTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.ExtendingSuperclassTestFlow;
@@ -110,5 +108,24 @@ public class GeneralTests {
             LOGGER.info("{}", file.exists());
             DrawerUtil.drawFromClass(analyzer, clazz, DrawerUtil.DEFAULT_OUT_DIR);
         }
+    }
+
+    @Test
+    public void KotlinTestFlowDecompiledTest() throws IOException {
+        testAnalyzeByRPCWithClass(KotlinTestFlowDecompiled.class);
+    }
+
+    @Test
+    public void kotlinTest() throws IOException, AnalysisErrorException {
+        String pathToKotlinJar = getClass().getClassLoader().getResource("KotlinTestJar.jar").getPath();
+
+        final JarAnalyzer analyzer = new JarAnalyzer(pathToKotlinJar);
+        final List<CtClass> Classes = analyzer.getClassesByAnnotation(StartableByRPC.class);
+        for (CtClass clazz : Classes) {
+            final AnalysisResult analysisResult = analyzer.analyzeFlowLogicClass(clazz);
+            System.out.println(analysisResult.getStatements());
+        }
+        DrawerUtil.drawAllStartableClasses(analyzer);
+        //testAnalyzeByRPCWithClass(SubFlowInitializationTestFlow.class);
     }
 }

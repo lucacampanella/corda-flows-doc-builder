@@ -6,11 +6,12 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.*;
 import net.corda.core.flows.FlowLogic;
 import net.corda.core.flows.FlowSession;
 import spoon.Launcher;
+import spoon.pattern.Pattern;
+import spoon.pattern.PatternBuilder;
+import spoon.pattern.PatternBuilderHelper;
 import spoon.reflect.CtModel;
 import spoon.reflect.code.*;
-import spoon.reflect.declaration.CtElement;
-import spoon.reflect.declaration.CtMethod;
-import spoon.reflect.declaration.CtTypedElement;
+import spoon.reflect.declaration.*;
 import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.chain.CtQueryable;
 import spoon.reflect.visitor.filter.InvocationFilter;
@@ -82,11 +83,24 @@ public final class MatcherHelper {
      */
     public static TemplateMatcher getMatcher(String name) {
         return matchersMap.computeIfAbsent(name, key -> {
-            CtMethod<?> method = (CtMethod<?>) model.getElements(
-                    new NamedElementFilter(CtMethod.class, name)).get(0);
-            CtElement templateRoot = method.getBody().getStatement(0);
+            CtElement templateRoot = getFirstLineOfMethod(name);
             return new TemplateMatcher(templateRoot);
         });
+    }
+
+    private static CtElement getFirstLineOfMethod(String methodName) {
+        CtMethod<?> method = (CtMethod<?>) model.getElements(
+                new NamedElementFilter(CtMethod.class, methodName)).get(0);
+        return method.getBody().getStatement(0);
+    }
+
+    public static Pattern getPattern(String name) {
+        return  PatternBuilder.create(
+                new PatternBuilderHelper((CtType<?>) model.getElements(
+                        new NamedElementFilter(CtClass.class, "MatcherContainer")
+                ).get(0)).setBodyOfMethod(name).getPatternElements())
+                .configurePatternParameters()
+                .build();
     }
 
     public static CtTypeReference getTypeReference(Class klass) {
@@ -104,19 +118,45 @@ public final class MatcherHelper {
      * @param matcherName the name of the matcher to use in the query
      * @return the matched expression
      */
-    public static CtExpression getFirstMatchedExpression(CtStatement statement, String matcherName) {
-        final List<CtExpression> queryResult = statement.filterChildren(getMatcher(matcherName)).list();
-        if(queryResult.isEmpty()) {
-            return null;
+    public static CtAbstractInvocation getFirstMatchedExpression(CtElement statement, String matcherName) {
+
+        Queue<CtElement> queue = new LinkedList<>();
+        queue.add(statement);
+
+        //breadth first search
+        while(!queue.isEmpty()){
+            CtElement current = queue.remove();
+            if(current == null) {
+                continue;
+            }
+            if(current instanceof CtAbstractInvocation) {
+                CtAbstractInvocation inv = (CtAbstractInvocation) current;
+                if(invocationMatches(inv, matcherName)) {
+                    return inv;
+                }
+            }
+            queue.addAll(current.getDirectChildren());
         }
-        return queryResult.get(0);
+
+        return null;
     }
 
-    public static CtExpression getFirstMatchedStatementWithCompanion(CtQueryable statement) {
+    private static String getSignatureDescription(String matcherName) {
+        final CtElement firstLineOfMethod = getFirstLineOfMethod(matcherName);
+        final CtAbstractInvocation ctAbstractInvocation =
+                firstLineOfMethod.getElements(new TypeFilter<>(CtAbstractInvocation.class)).get(0);
+        return ctAbstractInvocation.getExecutable().getSignature();
+    }
+
+    public static boolean invocationMatches(CtAbstractInvocation inv, String matcherName) {
+        return inv.getExecutable().getSignature().equals(getSignatureDescription(matcherName));
+    }
+
+    public static CtAbstractInvocation getFirstMatchedStatementWithCompanion(CtElement statement) {
         for(String matcherName : matchersWithCompanion) {
-            final List<CtExpression> queryResult = statement.filterChildren(getMatcher(matcherName)).list();
-            if (!queryResult.isEmpty()) {
-                return queryResult.get(0);
+            final CtAbstractInvocation inv = getFirstMatchedExpression(statement, matcherName);
+            if(inv != null) {
+                return inv;
             }
         }
         return null;
@@ -155,11 +195,9 @@ public final class MatcherHelper {
      * @param matcherName the name of the matcher to use in the query
      * @return true if the matcher finds a result inside the queryable, false otherwise
      */
-    public static boolean matchesAnyChildren(CtQueryable queryable, String matcherName) {
-        return !queryable.filterChildren(getMatcher(matcherName)).list().isEmpty();
+    public static boolean matchesAnyChildren(CtElement queryable, String matcherName) {
+        return getFirstMatchedExpression(queryable, matcherName) != null;
     }
-
-
 
     private static StatementInterface addIfBranchingStatement(CtStatement statement,
                                                               AnalyzerWithModel analyzer) {
@@ -202,10 +240,6 @@ public final class MatcherHelper {
         else if (matchesAnyChildren(statement, SUB_FLOW_MATCHER)) {
             return SubFlowBuilder.fromCtStatement(statement, analyzer);
         }
-
-//        final CtMethod ctMethod = (CtMethod) MatcherHelper.model.getElements(new NamedElementFilter(CtMethod.class, "subFlowMatcher")).get(0);
-//
-//        new InvocationFilter(ctMethod);
 
         return null;
     }
@@ -275,7 +309,7 @@ public final class MatcherHelper {
         return res;
     }
 
-    public static StatementInterface instantiateStatementIfQueryableMatches(CtQueryable queryable,
+    public static StatementInterface instantiateStatementIfQueryableMatches(CtElement queryable,
                                                                                          CtStatement statement,
                                                                                          AnalyzerWithModel analyzer) {
         if (matchesAnyChildren(queryable, SEND_MATCHER) ||
@@ -294,4 +328,49 @@ public final class MatcherHelper {
 
         return null;
     }
+
+    public static boolean isCordaMethod(CtAbstractInvocation element) {
+        final Set<String> allMatchers = getAllMatcherNames();
+        for(String matcherName : allMatchers) {
+            if(invocationMatches(element, matcherName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //OLD SYSTEM WITH SPOON DOING THE QUERIES
+    //    public static boolean matchesAnyChildren(CtQueryable queryable, String matcherName) {
+//        //return !queryable.filterChildren(getMatcher(matcherName)).list().isEmpty();
+//    }
+//    public static boolean matchesAnyChildren(CtQueryable queryable, String matcherName) {
+//        return !queryable.filterChildren(getMatcher(matcherName)).list().isEmpty();
+//    }
+//    public static boolean isCordaMethod(CtAbstractInvocation element) {
+//        boolean matched = false;
+//        final Set<TemplateMatcher> allMatchers = getAllMatchers();
+//        for(TemplateMatcher matcher : allMatchers) {
+//            if(matcher.matches(element)) {
+//                matched = true;
+//                break;
+//            }
+//        }
+//        return matched;
+//    }
+//    public static CtExpression getFirstMatchedExpression(CtStatement statement, String matcherName) {
+//        final List<CtExpression> queryResult = statement.filterChildren(getMatcher(matcherName)).list();
+//        if(queryResult.isEmpty()) {
+//            return null;
+//        }
+//        return queryResult.get(0);
+//    }
+//    public static CtExpression getFirstMatchedStatementWithCompanion(CtQueryable statement) {
+//        for(String matcherName : matchersWithCompanion) {
+//            final List<CtExpression> queryResult = statement.filterChildren(getMatcher(matcherName)).list();
+//            if (!queryResult.isEmpty()) {
+//                return queryResult.get(0);
+//            }
+//        }
+//        return null;
+//    }
 }

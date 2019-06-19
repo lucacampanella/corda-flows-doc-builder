@@ -20,7 +20,7 @@ public class MatcherContainer extends FlowLogic {
 
     public TemplateParameter<Party> _party_;
 
-    public TemplateParameter<FlowLogic<SignedTransaction>> _subFlow_;
+    public TemplateParameter<FlowLogic<?>> _subFlow_;
 
     public TemplateParameter<Class> _class_;
 

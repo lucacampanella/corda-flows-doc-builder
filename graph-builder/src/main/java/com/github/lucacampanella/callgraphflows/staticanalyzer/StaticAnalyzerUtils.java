@@ -12,7 +12,6 @@ import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.visitor.filter.NamedElementFilter;
 import spoon.reflect.visitor.filter.TypeFilter;
-import spoon.template.TemplateMatcher;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -549,7 +548,7 @@ public class StaticAnalyzerUtils {
 
         if(statement instanceof CtAbstractInvocation) { //it's a method call
             CtAbstractInvocation inv = (CtAbstractInvocation) statement;
-            if(!isCordaMethod(inv)) {
+            if(!MatcherHelper.isCordaMethod(inv)) {
                 MethodInvocation methodInvocation = MethodInvocation.fromCtStatement((CtStatement) inv, analyzer);
                 res.addIfRelevant(methodInvocation);
                 return res;
@@ -566,15 +565,4 @@ public class StaticAnalyzerUtils {
         return res;
     }
 
-    public static boolean isCordaMethod(CtAbstractInvocation element) {
-        boolean matched = false;
-        final Set<TemplateMatcher> allMatchers = MatcherHelper.getAllMatchers();
-        for(TemplateMatcher matcher : allMatchers) {
-            if(matcher.matches(element)) {
-                matched = true;
-                break;
-            }
-        }
-        return matched;
-    }
 }

@@ -103,7 +103,7 @@ public class SubFlowBuilder {
             subFlowInfo.assignedVariableName = Optional.ofNullable(((CtAssignmentImpl) statement).getAssigned().toString());
         }
 
-        final CtExpression expression = MatcherHelper.getFirstMatchedExpression(statement, "subFlowMatcher");
+        final CtAbstractInvocation expression = MatcherHelper.getFirstMatchedExpression(statement, "subFlowMatcher");
         if(expression instanceof CtInvocation) {
             CtInvocation invocation = (CtInvocation) expression;
             Object firstArgument = invocation.getArguments().get(0);
