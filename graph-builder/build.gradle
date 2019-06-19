@@ -63,13 +63,15 @@ task copyTestJarToResources(type: Copy) {
 }
 
 task createTestJar(type: Jar) {
-    archiveName = "JarAnalyzerTestJar.jar"
+    archiveFileName = "JarAnalyzerTestJar.jar"
     from {
         sourceSets.test.output
     }
     include '**/testclasses/subclassestests/*.class'
     includeEmptyDirs false
 }
+
+copyTestJarToResources.dependsOn(createTestJar)
 
 tasks.withType(Test).each{it -> it.dependsOn(copyTestJarToResources)}
 
@@ -80,32 +82,49 @@ processResources {
 sourceSets {
     test.java.srcDirs += 'src/test/kotlin'
 }
-task createKotlinTestJar(type: Jar) {
 
-    println file(buildDir.toString() + "/classes/kotlin/test").listFiles({File file -> file.toString().contains("KotlinTestFlow")} as FileFilter)
-    from file(buildDir.toString() + "/classes/kotlin/test").listFiles({File file -> file.toString().contains("KotlinTestFlow")} as FileFilter)
-    setArchiveFileName("KotlinTestJar.jar")
-//    doLast {
-//        println "kotlin test jar"
-//        println sourceSets.test.output.classesDirs
-//        println sourceSets.test.output.classesDirs.asFileTree.filter {
-//            it.toString().contains("KotlinTestFlow")
-//        }.collect()
+//task copyKotlinTestJarToResources(type: Copy) {
+//    from buildDir.toURI().toURL().toString() + "/libs/KotlinTestJar.jar";
+//    into sourceSets.test.output.resourcesDir
+//}
+//
+//task createKotlinTestJar(type: Jar) {
+//
+////    archiveFileName = "KotlinTestJar.jar"
+////    from {
+////        sourceSets.test.output
+////    }
+////    //include '**/kotlin/**/*.class'
+////    includeEmptyDirs false
 //
 //
-//        //println file(sourceSets.test.output.asPath).listFiles()
-//        //println configurations.testRuntimeClasspath.asPath//collect { it.isDirectory() ? it : zipTree(it) }
-//        from sourceSets.test.output.classesDirs.asFileTree.filter { it.toString().contains("KotlinTestFlow")}.collect()
-//    }
+//    println file(buildDir.toString() + "/classes/kotlin/test").listFiles({File file -> file.toString().contains("KotlinTestFlow")} as FileFilter)
+//    from file(buildDir.toString() + "/classes/kotlin/test").listFiles({File file -> file.toString().contains("KotlinTestFlow")} as FileFilter)
+//    archiveFileName = "KotlinTestJar.jar"
+////    doLast {
+////        println "kotlin test jar"
+////        println sourceSets.test.output.classesDirs
+////        println sourceSets.test.output.classesDirs.asFileTree.filter {
+////            it.toString().contains("KotlinTestFlow")
+////        }.collect()
+////
+////
+////        //println file(sourceSets.test.output.asPath).listFiles()
+////        //println configurations.testRuntimeClasspath.asPath//collect { it.isDirectory() ? it : zipTree(it) }
+////        from sourceSets.test.output.classesDirs.asFileTree.filter { it.toString().contains("KotlinTestFlow")}.collect()
+////    }
+//
+//}
+//
+//copyKotlinTestJarToResources.dependsOn(createKotlinTestJar)
+//tasks.withType(Test).each{it -> it.dependsOn(copyKotlinTestJarToResources)}
 
-}
 
-processTestResources.dependsOn(createKotlinTestJar)
-processTestResources {
-    from file(buildDir.toString() + "/libs/KotlinTestJar.jar")
-}
-
-copyTestJarToResources.dependsOn(createTestJar)
+//createKotlinTestJar.dependsOn(compileTestKotlin)
+//processTestResources.dependsOn(createKotlinTestJar)
+//processTestResources {
+//    from file(buildDir.toString() + "/libs/KotlinTestJar.jar")
+//}
 
 publishing {
     publications {
