@@ -3,6 +3,7 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer.matchers;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.*;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
 import net.corda.core.flows.FlowLogic;
 import net.corda.core.flows.FlowSession;
 import spoon.Launcher;
@@ -106,7 +107,8 @@ public final class MatcherHelper {
     public static CtTypeReference getTypeReference(Class klass) {
         return typesMap.computeIfAbsent(klass, key -> {
             CtMethod<?> method = (CtMethod<?>) model.getElements(
-                    new NamedElementFilter(CtMethod.class, "typeTemplateFor" + klass.getSimpleName())).get(0);
+                    new NamedElementFilter(CtMethod.class, "typeTemplateFor" +
+                            Utils.removePackageDescription(klass.getName()))).get(0);
 
             return  ((CtLocalVariable) method.getBody().getStatement(0)).getType();
         });

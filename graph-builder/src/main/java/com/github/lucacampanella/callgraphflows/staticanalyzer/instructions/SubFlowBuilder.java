@@ -7,6 +7,8 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
+import net.corda.confidential.IdentitySyncFlow;
+import net.corda.confidential.SwapIdentitiesFlow;
 import net.corda.core.flows.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,6 +88,12 @@ public class SubFlowBuilder {
 
         cordaSpecialFlows.put(MatcherHelper.getTypeReference(FinalityFlow.class),
                 MatcherHelper.getTypeReference(ReceiveFinalityFlow.class));
+
+        cordaSpecialFlows.put(MatcherHelper.getTypeReference(SwapIdentitiesFlow.class),
+                MatcherHelper.getTypeReference(SwapIdentitiesFlow.class));
+
+        cordaSpecialFlows.put(MatcherHelper.getTypeReference(IdentitySyncFlow.Send.class),
+                MatcherHelper.getTypeReference(IdentitySyncFlow.Receive.class));
     }
 
     public static SubFlowBase fromCtStatement(CtStatement statement, AnalyzerWithModel analyzer) {
@@ -124,7 +132,7 @@ public class SubFlowBuilder {
 
             final CtMethod callMethod = StaticAnalyzerUtils.findCallMethod(
                     (CtClass) subFlowInfo.subFlowType.getTypeDeclaration());
-
+            //todo: null check on subFlow type
             if(callMethod != null) {
                 subFlowInfo.returnType = Optional.ofNullable(callMethod.getType().toString());
             }
@@ -142,7 +150,7 @@ public class SubFlowBuilder {
         }
         else { //is not a corda flow
             try {
-                AnalysisResult resultOfClassAnalysis = resultOfClassAnalysis = analyzer.analyzeFlowLogicClass(
+                AnalysisResult resultOfClassAnalysis = analyzer.analyzeFlowLogicClass(
                         (CtClass) subFlowInfo.subFlowType.getDeclaration());
                 subFlowInfo.isInitiatingFlow = resultOfClassAnalysis.hasCounterpartyResult();
                 if (subFlowInfo.isInitiatingFlow) {
@@ -164,6 +172,7 @@ public class SubFlowBuilder {
     }
 
     private static boolean isInitiatingSpecialCordaFlow(CtTypeReference subFlowType) {
+        //todo: add remaining class and a default way if not find any corda class
         for (Map.Entry<CtTypeReference, CtTypeReference> entry : cordaSpecialFlows.entrySet()) {
             CtTypeReference cordaInitiatingFlow = entry.getKey();
             if (subFlowType.isSubtypeOf(cordaInitiatingFlow)) {

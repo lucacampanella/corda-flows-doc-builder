@@ -1,5 +1,7 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.matchers;
 
+import net.corda.confidential.IdentitySyncFlow;
+import net.corda.confidential.SwapIdentitiesFlow;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
@@ -118,6 +120,22 @@ public class MatcherContainer extends FlowLogic {
     private void typeTemplateForReceiveFinalityFlow() {
         ReceiveFinalityFlow var;
     }
+
+    private void typeTemplateForSwapIdentitiesFlow() {
+        SwapIdentitiesFlow var;
+    }
+
+    private void typeTemplateForIdentitySyncFlow$Send() {
+        IdentitySyncFlow.Send var;
+    }
+
+    private void typeTemplateForIdentitySyncFlow$Receive() {
+        IdentitySyncFlow.Receive var;
+    }
+
+    /*private void typeTemplateForSwapIdentitiesFlow() {
+        SwapIdentitiesFlow var;
+    }*/
 
     @Override
     public Object call() throws FlowException {

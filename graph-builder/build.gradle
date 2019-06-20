@@ -31,6 +31,7 @@ repositories {
 
 dependencies {
     implementation "$corda_release_group:corda-core:$corda_release_version"
+    implementation "$corda_release_group:corda-confidential-identities:$corda_release_version"
     implementation "fr.inria.gforge.spoon:spoon-core:$spoon_version"
 
     implementation "org.jboss.windup.decompiler.fernflower:fernflower:2.5.0.Final"

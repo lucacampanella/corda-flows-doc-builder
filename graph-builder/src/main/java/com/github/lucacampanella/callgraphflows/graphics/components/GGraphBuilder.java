@@ -95,9 +95,8 @@ public class GGraphBuilder {
 
             Dimension dim = entry.getValue().getDimensions(g2);
             width += Math.max(dim.width, titleBox.getDimensions(g2).width);
-            if(dim.height > height) {
-                height = dim.height + titleBox.getDimensions(g2).height + BORDER;
-            }
+
+            height = Math.max(height, dim.height + titleBox.getDimensions(g2).height + BORDER);
         }
 
         width += BORDER + gSessionsMap.size()*BORDER;
@@ -140,6 +139,5 @@ public class GGraphBuilder {
         String svgElement = g2.getSVGElement();
 
         Files.write(Paths.get(path), svgElement.getBytes());
-
     }
 }

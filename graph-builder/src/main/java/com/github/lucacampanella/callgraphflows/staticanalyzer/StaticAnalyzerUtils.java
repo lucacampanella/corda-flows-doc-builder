@@ -3,6 +3,8 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import net.corda.core.flows.FlowSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spoon.reflect.code.CtAbstractInvocation;
 import spoon.reflect.code.CtLiteral;
 import spoon.reflect.code.CtStatement;
@@ -17,6 +19,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class StaticAnalyzerUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(StaticAnalyzerUtils.class);
 
     private StaticAnalyzerUtils() {
         //private constructor to hide public one
@@ -533,8 +537,13 @@ public class StaticAnalyzerUtils {
     public static Optional<String> findTargetSessionName(CtStatement ctStatement) {
         final List<CtVariableRead> mentionedSessions = ctStatement.
                 getElements(new TypeFilter<>(CtVariableRead.class))
-                .stream().filter(varRead ->
-                        varRead.getType().box().getQualifiedName().equals(FlowSession.class.getCanonicalName()))
+                .stream().filter(varRead -> {
+                    if(varRead.getType() == null) {
+                        LOGGER.warn("Couldn't find out type of {} in statement {} : ignoring the type for target session search", varRead, ctStatement);
+                        return false;
+                    }
+                    return  varRead.getType().box().getQualifiedName().equals(FlowSession.class.getCanonicalName());
+                })
                 .collect(Collectors.toList());
 
         if(!mentionedSessions.isEmpty()) {
