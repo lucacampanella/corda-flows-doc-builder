@@ -132,12 +132,13 @@ public class SubFlowBuilder {
 
             if(subFlowInfo.subFlowType.getTypeDeclaration() == null) {
                 LOGGER.warn("Couldn't retrive declaration for subflow type {}, for statement {}," +
-                        " defaulting to null subFlowType and not analyzing the subFlow called",
+                        " defaulting to null subFlowType and not analyzing the subFlow called. " +
+                                "Also filling returnType with an empty optional " +
+                                "since we can't analyze the generics of the class not present in classpath",
                         subFlowInfo.subFlowType, statement);
             } else {
                 final CtMethod callMethod = StaticAnalyzerUtils.findCallMethod(
                         (CtClass) subFlowInfo.subFlowType.getTypeDeclaration());
-                //todo: null check on subFlow type
                 if (callMethod != null) {
                     subFlowInfo.returnType = Optional.ofNullable(callMethod.getType().toString());
                 }
