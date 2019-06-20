@@ -24,7 +24,7 @@ public class DoWhile extends BranchingStatement {
 
         //we unfold the loop only once for now
         doWhile.bodyStatements.add(
-                MatcherHelper.fromCtStatementsToStatements(
+                MatcherHelper.fromCtStatementsToStatementsForLoopBody(
                         ((CtStatementList) whileStatement.getBody()).getStatements(), analyzer));
 
 

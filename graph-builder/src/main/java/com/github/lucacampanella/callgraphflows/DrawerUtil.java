@@ -57,6 +57,10 @@ public final class DrawerUtil {
             return;
         }
 
+        drawFromAnalysis(analysisResult, outPath);
+    }
+
+    public static void drawFromAnalysis(AnalysisResult analysisResult, String outPath) throws IOException {
         final ClassDescriptionContainer classDescription = analysisResult.getClassDescription();
 
         GGraphBuilder graphBuilder = new GGraphBuilder();

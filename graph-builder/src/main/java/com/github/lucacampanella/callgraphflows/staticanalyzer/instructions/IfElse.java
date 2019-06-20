@@ -26,13 +26,13 @@ public class IfElse extends BranchingStatement {
         CtStatementList thenStatement = ifStatement.getThenStatement();
         ifElse.branchTrue = new Branch();
         if(thenStatement != null) { //there is a then statement
-            ifElse.branchTrue.add(MatcherHelper.fromCtStatementsToStatements(thenStatement.getStatements(), analyzer));
+            ifElse.branchTrue.add(MatcherHelper.fromCtStatementsToStatementsForLoopBody(thenStatement.getStatements(), analyzer));
         }
 
         CtStatementList elseStatement = ifStatement.getElseStatement();
         ifElse.branchFalse = new Branch();
         if(elseStatement != null) { //there is an else statement
-            ifElse.branchFalse.add(MatcherHelper.fromCtStatementsToStatements(elseStatement.getStatements(), analyzer));
+            ifElse.branchFalse.add(MatcherHelper.fromCtStatementsToStatementsForLoopBody(elseStatement.getStatements(), analyzer));
         }
         //here the statements can be also if statements if an "else if" condition is applied
 

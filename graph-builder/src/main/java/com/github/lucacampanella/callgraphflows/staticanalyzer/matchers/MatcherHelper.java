@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 /**
@@ -287,7 +288,7 @@ public final class MatcherHelper {
             res = MethodInvocation.fromCtStatement(statement, analyzer);
         }
         if(res == null && statement instanceof CtCFlowBreak) {
-            res = FlowBreak.fromStatement(statement,analyzer);
+            res = CodeFlowBreak.fromStatement(statement,analyzer);
         }
         if(res == null) {
             res = initiateIfContainsRelevantMethod(statement, analyzer);
@@ -296,7 +297,9 @@ public final class MatcherHelper {
         return res;
     }
 
-    public static Branch fromCtStatementsToStatements(List<CtStatement> ctStatements, AnalyzerWithModel analyzer) {
+    public static Branch fromCtStatementsToStatements(List<CtStatement> ctStatements,
+                                                      AnalyzerWithModel analyzer,
+                                                      BiConsumer<Branch, Branch> addCheckingFunction) {
 
         final Branch res = new Branch();
 
@@ -305,10 +308,20 @@ public final class MatcherHelper {
             final StatementInterface statement = instantiateStatement(ctStatement, analyzer);
             if(statement != null) {
                 Branch desugared = statement.desugar();
-                res.addIfRelevantForAnalysisOrIfRelevantForLoop(desugared);
+                addCheckingFunction.accept(res, desugared);
             }
         }
         return res;
+    }
+
+    public static Branch fromCtStatementsToStatements(List<CtStatement> ctStatements,
+                                                      AnalyzerWithModel analyzer) {
+        return fromCtStatementsToStatements(ctStatements, analyzer, Branch::addIfRelevantForAnalysis);
+    }
+
+    public static Branch fromCtStatementsToStatementsForLoopBody(List<CtStatement> ctStatements,
+                                                      AnalyzerWithModel analyzer) {
+        return fromCtStatementsToStatements(ctStatements, analyzer, Branch::addIfRelevantForAnalysisOrIfRelevantForLoop);
     }
 
     public static StatementInterface instantiateStatementIfQueryableMatches(CtElement queryable,

@@ -42,7 +42,7 @@ public class For extends BranchingStatement {
 
         //we unfold the loop only once for now
         forInstr.branchTrue.add(
-                MatcherHelper.fromCtStatementsToStatements(
+                MatcherHelper.fromCtStatementsToStatementsForLoopBody(
                 ((CtStatementList) forStatement.getBody()).getStatements(), analyzer));
 
         List<CtStatement> update = forStatement.getForUpdate();

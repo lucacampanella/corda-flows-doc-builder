@@ -2,6 +2,8 @@ package com.github.lucacampanella.callgraphflows;
 
 import com.github.lucacampanella.TestUtils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.*;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.IfElse;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.While;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.DoubleExtendingSuperclassTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.ExtendingSuperclassTestFlow;
@@ -13,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spoon.reflect.declaration.CtClass;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
@@ -92,6 +93,25 @@ public class GeneralTests {
     @Test
     public void SubFlowInitializationTest() throws IOException {
         testAnalyzeByRPCWithClass(SubFlowInitializationTestFlow.class);
+    }
+
+    @Test
+    public void ContinueBreakTest() throws IOException, AnalysisErrorException {
+        final AnalysisResult analysisResult = drawAndReturnAnalysis(ContinueBreakTest.class);
+        assertThat(analysisResult.getStatements()).hasSize(4);
+        While whileStatement = (While) analysisResult.getStatements().getStatements().get(1);
+        assertThat(whileStatement.getBranchTrue().getStatements()).hasSize(3);
+        IfElse ifElseInWhile = (IfElse)  whileStatement.getBranchTrue().getStatements().get(0);
+        assertThat(ifElseInWhile.getBranchTrue()).hasSize(2);
+        assertThat(analysisResult.getCounterpartyClassResult().getStatements()).hasSize(4);
+    }
+
+    public AnalysisResult drawAndReturnAnalysis(Class toBeAnalyzed) throws AnalysisErrorException, IOException {
+        final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(TestUtils.fromClassSrcToPath(toBeAnalyzed));
+        final CtClass klass = analyzer.getClassesByAnnotation(StartableByRPC.class).stream().findFirst().get();
+        final AnalysisResult analysisResult = analyzer.analyzeFlowLogicClass(klass);
+        DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
+        return analysisResult;
     }
 
     private void testAnalyzeByRPCWithClass(Class toBeAnalyzed) throws IOException {

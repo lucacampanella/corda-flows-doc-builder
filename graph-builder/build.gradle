@@ -1,3 +1,5 @@
+import java.nio.file.Paths
+
 buildscript {
     repositories {
         jcenter()
@@ -82,6 +84,18 @@ processResources {
 
 sourceSets {
     test.java.srcDirs += 'src/test/kotlin'
+}
+
+task createIndexFileForViewingTests() {
+    File graphsFolder = file(Paths.get(buildDir.absolutePath, "graphs"))
+    File indexFile = file(Paths.get(graphsFolder.absolutePath, "indexForTests.adoc"))
+    indexFile.text = "# Index file for tests\n\n"
+
+    graphsFolder.eachFileRecurse groovy.io.FileType.FILES,  { file ->
+        if (file.name.endsWith(".adoc") && !file.name.startsWith("index")) {
+            indexFile << "include::" + file.name + "[]\n"
+        }
+    }
 }
 
 //task copyKotlinTestJarToResources(type: Copy) {

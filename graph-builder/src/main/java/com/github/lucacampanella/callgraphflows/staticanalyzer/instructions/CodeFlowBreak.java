@@ -6,15 +6,15 @@ import spoon.reflect.code.CtStatement;
 import java.awt.*;
 
 /**
- * Class that maps CtCFlowBreak, so CtBreak, CtContinue, CtLabelledFlowBreak, CtReturn<R>, CtThrow
+ * Class that maps CtCFlowBreak, so CtBreak, CtContinue, CtLabelledFlowBreak, CtReturn, CtThrow
  */
-public class FlowBreak extends InstructionStatement {
-    protected FlowBreak(CtStatement statement) {
+public class CodeFlowBreak extends InstructionStatement {
+    protected CodeFlowBreak(CtStatement statement) {
         super(statement);
     }
 
-    public static FlowBreak fromStatement(CtStatement statement, AnalyzerWithModel analyzer) {
-        FlowBreak flowBreak = new FlowBreak(statement);
+    public static CodeFlowBreak fromStatement(CtStatement statement, AnalyzerWithModel analyzer) {
+        CodeFlowBreak flowBreak = new CodeFlowBreak(statement);
         return flowBreak;
     }
 
