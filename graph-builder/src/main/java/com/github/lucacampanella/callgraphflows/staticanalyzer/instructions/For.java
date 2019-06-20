@@ -85,7 +85,7 @@ public class For extends BranchingStatement {
     @Override
     public Branch desugar() { //we desugar the for in case it has a receive call in the init statements
         Branch result = new Branch();
-        result.addIfRelevant(getInternalMethodInvocations());
+        result.addIfRelevantForAnalysis(getInternalMethodInvocations());
         result.add(initBranch);
         result.add(this);
 

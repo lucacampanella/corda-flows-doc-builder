@@ -29,7 +29,7 @@ public class Branch implements Iterable<StatementInterface> {
         if(instr != null) statements.add(instr);
     }
 
-    public boolean addIfRelevant(StatementInterface instr) {
+    public boolean addIfRelevantForAnalysis(StatementInterface instr) {
         if (instr != null && instr.isRelevantForAnalysis()) {
             add(instr);
             return true;
@@ -37,10 +37,27 @@ public class Branch implements Iterable<StatementInterface> {
         return false;
     }
 
-    public boolean addIfRelevant(Branch instrs) {
+    public boolean addIfRelevantForAnalysis(Branch instrs) {
         boolean atLeastOneAdded = false;
         for(StatementInterface stmt : instrs) {
-            boolean addingRes = addIfRelevant(stmt);
+            boolean addingRes = addIfRelevantForAnalysis(stmt);
+            atLeastOneAdded = atLeastOneAdded || addingRes;
+        }
+        return atLeastOneAdded;
+    }
+
+    public boolean addIfRelevantForAnalysisOrIfRelevantForLoop(StatementInterface instr) {
+        if (instr != null && (instr.isRelevantForAnalysis() || instr.isRelevantForLoop())) {
+            add(instr);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean addIfRelevantForAnalysisOrIfRelevantForLoop(Branch instrs) {
+        boolean atLeastOneAdded = false;
+        for(StatementInterface stmt : instrs) {
+            boolean addingRes = addIfRelevantForAnalysisOrIfRelevantForLoop(stmt);
             atLeastOneAdded = atLeastOneAdded || addingRes;
         }
         return atLeastOneAdded;

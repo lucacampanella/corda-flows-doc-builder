@@ -39,7 +39,13 @@ public class FlowAssignment extends InstructionStatement {
 
         if(statement instanceof CtLocalVariable) {
             flowAssignment.lhsName = ((CtLocalVariable) statement).getSimpleName();
-            flowAssignment.rhsName = ((CtLocalVariable) statement).getDefaultExpression().toString();
+            if(((CtLocalVariable) statement).getDefaultExpression() != null) {
+                flowAssignment.rhsName = ((CtLocalVariable) statement).getDefaultExpression().toString();
+            }
+            else {
+                //the variable declaration doesn't have any right side, just a declaration
+                flowAssignment.rhsName = null;
+            }
         }
         else if(statement instanceof CtAssignment) {
             flowAssignment.lhsName = ((CtAssignmentImpl) statement).getAssigned().toString();

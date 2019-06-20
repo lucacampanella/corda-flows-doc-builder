@@ -22,7 +22,7 @@ public class While extends BranchingStatement {
                 statement, analyzer);
 
         //we unfold the loop only once for now
-        whileInstr.branchTrue.addIfRelevant(MatcherHelper.fromCtStatementsToStatements(
+        whileInstr.branchTrue.add(MatcherHelper.fromCtStatementsToStatements(
                 ((CtStatementList) whileStatement.getBody()).getStatements(), analyzer));
 
         if(whileInstr.hasBlockingStatementInCondition()){

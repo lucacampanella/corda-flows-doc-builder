@@ -52,7 +52,7 @@ public class MethodInvocation extends InstructionStatement {
                     //todo: this makes the "Error" happen, if the corda method is a target invocation is called from here
                     //think about how to resolve this and what implications in has
                     MethodInvocation targetInv = MethodInvocation.fromCtStatement((CtInvocation) methodInv.getTarget(), analyzer);
-                    methodInvocation.internalMethodInvocations.addIfRelevant(targetInv);
+                    methodInvocation.internalMethodInvocations.addIfRelevantForAnalysis(targetInv);
                 }
             }
 
@@ -81,13 +81,13 @@ public class MethodInvocation extends InstructionStatement {
                     }
                     final Branch allRelevantMethodInvocations = StaticAnalyzerUtils.getAllRelevantMethodInvocations(expr,
                             analyzer);
-                    methodInvocation.internalMethodInvocations.addIfRelevant(allRelevantMethodInvocations);
+                    methodInvocation.internalMethodInvocations.addIfRelevantForAnalysis(allRelevantMethodInvocations);
                 }
             }
             try {
                 final Branch bodyStatements = MatcherHelper.fromCtStatementsToStatements(
                         inv.getExecutable().getDeclaration().getBody().getStatements(), analyzer);
-                methodInvocation.body.addIfRelevant(bodyStatements);
+                methodInvocation.body.addIfRelevantForAnalysis(bodyStatements);
             } catch (NullPointerException e) {
                 LOGGER.warn("Couldn't retrieve the body of method {} adding an empty one", inv);
             }

@@ -38,7 +38,7 @@ public interface StatementInterface {
     //Implementation for statements that have just one instruction inside or don't need desugaring
     default Branch desugar() {
         Branch res = new Branch();
-        getInternalMethodInvocations().forEach(stmt -> res.addIfRelevant(stmt.desugar()));
+        getInternalMethodInvocations().forEach(stmt -> res.addIfRelevantForAnalysis(stmt.desugar()));
         res.add(this);
         return res;
     }
@@ -61,6 +61,13 @@ public interface StatementInterface {
      */
     default boolean isRelevantForAnalysis() {
         return true;
+    }
+
+    /**
+     * @return true if it's an instruction relevant to be sisplayed and analyzed in a loop, such as break or continue
+     */
+    default boolean isRelevantForLoop() {
+        return isRelevantForAnalysis();
     }
 
     /**

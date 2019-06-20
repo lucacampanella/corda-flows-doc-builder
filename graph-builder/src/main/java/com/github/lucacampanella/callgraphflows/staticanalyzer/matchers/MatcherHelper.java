@@ -14,15 +14,12 @@ import spoon.reflect.CtModel;
 import spoon.reflect.code.*;
 import spoon.reflect.declaration.*;
 import spoon.reflect.reference.CtTypeReference;
-import spoon.reflect.visitor.chain.CtQueryable;
-import spoon.reflect.visitor.filter.InvocationFilter;
 import spoon.reflect.visitor.filter.NamedElementFilter;
 import spoon.reflect.visitor.filter.TypeFilter;
 import spoon.support.compiler.VirtualFile;
 import spoon.template.TemplateMatcher;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
@@ -289,6 +286,9 @@ public final class MatcherHelper {
         if(res == null && statement instanceof CtAbstractInvocation) {
             res = MethodInvocation.fromCtStatement(statement, analyzer);
         }
+        if(res == null && statement instanceof CtCFlowBreak) {
+            res = FlowBreak.fromStatement(statement,analyzer);
+        }
         if(res == null) {
             res = initiateIfContainsRelevantMethod(statement, analyzer);
         }
@@ -305,7 +305,7 @@ public final class MatcherHelper {
             final StatementInterface statement = instantiateStatement(ctStatement, analyzer);
             if(statement != null) {
                 Branch desugared = statement.desugar();
-                res.addIfRelevant(desugared);
+                res.addIfRelevantForAnalysisOrIfRelevantForLoop(desugared);
             }
         }
         return res;

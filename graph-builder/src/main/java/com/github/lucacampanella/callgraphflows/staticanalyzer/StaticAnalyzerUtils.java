@@ -559,7 +559,7 @@ public class StaticAnalyzerUtils {
             CtAbstractInvocation inv = (CtAbstractInvocation) statement;
             if(!MatcherHelper.isCordaMethod(inv)) {
                 MethodInvocation methodInvocation = MethodInvocation.fromCtStatement((CtStatement) inv, analyzer);
-                res.addIfRelevant(methodInvocation);
+                res.addIfRelevantForAnalysis(methodInvocation);
                 return res;
             }
         }
@@ -567,7 +567,7 @@ public class StaticAnalyzerUtils {
             final List<CtElement> directChildren = statement.getDirectChildren();
 
             for (CtElement elem : directChildren) {
-                res.addIfRelevant(getAllRelevantMethodInvocations(elem, analyzer));
+                res.addIfRelevantForAnalysis(getAllRelevantMethodInvocations(elem, analyzer));
             }
         }
 
