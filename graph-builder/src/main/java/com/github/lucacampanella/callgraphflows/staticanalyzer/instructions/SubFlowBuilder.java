@@ -131,10 +131,11 @@ public class SubFlowBuilder {
             }
 
             if(subFlowInfo.subFlowType.getTypeDeclaration() == null) {
-                LOGGER.error("Couldn't retrive declaration for subflow type {}, for statement {}," +
+                LOGGER.warn("Couldn't retrive declaration for subflow type {}, for statement {}," +
                         " defaulting to null subFlowType and not analyzing the subFlow called. " +
                                 "Also filling returnType with an empty optional " +
-                                "since we can't analyze the generics of the class not present in classpath",
+                                "since we can't analyze the generics of the class not present in classpath." +
+                                "\nThis could result in a problem in the produced graph",
                         subFlowInfo.subFlowType, statement);
             } else {
                 final CtMethod callMethod = StaticAnalyzerUtils.findCallMethod(
@@ -172,7 +173,8 @@ public class SubFlowBuilder {
                 ((SubFlowBaseWithAnalysis) result).resultOfClassAnalysis = resultOfClassAnalysis;
 
             } catch (AnalysisErrorException e) {
-                LOGGER.error("Could not get contents of subflow {}, inserting empty flow instead",
+                LOGGER.warn("Could not get contents of subflow {}, inserting empty flow instead" +
+                        "\nThis could result in a problem in the produced graph",
                         subFlowInfo.subFlowType.toString(), e);
                 result = new CordaSubFlow();
             }

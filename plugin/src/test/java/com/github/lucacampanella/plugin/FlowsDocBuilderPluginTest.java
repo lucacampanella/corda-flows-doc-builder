@@ -34,7 +34,7 @@ class FlowsDocBuilderPluginTest {
     @BeforeAll
     static void setUp() throws IOException {
 //        tmpDir = Files.createTempDirectory("testTempDir").toFile();
-//        LOGGER.info(tmpDir);
+//        LOGGER.trace(tmpDir);
 //
 //        FileUtils.copyDirectory(sampleProjectDirectory, tmpDir);
 
@@ -45,8 +45,8 @@ class FlowsDocBuilderPluginTest {
         //todo: copy only the important files, not caches and so on, this may also allow to fire up different gradle
         //versions
 
-        LOGGER.info("{}", buildResult.getOutput());
-        LOGGER.info("{}", buildResult);
+        LOGGER.trace("{}", buildResult.getOutput());
+        LOGGER.trace("{}", buildResult);
     }
 
     @Test

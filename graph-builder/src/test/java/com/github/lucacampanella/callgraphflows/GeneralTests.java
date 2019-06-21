@@ -112,7 +112,7 @@ public class GeneralTests {
     public void InitiatedByInnerClassAcceptorTest() throws IOException, AnalysisErrorException {
         final AnalysisResult analysisResult = drawAndReturnAnalysis(InitiatedByInnerClassAcceptorTestFlow.class,
                 SimpleFlowTestFlow.class);
-        LOGGER.info("{}", analysisResult.getStatements());
+        LOGGER.trace("{}", analysisResult.getStatements());
     }
 
     public AnalysisResult drawAndReturnAnalysis(Class... toBeAnalyzed) throws AnalysisErrorException, IOException {

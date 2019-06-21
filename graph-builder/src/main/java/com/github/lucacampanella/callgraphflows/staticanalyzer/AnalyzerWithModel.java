@@ -139,9 +139,10 @@ public class AnalyzerWithModel {
                         initiatedByAnnotationOptional.get().getAllValues().get("value");
 
                 if(((CtFieldReadImpl) referenceToClass).getVariable().getDeclaringType() == null){
-                    LOGGER.error("Couldn't retrieve declaration of class declared in the @initiatedBy " +
+                    LOGGER.warn("Couldn't retrieve declaration of class declared in the @initiatedBy " +
                             "annotation. Skipping this class in finding the responder flow " +
-                            "(This might lead to wrong docs). \nDeclared reference: {} \nDeclaring class: {} " +
+                            "\nThis could result in a problem in the produced graph." +
+                            " \nDeclared reference: {} \nDeclaring class: {} " +
                             "\nInitiatingClass {}", referenceToClass, klass, initiatingClass);
                     continue;
                 }

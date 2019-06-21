@@ -21,7 +21,7 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
 
         LOGGER.info("Corda flows doc builder plugin: ");
         LOGGER.info("Version: {}", BUILD_VERSION);
-        LOGGER.error(System.getProperty("user.dir"));
+        LOGGER.trace(System.getProperty("user.dir"));
 
         final TaskCollection<Jar> jarTasks = project.getTasks().withType(Jar.class);
         List<Jar> jarTasksList = new ArrayList<>(jarTasks);

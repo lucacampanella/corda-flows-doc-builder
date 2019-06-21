@@ -539,7 +539,9 @@ public class StaticAnalyzerUtils {
                 getElements(new TypeFilter<>(CtVariableRead.class))
                 .stream().filter(varRead -> {
                     if(varRead.getType() == null) {
-                        LOGGER.error("Couldn't find out type of {} in statement {} : ignoring the type for target session search", varRead, ctStatement);
+                        LOGGER.warn("Couldn't find out type of {} in statement {} : " +
+                                "ignoring the type for target session search"
+                                + "\nThis could result in a problem in the produced graph", varRead, ctStatement);
                         return false;
                     }
                     return  varRead.getType().box().getQualifiedName().equals(FlowSession.class.getCanonicalName());

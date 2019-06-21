@@ -252,7 +252,9 @@ public final class MatcherHelper {
                                                                                            AnalyzerWithModel analyzer) {
         CtTypedElement elem = (CtTypedElement) statement;
         if(elem.getType() == null) {
-            LOGGER.error("Couldn't get type of {}, continuing without trying to figure out if containts a flow session or a flow logic type", statement);
+            LOGGER.warn("Couldn't get type of {}, continuing without trying to figure out " +
+                    "if containts a flow session or a flow logic type"
+                    + "\nThis could result in a problem in the produced graph", statement);
             return null;
         }
 

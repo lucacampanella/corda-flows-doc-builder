@@ -18,7 +18,7 @@ class JarAnalyzerTest extends AnalyzerWithModelTest {
     @BeforeAll
     static void setUp() {
         final URL jarURL = JarAnalyzerTest.class.getClassLoader().getResource(TEST_JAR_NAME);
-        LOGGER.info("{}", jarURL);
+        LOGGER.trace("{}", jarURL);
         analyzerWithModel = new JarAnalyzer(jarURL.getPath());
     }
 
