@@ -116,7 +116,9 @@ plugin relies on the analysis engine that can be found in this repo under the `g
  Example: `pathToExecJar = "path/to/my/analyzerExtended.jar"`
  Default: the latest version of the Jar is downloaded from the artifactory automatically 
  Gradle dependency handler.
- 
+ - `decompilerName`: change the decompiler used. Available options: `CFR`, `Fernflower`
+  Example: `decompilerName = "fernflower"`
+  Default: `CFR` 
 
 For example using the Groovy DSL:
 ```
@@ -136,7 +138,11 @@ is to use the [shadow plugin](https://github.com/johnrengelman/shadow) to create
 ### As a standalone executable
 Run with:
 ```
-java -jar [-Dorg.slf4j.simpleLogger.defaultLogLevel=<logLevel>] graph-builder-<version>-all.jar <path/to/input_jar.jar> [path/to/additionalClasspathJars.jar ...] [-o <path/to/output_folder>]
+java -jar [-Dorg.slf4j.simpleLogger.defaultLogLevel=<logLevel>] graph-builder-<version>-all.jar 
+<path/to/input_jar.jar> \
+[path/to/additionalClasspathJars.jar ...] \
+[-o <path/to/output_folder>] \
+[-d <decompilerName>]
 ```
 Meaning:
 - `-Dorg.slf4j.simpleLogger.defaultLogLevel=<logLevel>`: optional parameter to decide the 
@@ -148,6 +154,8 @@ log level. Complete `<logLevel>` with one of the
 useful when the jar to be analyzed is not a fat Jar and the analysis still needs some dependencies.
 - `-o <path/to/output_folder>`: the output folder where the resulting documentation should be placed.  
 Default: `graphs`
+- `-d <decompilerName>`: change the decompiler used. Available options: `CFR`, `Fernflower`  
+Default: `CFR` 
 
 ## Running the tests
 

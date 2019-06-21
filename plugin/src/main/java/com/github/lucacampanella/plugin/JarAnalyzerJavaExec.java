@@ -23,6 +23,7 @@ public class JarAnalyzerJavaExec extends JavaExec {
 
     String pathToJar = null;
     String outPath = "build/reports/flowsdocbuilder";
+    String decompilerName = "CFR";
     String pathToExecJar = null;
     boolean removeJavaAgents = true; //remove agents like quasar that might be pluggen in to any javaexec task by the quasar plugin
     Level logLevel = null;
@@ -35,7 +36,7 @@ public class JarAnalyzerJavaExec extends JavaExec {
             pathToExecJar = JarExecPathFinderUtils.getPathToExecJar(getProject());
         }
 
-        this.args(pathToExecJar, pathToJar, "-o", outPath);
+        this.args(pathToExecJar, pathToJar, "-o", outPath, "-d", decompilerName);
 
         if(logLevel == null) {
             final LogLevel gradleLogLevel = getCurrentLogLevel();
@@ -76,6 +77,10 @@ public class JarAnalyzerJavaExec extends JavaExec {
         this.logLevel = logLevel;
     }
 
+    public void setDecompilerName(String decompilerName) {
+        this.decompilerName = decompilerName;
+    }
+
     @Input
     public String getPathToJar() {
         return pathToJar;
@@ -90,6 +95,11 @@ public class JarAnalyzerJavaExec extends JavaExec {
     @Input
     public boolean isRemoveJavaAgents() {
         return removeJavaAgents;
+    }
+
+    @Input
+    public String getDecompilerName() {
+        return decompilerName;
     }
 
     @OutputDirectory

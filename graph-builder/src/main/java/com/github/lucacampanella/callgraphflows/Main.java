@@ -20,6 +20,9 @@ public class Main implements Callable<Integer> {
     @CommandLine.Option(names = {"-o", "--output"}, defaultValue = "graphs", description = "Output folder path")
     private String outputPath;
 
+    @CommandLine.Option(names = {"-d", "--decompiler"}, defaultValue = "CFR", description = "Decompiler, choose between CFR and Fernflower")
+    private String decompilerName;
+
     public static void main(String []args) throws IOException {
 
         final Main app = CommandLine.populateCommand(new Main(), args);
@@ -38,10 +41,10 @@ public class Main implements Callable<Integer> {
         JarAnalyzer analyzer;
 
         if(additionalJarsPath == null) {
-            analyzer = new JarAnalyzer(inputJarPath);
+            analyzer = new JarAnalyzer(decompilerName, inputJarPath);
         }
         else {
-            analyzer = new JarAnalyzer(inputJarPath, additionalJarsPath);
+            analyzer = new JarAnalyzer(decompilerName, inputJarPath, additionalJarsPath);
         }
 
         DrawerUtil.drawAllStartableClasses(analyzer, outputPath);

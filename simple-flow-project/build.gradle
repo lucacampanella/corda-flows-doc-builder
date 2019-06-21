@@ -45,4 +45,6 @@ jarAnalyzerTask {
     logLevel = Level.TRACE
     
     //removeJavaAgents = false
+
+    decompilerName = "pippo"
 }
