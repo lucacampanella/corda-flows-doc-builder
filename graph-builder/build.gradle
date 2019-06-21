@@ -66,7 +66,7 @@ task copyTestJarToResources(type: Copy) {
 }
 
 task createTestJar(type: Jar) {
-    archiveName = "JarAnalyzerTestJar.jar"
+    archiveFileName = "JarAnalyzerTestJar.jar"
     from {
         sourceSets.test.output
     }
@@ -89,6 +89,7 @@ sourceSets {
 task createIndexFileForViewingTests() {
     File graphsFolder = file(Paths.get(buildDir.absolutePath, "graphs"))
     File indexFile = file(Paths.get(graphsFolder.absolutePath, "indexForTests.adoc"))
+    indexFile.createNewFile()
     indexFile.text = "# Index file for tests\n\n"
 
     graphsFolder.eachFileRecurse groovy.io.FileType.FILES,  { file ->
