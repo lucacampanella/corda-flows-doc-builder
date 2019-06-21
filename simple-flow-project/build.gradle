@@ -42,9 +42,9 @@ jarAnalyzerTask {
             .map { it.getAbsolutePath() }.findFirst()
             .orElseThrow { new RuntimeException("Could not find local executable jar") }
     
-    logLevel = Level.TRACE
+    logLevel = Level.ERROR
     
     //removeJavaAgents = false
 
-    decompilerName = "pippo"
+    decompilerName = "fernflower"
 }

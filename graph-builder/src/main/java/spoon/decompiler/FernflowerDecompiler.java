@@ -17,6 +17,8 @@
 package spoon.decompiler;
 
 import org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +26,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class FernflowerDecompiler implements Decompiler {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(FernflowerDecompiler.class);
 
 	File outputDir;
 
@@ -33,8 +37,21 @@ public class FernflowerDecompiler implements Decompiler {
 
 	@Override
 	public void decompile(String jarPath) {
-		ConsoleDecompiler.main(new String[]{jarPath, outputDir.getPath()});
 
+		String logLevelOption = "-log="; //log (INFO): a logging level, possible values are TRACE, INFO, WARN, ERROR
+		if(LOGGER.isTraceEnabled()) {
+			logLevelOption += "TRACE";
+		}
+		else if(LOGGER.isInfoEnabled()) {
+			logLevelOption += "INFO";
+		}
+		else if(LOGGER.isWarnEnabled()) {
+			logLevelOption += "WARN";
+		}
+		else{ //if(LOGGER.isErrorEnabled()) {
+			logLevelOption += "ERROR";
+		}
+		ConsoleDecompiler.main(new String[]{logLevelOption, jarPath, outputDir.getPath()});
 		String jarName = jarPath.substring(jarPath.lastIndexOf(System.getProperty("file.separator"))+1);
 		try {
 			unzipJar(Paths.get(outputDir.getPath(), jarName).toString(), outputDir.getPath());
