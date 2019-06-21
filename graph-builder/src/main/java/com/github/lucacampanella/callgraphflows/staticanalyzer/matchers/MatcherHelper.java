@@ -6,6 +6,8 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.*;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
 import net.corda.core.flows.FlowLogic;
 import net.corda.core.flows.FlowSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spoon.Launcher;
 import spoon.pattern.Pattern;
 import spoon.pattern.PatternBuilder;
@@ -39,6 +41,8 @@ public final class MatcherHelper {
     private static CtModel model;
 
     private static Set<String> allMatchersName = null;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MatcherHelper.class);
 
     private static final String SEND_MATCHER = "sendMatcher";
     private static final String SEND_WITH_BOOL_MATCHER = "sendWithBoolMatcher";
@@ -247,6 +251,11 @@ public final class MatcherHelper {
     private static StatementInterface initiateIfTypedElementContainsFlowSessionOrFlowLogic(CtStatement statement,
                                                                                            AnalyzerWithModel analyzer) {
         CtTypedElement elem = (CtTypedElement) statement;
+        if(elem.getType() == null) {
+            LOGGER.error("Couldn't get type of {}, continuing without trying to figure out if containts a flow session or a flow logic type", statement);
+            return null;
+        }
+
         if(elem.getType().isSubtypeOf(getTypeReference(FlowSession.class))) {
             return SessionAssignment.fromCtStatement(statement, analyzer);
         }

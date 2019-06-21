@@ -131,7 +131,7 @@ public class SubFlowBuilder {
             }
 
             if(subFlowInfo.subFlowType.getTypeDeclaration() == null) {
-                LOGGER.warn("Couldn't retrive declaration for subflow type {}, for statement {}," +
+                LOGGER.error("Couldn't retrive declaration for subflow type {}, for statement {}," +
                         " defaulting to null subFlowType and not analyzing the subFlow called. " +
                                 "Also filling returnType with an empty optional " +
                                 "since we can't analyze the generics of the class not present in classpath",

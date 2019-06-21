@@ -38,8 +38,8 @@ public class InitiatingSubFlow extends SubFlowBaseWithAnalysis {
             counterpartyClassResult.getStatements().forEach(stmt -> counterpartyFlow.addComponent(stmt.getGraphElem()));
             graphElem.setCounterpartySubFlow(counterpartyFlow,
                     (GInstruction) resultOfClassAnalysis.getStatements().getInitiateFlowStatementAtThisLevel()
-                            .orElseThrow(() -> new RuntimeException("Error buildinf the graph elem for " +
-                                    this.toString() + " because couldn't find the corresponding itiate flow" +
+                            .orElseThrow(() -> new RuntimeException("Error building the graph elem for " +
+                                    this.toString() + " because couldn't find the corresponding initiateFlow" +
                                     " call")).getGraphElem());
         }
     }
