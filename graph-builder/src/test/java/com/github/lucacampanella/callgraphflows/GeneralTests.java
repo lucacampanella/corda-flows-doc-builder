@@ -17,7 +17,9 @@ import spoon.reflect.declaration.CtClass;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.github.lucacampanella.TestUtils.fromClassSrcToPath;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -106,8 +108,16 @@ public class GeneralTests {
         assertThat(analysisResult.getCounterpartyClassResult().getStatements()).hasSize(4);
     }
 
-    public AnalysisResult drawAndReturnAnalysis(Class toBeAnalyzed) throws AnalysisErrorException, IOException {
-        final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(TestUtils.fromClassSrcToPath(toBeAnalyzed));
+    @Test
+    public void InitiatedByInnerClassAcceptorTest() throws IOException, AnalysisErrorException {
+        final AnalysisResult analysisResult = drawAndReturnAnalysis(InitiatedByInnerClassAcceptorTestFlow.class,
+                SimpleFlowTestFlow.class);
+        LOGGER.info("{}", analysisResult.getStatements());
+    }
+
+    public AnalysisResult drawAndReturnAnalysis(Class... toBeAnalyzed) throws AnalysisErrorException, IOException {
+        final List<String> pathToClasses = Arrays.stream(toBeAnalyzed).map(TestUtils::fromClassSrcToPath).collect(Collectors.toList());
+        final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(pathToClasses);
         final CtClass klass = analyzer.getClassesByAnnotation(StartableByRPC.class).stream().findFirst().get();
         final AnalysisResult analysisResult = analyzer.analyzeFlowLogicClass(klass);
         DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);

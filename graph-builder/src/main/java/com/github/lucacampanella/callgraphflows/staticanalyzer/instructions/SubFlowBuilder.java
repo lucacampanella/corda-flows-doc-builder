@@ -39,7 +39,7 @@ public class SubFlowBuilder {
 
         Branch internalMethodInvocations = new Branch();
 
-        Optional<String> returnType;
+        Optional<String> returnType = Optional.empty();
 
         Optional<String> subFlowVariableName = Optional.empty(); //if the subFlow is called with a variable as a
         //parameter and not with a constructor this is present
