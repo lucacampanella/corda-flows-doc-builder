@@ -3,7 +3,6 @@
 [![Build Status](https://travis-ci.org/lucacampanella/corda-flows-doc-builder.svg?branch=master)](https://travis-ci.org/lucacampanella/corda-flows-doc-builder)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
-
 Gradle plugin to automatically generate graph that represent Corda flows interactions. 
 The plugin is intended to help developers automatically build documentation regarding the 
 [Corda](https://www.corda.net/) flows they write. 
@@ -34,15 +33,7 @@ The doc builder can be used in two ways:
 To apply the plugin, in the `build.gradle` 
 (see [gradle website](https://plugins.gradle.org/plugin/com.github.lucacampanella.plugin.flows-doc-builder-plugin)):
 
-Using the plugin DSL
-
-```
-plugins {
-  id "com.github.lucacampanella.plugin.flows-doc-builder-plugin" version "0.0.12"
-}
-```
-
-Or using legacy plugin application:
+Using legacy plugin application:
 
 ```
 buildscript {
@@ -52,7 +43,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "com.github.lucacampanella:plugin:0.0.12"
+    classpath "com.github.lucacampanella:plugin:+"
   }
 }
 
