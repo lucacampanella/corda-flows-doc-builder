@@ -155,6 +155,10 @@ public class SubFlowBuilder {
             subFlowInfo.isInitiatingFlow = false;
             result = new CordaSubFlow();
         }
+        else if(isUnknownSpecialCordaFlow(subFlowInfo.subFlowType)) {
+            subFlowInfo.isInitiatingFlow = null;
+            result = new CordaSubFlow();
+        }
         else { //is not a corda flow
             try {
                 AnalysisResult resultOfClassAnalysis = analyzer.analyzeFlowLogicClass(
@@ -197,6 +201,10 @@ public class SubFlowBuilder {
             }
         }
         return false;
+    }
+
+    private static boolean isUnknownSpecialCordaFlow(CtTypeReference subFlowType) {
+        return subFlowType.toString().startsWith("net.corda");
     }
 
     protected static boolean areMatchingSpecialCordaFlow(CtTypeReference initiatingFlow, CtTypeReference initiatedFlow) {
