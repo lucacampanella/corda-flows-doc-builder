@@ -26,8 +26,10 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
         final TaskCollection<Jar> jarTasks = project.getTasks().withType(Jar.class);
         List<Jar> jarTasksList = new ArrayList<>(jarTasks);
 
+        project.getLogger().info("Creating listFlowAnalysisTasks task");
         final DefaultTask listFlowAnalysisTask = project.getTasks()
                 .create("listFlowAnalysisTasks", DefaultTask.class);
+        project.getLogger().info("Created");
 
         listFlowAnalysisTask.doLast(task -> {
             project.getLogger().info("Available tasks to create corda flow docs: ");
@@ -35,11 +37,13 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
                 project.getLogger().info("{}AnalyzerTask for file {}", jarTask.getName(), jarTask.getArchiveName());
             }
         });
+        project.getLogger().info("Configured");
 
         for(Jar task : jarTasksList) {
+            project.getLogger().info("----\nGetting task name");
             final String path = task.getArchivePath().getAbsolutePath(); //if modified to the non deprecated call it doesn't work this doesn't work for cardossier-cordapp
             final String taskName = task.getName() + "AnalyzerTask";
-            project.getLogger().trace("Attempting to create task {}", taskName); //idem
+            project.getLogger().info("Attempting to create task {}", taskName);
             final JarAnalyzerJavaExec javaExecTask = project.getTasks().create(taskName, JarAnalyzerJavaExec.class);
             javaExecTask.setMain("-jar");
             javaExecTask.dependsOn(task);
