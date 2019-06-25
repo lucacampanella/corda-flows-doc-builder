@@ -1,5 +1,3 @@
-import org.slf4j.event.Level
-
 buildscript {
     dependencies {
         classpath "com.github.lucacampanella:plugin:+"
@@ -42,7 +40,7 @@ jarAnalyzerTask {
             .map { it.getAbsolutePath() }.findFirst()
             .orElseThrow { new RuntimeException("Could not find local executable jar") }
     
-    logLevel = Level.ERROR
+    logLevel = "wrongloglevel"
     
     //removeJavaAgents = false
 

@@ -11,6 +11,13 @@ import java.util.stream.Collectors;
 
 
 public class JarAnalyzerJavaExec extends JavaExec {
+
+//        ERROR(40, "ERROR"),
+//        WARN(30, "WARN"),
+//        INFO(20, "INFO"),
+//        DEBUG(10, "DEBUG"),
+//        TRACE(0, "TRACE");
+
     private static Map<LogLevel, Level> gradleLogLevelToSLF4JLevel = new EnumMap<>(LogLevel.class);
     static {
         gradleLogLevelToSLF4JLevel.put(LogLevel.ERROR, Level.ERROR);
@@ -26,7 +33,7 @@ public class JarAnalyzerJavaExec extends JavaExec {
     String decompilerName = "CFR";
     String pathToExecJar = null;
     boolean removeJavaAgents = true; //remove agents like quasar that might be pluggen in to any javaexec task by the quasar plugin
-    Level logLevel = null;
+    String logLevel = null;
 
     @TaskAction
     @Override
@@ -38,12 +45,21 @@ public class JarAnalyzerJavaExec extends JavaExec {
 
         this.args(pathToExecJar, pathToJar, "-o", outPath, "-d", decompilerName);
 
+        getLogger().info("logLevel = {}", logLevel);
+        Level slf4jLogLevel = null;
+        try {
+            slf4jLogLevel = Level.valueOf(logLevel.toUpperCase());
+        } catch(Exception e) {
+            getLogger().error("Cannot convert logLevel string \"{}\" to " +
+                    "any log value, defaulting to gradle log level", logLevel, e);
+        }
+        getLogger().info("slf4jLogLevel = {}", slf4jLogLevel);
         if(logLevel == null) {
             final LogLevel gradleLogLevel = getCurrentLogLevel();
             //if not configured defaults to Gradle log level
-            logLevel = gradleLogLevelToSLF4JLevel.get(gradleLogLevel);
+            slf4jLogLevel = gradleLogLevelToSLF4JLevel.get(gradleLogLevel);
         }
-
+        getLogger().info("slf4jLogLevel = {}", slf4jLogLevel);
         final List<String> jvmArgs = this.getJvmArgs();
         jvmArgs.add("-Dorg.slf4j.simpleLogger.defaultLogLevel=" + logLevel);
 
@@ -71,10 +87,6 @@ public class JarAnalyzerJavaExec extends JavaExec {
 
     public void setRemoveJavaAgents(boolean removeJavaAgents) {
         this.removeJavaAgents = removeJavaAgents;
-    }
-
-    public void setLogLevel(Level logLevel) {
-        this.logLevel = logLevel;
     }
 
     public void setDecompilerName(String decompilerName) {
