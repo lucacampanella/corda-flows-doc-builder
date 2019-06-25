@@ -95,6 +95,18 @@ public class JarAnalyzerJavaExec extends JavaExec {
         this.decompilerName = decompilerName;
     }
 
+    public void setOutPath(String outPath) {
+        this.outPath = outPath;
+    }
+
+    public void setLogLevel(String logLevel) {
+        this.logLevel = logLevel;
+    }
+
+    public String getLogLevel() {
+        return logLevel;
+    }
+
     @Input
     public String getPathToJar() {
         return pathToJar;
