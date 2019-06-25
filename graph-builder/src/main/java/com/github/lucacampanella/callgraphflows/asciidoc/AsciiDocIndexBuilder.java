@@ -20,7 +20,7 @@ public class AsciiDocIndexBuilder {
 
     public void writeToFile(String path) throws IOException {
         StringBuilder sb = new StringBuilder();
-        sb.append("# Analysis of ");
+        sb.append("Analysis of ");
         sb.append(analysisName);
         sb.append("\n\n");
         for (String fileName : asciiDocFileNames) {
