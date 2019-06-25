@@ -45,7 +45,6 @@ public class JarAnalyzerJavaExec extends JavaExec {
 
         this.args(pathToExecJar, pathToJar, "-o", outPath, "-d", decompilerName);
 
-        getLogger().info("logLevel = {}", logLevel);
         Level slf4jLogLevel = null;
         if(logLevel != null) {
             try {
@@ -55,15 +54,13 @@ public class JarAnalyzerJavaExec extends JavaExec {
                         "any log value, defaulting to gradle log level", logLevel, e);
             }
         }
-        getLogger().info("slf4jLogLevel = {}", slf4jLogLevel);
         if(logLevel == null) {
             final LogLevel gradleLogLevel = getCurrentLogLevel();
             //if not configured defaults to Gradle log level
             slf4jLogLevel = gradleLogLevelToSLF4JLevel.get(gradleLogLevel);
         }
-        getLogger().info("slf4jLogLevel = {}", slf4jLogLevel);
         final List<String> jvmArgs = this.getJvmArgs();
-        jvmArgs.add("-Dorg.slf4j.simpleLogger.defaultLogLevel=" + logLevel);
+        jvmArgs.add("-Dorg.slf4j.simpleLogger.defaultLogLevel=" + slf4jLogLevel);
 
         if(removeJavaAgents) {
            getLogger().info("removeJavaAgents = true");

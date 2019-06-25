@@ -15,6 +15,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -33,15 +34,17 @@ class FlowsDocBuilderPluginTest {
 
     @BeforeAll
     static void setUp() throws IOException {
-//        tmpDir = Files.createTempDirectory("testTempDir").toFile();
+
+//        final File testTempDir = Files.createTempDirectory("testTempDir").toFile();
 //        LOGGER.trace(tmpDir);
 //
 //        FileUtils.copyDirectory(sampleProjectDirectory, tmpDir);
-
-        FileUtils.deleteDirectory(outputDir);
+//
+//        FileUtils.deleteDirectory(outputDir);
 
         final BuildResult buildResult = GradleRunner.create().withProjectDir(sampleProjectDirectory)
-                .withPluginClasspath().withArguments("JarAnalyzerTask").build();
+                .withPluginClasspath().withArguments("JarAnalyzerTask").withGradleVersion("4.1").build();
+
         //todo: copy only the important files, not caches and so on, this may also allow to fire up different gradle
         //versions
 

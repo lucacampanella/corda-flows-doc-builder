@@ -1,8 +1,8 @@
-buildscript {
-    dependencies {
-        classpath "com.github.lucacampanella:plugin:+"
-    }
-}
+//buildscript {
+//    dependencies {
+//        classpath "com.github.lucacampanella:plugin:+"
+//    }
+//}
 
 plugins {
     id 'java'
