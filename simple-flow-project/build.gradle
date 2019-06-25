@@ -6,9 +6,10 @@
 
 plugins {
     id 'java'
+    id 'com.github.lucacampanella.plugin.flows-doc-builder-plugin'
 }
 
-apply plugin: 'com.github.lucacampanella.plugin.flows-doc-builder-plugin'
+//apply plugin: 'com.github.lucacampanella.plugin.flows-doc-builder-plugin'
 
 ext {
     corda_release_group = 'net.corda'
@@ -35,10 +36,19 @@ project.tasks.withType(JavaExec) {
 jarAnalyzerTask {
     outPath = project.buildDir.path + "/reports/differentdir/flowsdocbuilder"
 
-    pathToExecJar = Arrays.stream(project.file("../graph-builder/build/libs").listFiles())
-            .filter {it.getName().startsWith("graph-builder") && it.getName().endsWith("-all.jar") }
-            .map { it.getAbsolutePath() }.findFirst()
-            .orElseThrow { new RuntimeException("Could not find local executable jar") }
+
+    if(project.file("../graph-builder/build/libs").exists()) {
+        pathToExecJar = Arrays.stream(project.file("../graph-builder/build/libs").listFiles())
+                .filter {it.getName().startsWith("graph-builder") && it.getName().endsWith("-all.jar") }
+                .map { it.getAbsolutePath() }.findFirst()
+                .orElseThrow { new RuntimeException("Could not find local executable jar") }
+    }
+    else { //build is called by GradleRunner
+        pathToExecJar = Arrays.stream(project.projectDir.listFiles())
+                .filter {it.getName().startsWith("graph-builder") && it.getName().endsWith("-all.jar") }
+                .map { it.getAbsolutePath() }.findFirst()
+                .orElseThrow { new RuntimeException("Could not find local executable jar") }
+    }
     
     logLevel = "wrongloglevel"
     
