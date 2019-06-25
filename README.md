@@ -87,10 +87,11 @@ For each analyzer task you can configure various options:
 Example: `outPath = "myFavouriteFolder/docs"`
 Default: `build/reports/flowsdocbuilder`  
 - `logLevel`: the log level to use for logging inside the task. It should be one of the 
-[slf4j log levels](https://www.slf4j.org/apidocs/org/slf4j/event/Level.html).  
-Example: `logLevel = Level.TRACE` or `logLevel = Level.DEBUG`
+[slf4j log levels](https://www.slf4j.org/apidocs/org/slf4j/event/Level.html). The input is taken as string and
+later in the task converted to the enum. Case insensitive.
+Example: `logLevel = "TRACE"` or `logLevel = "debug"`
 Default: defaults to gradle specified log level. For example run task with `--info`
-option to obtain slf4j `Level.DEBUG`. If the `logLevel` is specified by the user in the task
+option to obtain slf4j `DEBUG`. If the `logLevel` is specified by the user in the task
 this always takes precedence over gradle specified log level.
 -  `removeJavaAgents`: decide whether you want the plugin to remove java agents from
 the execution of the task. It's very common in Corda development environments to have
@@ -107,7 +108,7 @@ plugin relies on the analysis engine that can be found in this repo under the `g
  Example: `pathToExecJar = "path/to/my/analyzerExtended.jar"`
  Default: the latest version of the Jar is downloaded from the artifactory automatically 
  Gradle dependency handler.
- - `decompilerName`: change the decompiler used. Available options: `CFR`, `Fernflower`
+- `decompilerName`: change the decompiler used. Available options: `CFR`, `Fernflower`
   Example: `decompilerName = "fernflower"`
   Default: `CFR` 
 
@@ -115,7 +116,7 @@ For example using the Groovy DSL:
 ```
 jarAnalyzerTask {
     outPath = project.buildDir.path + "/reports/differentdir/flowsdocbuilder"
-    logLevel = Level.TRACE
+    logLevel = "TRACE"
     removeJavaAgents = false
     pathToExecJar = "path/to/my/analyzerExtended.jar"
 }
