@@ -1,6 +1,7 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
 import spoon.reflect.code.CtStatement;
 
 import java.awt.*;
@@ -15,6 +16,8 @@ public class CodeFlowBreak extends InstructionStatement {
 
     public static CodeFlowBreak fromStatement(CtStatement statement, AnalyzerWithModel analyzer) {
         CodeFlowBreak flowBreak = new CodeFlowBreak(statement);
+        flowBreak.internalMethodInvocations.add(
+                StaticAnalyzerUtils.getAllRelevantMethodInvocations(statement, analyzer));
         return flowBreak;
     }
 
@@ -27,6 +30,6 @@ public class CodeFlowBreak extends InstructionStatement {
 
     @Override
     public boolean isRelevantForAnalysis() {
-        return false;
+        return internalMethodInvocations.isRelevant();
     }
 }
