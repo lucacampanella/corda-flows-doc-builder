@@ -46,5 +46,5 @@ jarAnalyzerTask {
     
     //removeJavaAgents = false
 
-    decompilerName = "fernflower"
+    //decompilerName = "fernflower"
 }
