@@ -19,9 +19,9 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
     @Override
     public void apply(Project project) {
 
-        LOGGER.info("Corda flows doc builder plugin: ");
-        LOGGER.info("Version: {}", BUILD_VERSION);
-        LOGGER.trace(System.getProperty("user.dir"));
+        project.getLogger().info("Corda flows doc builder plugin: ");
+        project.getLogger().info("Version: {}", BUILD_VERSION);
+        project.getLogger().trace(System.getProperty("user.dir"));
 
         final TaskCollection<Jar> jarTasks = project.getTasks().withType(Jar.class);
         List<Jar> jarTasksList = new ArrayList<>(jarTasks);
@@ -30,23 +30,23 @@ public class FlowsDocBuilderPlugin implements Plugin<Project> {
                 .create("listFlowAnalysisTasks", DefaultTask.class);
 
         listFlowAnalysisTask.doLast(task -> {
-            System.out.println("Available tasks to create corda flow docs: ");
+            project.getLogger().info("Available tasks to create corda flow docs: ");
             for(Jar jarTask : jarTasksList) {
-                System.out.println(jarTask.getName() + "AnalyzerTask" + " for file " + jarTask.getArchiveName());
+                project.getLogger().info("{}AnalyzerTask for file {}", jarTask.getName(), jarTask.getArchiveName());
             }
         });
 
         for(Jar task : jarTasksList) {
-
             final String path = task.getArchivePath().getAbsolutePath(); //if modified to the non deprecated call it doesn't work this doesn't work for cardossier-cordapp
             final String taskName = task.getName() + "AnalyzerTask";
+            project.getLogger().trace("Attempting to create task {}", taskName); //idem
             final JarAnalyzerJavaExec javaExecTask = project.getTasks().create(taskName, JarAnalyzerJavaExec.class);
             javaExecTask.setMain("-jar");
             javaExecTask.dependsOn(task);
 
             javaExecTask.setPathToJar(path);
 
-            LOGGER.info("Run task {} to generate graph documents for file {}", taskName, task.getArchiveName()); //idem
+            project.getLogger().info("Run task {} to generate graph documents for file {}", taskName, task.getArchiveName()); //idem
 
         }
     }

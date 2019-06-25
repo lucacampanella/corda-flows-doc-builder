@@ -47,11 +47,13 @@ public class JarAnalyzerJavaExec extends JavaExec {
 
         getLogger().info("logLevel = {}", logLevel);
         Level slf4jLogLevel = null;
-        try {
-            slf4jLogLevel = Level.valueOf(logLevel.toUpperCase());
-        } catch(Exception e) {
-            getLogger().error("Cannot convert logLevel string \"{}\" to " +
-                    "any log value, defaulting to gradle log level", logLevel, e);
+        if(logLevel != null) {
+            try {
+                slf4jLogLevel = Level.valueOf(logLevel.toUpperCase());
+            } catch (Exception e) {
+                getLogger().error("Cannot convert logLevel string \"{}\" to " +
+                        "any log value, defaulting to gradle log level", logLevel, e);
+            }
         }
         getLogger().info("slf4jLogLevel = {}", slf4jLogLevel);
         if(logLevel == null) {
