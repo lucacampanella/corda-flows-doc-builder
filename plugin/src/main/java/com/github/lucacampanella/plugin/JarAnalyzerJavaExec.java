@@ -2,11 +2,10 @@ package com.github.lucacampanella.plugin;
 
 import org.gradle.api.logging.LogLevel;
 import org.gradle.api.tasks.*;
+import org.gradle.api.tasks.Optional;
 import org.slf4j.event.Level;
 
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -32,6 +31,7 @@ public class JarAnalyzerJavaExec extends JavaExec {
     String outPath = "build/reports/flowsdocbuilder";
     String decompilerName = "CFR";
     String pathToExecJar = null;
+    boolean drawLineNumbers = false;
     boolean removeJavaAgents = true; //remove agents like quasar that might be pluggen in to any javaexec task by the quasar plugin
     String logLevel = null;
 
@@ -43,7 +43,16 @@ public class JarAnalyzerJavaExec extends JavaExec {
             pathToExecJar = JarExecPathFinderUtils.getPathToExecJar(getProject());
         }
 
-        this.args(pathToExecJar, pathToJar, "-o", outPath, "-d", decompilerName);
+        List<String> args = new ArrayList<>(Arrays.asList(pathToExecJar, pathToJar, "-o", outPath, "-d", decompilerName));
+
+        if(drawLineNumbers) {
+            getLogger().info("drawLineNumbers = true");
+            args.add("-l");
+        }
+        getLogger().info("args = {}", args);
+
+        this.setArgs(args);
+        //this.args(pathToExecJar, pathToJar, "-o", outPath, "-d", decompilerName);
 
         Level slf4jLogLevel = null;
         if(logLevel != null) {
@@ -118,6 +127,11 @@ public class JarAnalyzerJavaExec extends JavaExec {
     @Input
     public boolean isRemoveJavaAgents() {
         return removeJavaAgents;
+    }
+
+    @Input
+    public boolean isDrawLineNumbers() {
+        return drawLineNumbers;
     }
 
     @Input

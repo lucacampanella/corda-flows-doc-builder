@@ -1,7 +1,6 @@
 package com.github.lucacampanella.callgraphflows;
 
 import com.github.lucacampanella.callgraphflows.staticanalyzer.JarAnalyzer;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
@@ -23,6 +22,9 @@ public class Main implements Callable<Integer> {
     @CommandLine.Option(names = {"-d", "--decompiler"}, defaultValue = "CFR", description = "Decompiler, choose between CFR and Fernflower")
     private String decompilerName;
 
+    @CommandLine.Option(names = {"-l", "--draw-line-numbers"}, description = "draw the line numbers")
+    boolean drawLineNumbers = false;
+
     public static void main(String []args) throws IOException {
 
         final Main app = CommandLine.populateCommand(new Main(), args);
@@ -37,7 +39,7 @@ public class Main implements Callable<Integer> {
         if(loggerLevel == null) {
             System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "error");
         }
-        LoggerFactory.getLogger(Main.class).debug("Logger level = {}", loggerLevel);
+        LoggerFactory.getLogger(Main.class).trace("Logger level = {}", loggerLevel);
         JarAnalyzer analyzer;
 
         if(additionalJarsPath == null) {
@@ -47,6 +49,8 @@ public class Main implements Callable<Integer> {
             analyzer = new JarAnalyzer(decompilerName, inputJarPath, additionalJarsPath);
         }
 
+        LoggerFactory.getLogger(Main.class).trace("drawLineNumbers = {}", drawLineNumbers);
+        DrawerUtil.setDrawLineNumbers(drawLineNumbers);
         DrawerUtil.drawAllStartableClasses(analyzer, outputPath);
         return 0;
     }

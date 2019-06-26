@@ -50,7 +50,7 @@ jarAnalyzerTask {
                 .orElseThrow { new RuntimeException("Could not find local executable jar") }
     }
 
-    logLevel = "wrongloglevel"
+    //logLevel = "wrongloglevel"
 
     //removeJavaAgents = false
 

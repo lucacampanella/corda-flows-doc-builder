@@ -89,10 +89,10 @@ class FlowsDocBuilderPluginTest {
                 + "/com.github.lucacampanella.testclasses.SimpleFlowTest$Initiator.svg");
 
         assertThat(nodeContents).hasSize(4);
-        assertThat(nodeContents).contains("[49] session = initiateFlow(this.otherParty)",
-                "[50] ==><== sendAndReceive(<== <<String>>, ==> <<Boolean>>)==><==",
-                "[30] <== receive(<<Boolean>>) <==",
-                "[31] ==> send(<<String>>) ==>");
+        assertThat(nodeContents).contains("session = initiateFlow(this.otherParty)",
+                "==><== sendAndReceive(<== <<String>>, ==> <<Boolean>>)==><==",
+                "<== receive(<<Boolean>>) <==",
+                "==> send(<<String>>) ==>");
 
     }
 

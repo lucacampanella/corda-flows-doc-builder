@@ -3,6 +3,7 @@ package com.github.lucacampanella.callgraphflows;
 import com.github.lucacampanella.callgraphflows.asciidoc.AsciiDocBuilder;
 import com.github.lucacampanella.callgraphflows.asciidoc.AsciiDocIndexBuilder;
 import com.github.lucacampanella.callgraphflows.graphics.components.GGraphBuilder;
+import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.ClassDescriptionContainer;
@@ -17,6 +18,8 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public final class DrawerUtil {
+
+    private static boolean drawLineNumbers = false;
 
     private DrawerUtil() {
         //private constuctor to hide public one
@@ -74,5 +77,10 @@ public final class DrawerUtil {
 
         AsciiDocBuilder asciiDocBuilder = AsciiDocBuilder.fromAnalysisResult(analysisResult);
         asciiDocBuilder.writeToFile(Paths.get(outPath, classDescription.getFullyQualifiedName() + ".adoc").toString());
+    }
+
+    public static void setDrawLineNumbers(boolean drawLineNumbers) {
+        DrawerUtil.drawLineNumbers = drawLineNumbers;
+        GInstruction.setDrawLineNumbers(drawLineNumbers);
     }
 }
