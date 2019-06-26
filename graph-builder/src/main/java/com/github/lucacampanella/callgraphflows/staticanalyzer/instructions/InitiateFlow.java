@@ -15,7 +15,7 @@ public class InitiateFlow extends InstructionStatement {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(InitiateFlow.class);
 
-    String partyArgument = null;
+    private String partyArgument = null;
 
     public InitiateFlow(CtStatement statement) {
         super(statement);
