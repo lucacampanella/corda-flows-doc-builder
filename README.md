@@ -130,6 +130,9 @@ The plugin works best on fat / uber jars with all the dependencies inside. The b
 is to use the [shadow plugin](https://github.com/johnrengelman/shadow) to create the fat jar. Then run
 `shadowJarAnalyzerTask` to create documentation based on this Jar.
 
+#### Gradle minimum version
+The plugin requires Gradle minimum version 4.10 in order to work.
+
 ### As a standalone executable
 Run with:
 ```

@@ -1,8 +1,8 @@
-//buildscript {
-//    dependencies {
-//        classpath "com.github.lucacampanella:plugin:+"
-//    }
-//}
+buildscript {
+    dependencies {
+        classpath "com.github.lucacampanella:plugin:+"
+    }
+}
 
 plugins {
     id 'java'
@@ -49,9 +49,9 @@ jarAnalyzerTask {
                 .map { it.getAbsolutePath() }.findFirst()
                 .orElseThrow { new RuntimeException("Could not find local executable jar") }
     }
-    
+
     logLevel = "wrongloglevel"
-    
+
     //removeJavaAgents = false
 
     //decompilerName = "fernflower"

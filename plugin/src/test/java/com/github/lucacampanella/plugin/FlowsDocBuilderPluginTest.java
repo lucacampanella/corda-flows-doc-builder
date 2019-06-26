@@ -4,10 +4,9 @@ import com.github.lucacampanella.TestUtils;
 import org.apache.commons.io.FileUtils;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -32,16 +31,15 @@ class FlowsDocBuilderPluginTest {
     private static final Path upperDir = Paths.get(System.getProperty("user.dir")).getParent();
 
     private static final File sampleProjectDirectory = Paths.get(upperDir.toString(), "simple-flow-project").toFile();
-    private static final File outputDir = Paths.get(sampleProjectDirectory.toString(),
-            "build", "reports", "differentdir", "flowsdocbuilder").toFile();
-    private static File tmpOutputdir = null;
-    private static File tmpDir = null;
+
+    private File tmpOutputdir = null;
+    private File tmpDir = null;
 
     private static final String[] filesToCopy = {"settings.gradle", "gradlew.bat", "gradlew", "build.gradle"};
     private static final String[] dirsToCopy = {"gradle", "src"};
 
-    @BeforeAll
-    static void setUp() throws IOException {
+    @BeforeEach
+    void setUp() throws IOException {
         tmpDir = Files.createTempDirectory("testTempDir").toFile();
 
         tmpOutputdir = Paths.get(tmpDir.toString(),
@@ -73,23 +71,17 @@ class FlowsDocBuilderPluginTest {
 
         //FileUtils.deleteDirectory(outputDir);
 
-        final BuildResult buildResult = GradleRunner.create().withProjectDir(tmpDir)
-                .withPluginClasspath().withArguments("JarAnalyzerTask")/*.withGradleVersion("4.10.1")*/.build();
+
 
         //todo: copy only the important files, not caches and so on, this may also allow to fire up different gradle
         //versions
-
-        LOGGER.trace("{}", buildResult.getOutput());
-        LOGGER.trace("{}", buildResult);
     }
 
-    @Test
     void hasOutput() {
         final File[] outputFiles = tmpOutputdir.listFiles();
         assertThat(outputFiles).isNotEmpty();
     }
 
-    @Test
     void outputSVGIsCorrect() throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
 
         //we check directly the XML file
@@ -97,14 +89,13 @@ class FlowsDocBuilderPluginTest {
                 + "/com.github.lucacampanella.testclasses.SimpleFlowTest$Initiator.svg");
 
         assertThat(nodeContents).hasSize(4);
-        assertThat(nodeContents).contains("[49] initiateFlow(session)",
+        assertThat(nodeContents).contains("[49] session = initiateFlow(this.otherParty)",
                 "[50] ==><== sendAndReceive(<== <<String>>, ==> <<Boolean>>)==><==",
                 "[30] <== receive(<<Boolean>>) <==",
                 "[31] ==> send(<<String>>) ==>");
 
     }
 
-    @Test
     void outputAsciiDocIsCorrect() throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
 
         //we check directly the XML file
@@ -114,9 +105,27 @@ class FlowsDocBuilderPluginTest {
         assertThat(outFile).exists();
     }
 
-    @AfterAll
-    static void tearDown() throws IOException {
+    @AfterEach
+    void tearDown() throws IOException {
         FileUtils.deleteDirectory(tmpDir);
+    }
 
+
+    @ParameterizedTest
+    @ValueSource(strings = {"4.10", "4.10.1", "5.1", "5.4.1"})
+    void gradlePassingVersionsTest(String version) throws IOException, XPathExpressionException, SAXException, ParserConfigurationException {
+        GradleRunner.create().withProjectDir(tmpDir)
+                .withPluginClasspath().withArguments("JarAnalyzerTask").withGradleVersion(version).build();
+        hasOutput();
+        outputSVGIsCorrect();
+        outputSVGIsCorrect();
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"4.8", "4.4.1"})
+    void gradleFailingVersionsTest(String version) {
+        final BuildResult buildResult = GradleRunner.create().withProjectDir(tmpDir)
+                .withPluginClasspath().withArguments("JarAnalyzerTask").withGradleVersion(version).buildAndFail();
+        assertThat(buildResult.getOutput()).contains("Flows doc builder plugin doesn't support version");
     }
 }

@@ -24,6 +24,7 @@ public final class JarExecPathFinderUtils {
                         .setDescription("The jar file needed to run the corda flows doc builder plugin");
                 config.setTransitive(false);
             }
+            initializeBuildVersion();
 
             final String dependency = "com.github.lucacampanella:graph-builder:" + buildVersion + ":all";
             config.defaultDependencies(dependencies ->
@@ -39,10 +40,14 @@ public final class JarExecPathFinderUtils {
         return pathToExecJar;
     }
 
-    public static String getBuildVersion(){
+    private static void initializeBuildVersion() {
         if(buildVersion == null) {
             buildVersion = FlowsDocBuilderPlugin.class.getPackage().getImplementationVersion();
         }
+    }
+
+    public static String getBuildVersion(){
+        initializeBuildVersion();
         return buildVersion;
     }
 }

@@ -12,12 +12,20 @@ import java.util.List;
 
 public class FlowsDocBuilderPlugin implements Plugin<Project> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FlowsDocBuilderPlugin.class);
-
     private static final String BUILD_VERSION = JarExecPathFinderUtils.getBuildVersion();
+
+    private static final GradleVersion MIN_GRADLE_VERSION = new GradleVersion("4.10");
 
     @Override
     public void apply(Project project) {
+
+        final String gradleVersion = project.getGradle().getGradleVersion();
+        project.getLogger().info("MIN_GRADLE_VERSION.compareTo(new GradleVersion(gradleVersion)) = {}",
+                MIN_GRADLE_VERSION.compareTo(new GradleVersion(gradleVersion)));
+        if(MIN_GRADLE_VERSION.compareTo(new GradleVersion(gradleVersion)) > 0) {
+            throw new GradleException("Flows doc builder plugin doesn't support version " + gradleVersion + "\n" +
+                    "Minimum supported version: " + MIN_GRADLE_VERSION + ", please upgrade your gradle");
+        }
 
         project.getLogger().info("Corda flows doc builder plugin: ");
         project.getLogger().info("Version: {}", BUILD_VERSION);
