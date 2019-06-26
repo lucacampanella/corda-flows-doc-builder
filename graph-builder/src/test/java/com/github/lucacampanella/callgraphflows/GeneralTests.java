@@ -109,6 +109,13 @@ public class GeneralTests {
     }
 
     @Test
+    public void ContainerFlowTest() throws IOException, AnalysisErrorException {
+        final AnalysisResult analysisResult = drawAndReturnAnalysis(ContainerFlow.class,
+                DoWhileTestFlow.class);
+        LOGGER.trace("{}", analysisResult.getStatements());
+    }
+
+    @Test
     public void InitiatedByInnerClassAcceptorTest() throws IOException, AnalysisErrorException {
         final AnalysisResult analysisResult = drawAndReturnAnalysis(InitiatedByInnerClassAcceptorTestFlow.class,
                 SimpleFlowTestFlow.class);

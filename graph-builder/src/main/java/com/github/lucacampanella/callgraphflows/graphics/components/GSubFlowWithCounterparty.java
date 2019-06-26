@@ -11,6 +11,7 @@ public class GSubFlowWithCounterparty extends GBaseGraphicComponent {
     GSubFlow mainSubFlow = new GSubFlow();
     GSubFlow counterpartySubFlow = null;
     GInstruction initiateFlowInstruction = null;
+    GBaseTextComponent arrowText = null;
 
     public GSubFlowWithCounterparty() {
         mainSubFlow.setParent(this);
@@ -90,5 +91,9 @@ public class GSubFlowWithCounterparty extends GBaseGraphicComponent {
         this.initiateFlowInstruction = initiateFlowInstruction;
         recomputeDimensions = true;
         this.counterpartySubFlow.setParent(this);
+    }
+
+    public void setArrowText(GBaseTextComponent arrowText) {
+        this.arrowText = arrowText;
     }
 }

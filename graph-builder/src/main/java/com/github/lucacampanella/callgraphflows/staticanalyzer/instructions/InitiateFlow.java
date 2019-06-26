@@ -1,5 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
+import com.github.lucacampanella.callgraphflows.staticanalyzer.ClassDescriptionContainer;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
@@ -8,6 +9,8 @@ import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spoon.reflect.code.*;
+import spoon.reflect.declaration.CtClass;
+import spoon.reflect.visitor.filter.TypeFilter;
 
 import java.util.Optional;
 
@@ -16,6 +19,7 @@ public class InitiateFlow extends InstructionStatement {
     private static final Logger LOGGER = LoggerFactory.getLogger(InitiateFlow.class);
 
     private String partyArgument = null;
+    private ClassDescriptionContainer initiatingClassDescription = null;
 
     public InitiateFlow(CtStatement statement) {
         super(statement);
@@ -28,6 +32,9 @@ public class InitiateFlow extends InstructionStatement {
         InitiateFlow initiateFlow = new InitiateFlow();
         initiateFlow.line = statement.getPosition().getLine();
         initiateFlow.internalMethodInvocations.add(StaticAnalyzerUtils.getAllRelevantMethodInvocations(statement, analyzer));
+
+        initiateFlow.initiatingClassDescription = ClassDescriptionContainer.fromClass(
+                statement.getParent(new TypeFilter<>(CtClass.class)));
 
         if(statement instanceof CtLocalVariable) {
             initiateFlow.targetSessionName = Optional.ofNullable(((CtLocalVariable) statement).getReference().getSimpleName());
@@ -85,5 +92,9 @@ public class InitiateFlow extends InstructionStatement {
         sb.append(")");
 
         return sb.toString();
+    }
+
+    public ClassDescriptionContainer getInitiatingClassDescription() {
+        return initiatingClassDescription;
     }
 }
