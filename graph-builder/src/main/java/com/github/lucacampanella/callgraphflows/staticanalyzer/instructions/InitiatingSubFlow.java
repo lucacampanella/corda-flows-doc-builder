@@ -32,15 +32,22 @@ public class InitiatingSubFlow extends SubFlowBaseWithAnalysis {
         graphElem.setMainSubFlow(getMainSubFlowElement());
         if(resultOfClassAnalysis.hasCounterpartyResult()) {
             final AnalysisResult counterpartyClassResult = resultOfClassAnalysis.getCounterpartyClassResult();
+
+            final InitiateFlow initiateFlow = resultOfClassAnalysis.getStatements().getInitiateFlowStatementAtThisLevel()
+                    .orElseThrow(() -> new RuntimeException("Error building the graph elem for " +
+                            this.toString() + " because couldn't find the corresponding initiateFlow" +
+                            " call"));
+
+            String enteringArrowText = counterpartyClassResult.getClassDescription().getNameWithParent() +
+                    "\n" + "@InitiatedBy(" + initiateFlow.getInitiatingClassDescription().getNameWithParent() + ")";
+
             GSubFlow counterpartyFlow = new GSubFlow();
             counterpartyFlow.setEnteringArrowText(
-                    new GBaseTextComponent(counterpartyClassResult.getClassDescription().getNameWithParent()));
+                    new GBaseTextComponent(enteringArrowText));
+
             counterpartyClassResult.getStatements().forEach(stmt -> counterpartyFlow.addComponent(stmt.getGraphElem()));
             graphElem.setCounterpartySubFlow(counterpartyFlow,
-                    (GInstruction) resultOfClassAnalysis.getStatements().getInitiateFlowStatementAtThisLevel()
-                            .orElseThrow(() -> new RuntimeException("Error building the graph elem for " +
-                                    this.toString() + " because couldn't find the corresponding initiateFlow" +
-                                    " call")).getGraphElem());
+                    (GInstruction) initiateFlow.getGraphElem());
         }
     }
 

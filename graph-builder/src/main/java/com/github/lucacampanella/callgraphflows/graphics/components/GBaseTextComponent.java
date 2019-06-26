@@ -31,17 +31,32 @@ public class GBaseTextComponent extends GBaseGraphicComponent {
 
         Color backupColor = g2.getColor();
         g2.setColor(getTextColor());
-        g2.drawString(getDisplayText(), getStartX() + getBorderDim(), getStartY() + getBorderDim() + g2.getFontMetrics().getAscent());
+        int currY = getStartY() + getBorderDim();
+        for (String line : getDisplayText().split("\n")) {
+            g2.drawString(line, getStartX() + getBorderDim(), currY + g2.getFontMetrics().getAscent());
+            currY += g2.getFontMetrics().getHeight();
+        }
         g2.setColor(backupColor);
     }
 
     @Override
     public Dimension computeDimensions(SVGGraphics2D g2) {
         //todo: find better way to compute this, just the length of the string is wrong
-        final Rectangle2D stringBounds = g2.getFont().getStringBounds(getDisplayText(), g2.getFontRenderContext());
+        int width = 0;
+        int height = 0;
+        Rectangle2D stringBounds;
+        for (String line : getDisplayText().split("\n")) {
+            stringBounds = g2.getFont().getStringBounds(line, g2.getFontRenderContext());
+            int newWidth = GUtils.doubleToInt(stringBounds.getWidth());
+            if(newWidth > width) {
+                width = newWidth;
+            }
+            height += GUtils.doubleToInt(stringBounds.getHeight());
+        }
+
         Dimension res = new Dimension(
-                GUtils.doubleToInt(stringBounds.getWidth()) + 2*getBorderDim(),
-                GUtils.doubleToInt(stringBounds.getHeight()) + 2*getBorderDim());
+                width + 2*getBorderDim(),
+                height + 2*getBorderDim());
         return res;
     }
 

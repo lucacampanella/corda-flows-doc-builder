@@ -30,7 +30,7 @@ public class GIfElse extends GBaseGraphicComponent {
 
     @Override
     public void draw(SVGGraphics2D g2) {
-        int currY = getStartY() + SPACE_BETWEEN_COMPONENTS;
+        int currY = getStartY();
 
         for(GBaseGraphicComponent comp : blocks) {
             comp.setStart(getStartX(), currY);
@@ -43,10 +43,9 @@ public class GIfElse extends GBaseGraphicComponent {
     public Dimension computeDimensions(SVGGraphics2D g2) {
         Dimension res = new Dimension();
 
-        res.height = SPACE_BETWEEN_COMPONENTS;
-
         res.height += blocks.stream()
-                .mapToInt(comp -> comp.getDimensions(g2).height + SPACE_BETWEEN_COMPONENTS).sum();
+                .mapToInt(comp -> comp.getDimensions(g2).height + SPACE_BETWEEN_COMPONENTS).sum()
+        - SPACE_BETWEEN_COMPONENTS; //the last one should not have border computed here
 
         res.width = INDENTATION + blocks.stream()
                                 .mapToInt(comp -> comp.getDimensions(g2).width).max().orElse(0);
