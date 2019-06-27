@@ -138,3 +138,6 @@ secret-keys.gpg
 
 # avoid generated .adoc s files
 simple-flow-project/**/*.adoc
+
+# avoid a sample project used for plugin manual testing
+simple-flow-project-manual-tests/*
