@@ -119,4 +119,10 @@ public class Receive extends InstructionStatement implements StatementWithCompan
 
         return sb.toString();
     }
+
+    @Override
+    protected void buildGraphElem() {
+        super.buildGraphElem();
+        graphElem.setDrawBox(true);
+    }
 }

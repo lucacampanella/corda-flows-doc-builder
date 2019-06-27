@@ -145,4 +145,10 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
 
         return sb.toString();
     }
+
+    @Override
+    protected void buildGraphElem() {
+        super.buildGraphElem();
+        graphElem.setDrawBox(true);
+    }
 }

@@ -103,4 +103,10 @@ public class Send extends InstructionStatement implements StatementWithCompanion
 
         return sb.toString();
     }
+
+    @Override
+    protected void buildGraphElem() {
+        super.buildGraphElem();
+        graphElem.setDrawBox(true);
+    }
 }
