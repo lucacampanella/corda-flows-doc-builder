@@ -1,6 +1,8 @@
 package com.github.lucacampanella.callgraphflows;
 
+import com.github.lucacampanella.callgraphflows.staticanalyzer.DecompilerEnum;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.JarAnalyzer;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.SourceAndJarAnalyzer;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
@@ -10,11 +12,10 @@ import java.util.concurrent.Callable;
 
 public class Main implements Callable<Integer> {
 
-    @CommandLine.Parameters(arity = "1", index="0", paramLabel = "JarFile", description = "Jar file to process.")
-    private String inputJarPath;
-
-    @CommandLine.Parameters(arity = "0..*", index="1..*", paramLabel = "AdditionalJarFiles", description = "Additional jars to be added to classpath")
-    private String[] additionalJarsPath;
+    @CommandLine.Parameters(arity = "1..*", index="0..*", paramLabel = "filesToAnalyze",
+            description = "The paths to the files that need to be analyzed, they can be " +
+                    ".java files, folders or .jar files")
+    private String[] filesPaths;
 
     @CommandLine.Option(names = {"-o", "--output"}, defaultValue = "graphs", description = "Output folder path")
     private String outputPath;
@@ -40,14 +41,8 @@ public class Main implements Callable<Integer> {
             System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "error");
         }
         LoggerFactory.getLogger(Main.class).trace("Logger level = {}", loggerLevel);
-        JarAnalyzer analyzer;
-
-        if(additionalJarsPath == null) {
-            analyzer = new JarAnalyzer(decompilerName, inputJarPath);
-        }
-        else {
-            analyzer = new JarAnalyzer(decompilerName, inputJarPath, additionalJarsPath);
-        }
+        SourceAndJarAnalyzer analyzer = new SourceAndJarAnalyzer(filesPaths,
+                DecompilerEnum.fromStringOrDefault(decompilerName));
 
         LoggerFactory.getLogger(Main.class).trace("drawLineNumbers = {}", drawLineNumbers);
         DrawerUtil.setDrawLineNumbers(drawLineNumbers);

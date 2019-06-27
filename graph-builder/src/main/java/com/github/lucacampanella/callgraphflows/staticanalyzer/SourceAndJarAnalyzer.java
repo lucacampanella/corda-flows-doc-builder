@@ -9,16 +9,27 @@ import spoon.decompiler.Decompiler;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SourceAndJarAnalyzer extends AnalyzerWithModel {
 
     public SourceAndJarAnalyzer(List<String> pathsToFoldersOrSrc) throws IOException {
         init(pathsToFoldersOrSrc, null, null);
+    }
+
+    public SourceAndJarAnalyzer(String[] unsortedTypesFiles, DecompilerEnum decompilerEnum) throws IOException {
+        List<String> jarPaths = new ArrayList<>();
+        List<String> otherPaths = new ArrayList<>();
+        for(String path : unsortedTypesFiles) {
+            if(path.endsWith(".jar")) {
+                jarPaths.add(path);
+            }
+            else {
+                otherPaths.add(path);
+            }
+        }
+        init(otherPaths, jarPaths, decompilerEnum);
     }
 
     public SourceAndJarAnalyzer(List<String> pathsToFoldersOrSrc, List<String> pathsToJars, DecompilerEnum decompilerEnum) throws IOException {
