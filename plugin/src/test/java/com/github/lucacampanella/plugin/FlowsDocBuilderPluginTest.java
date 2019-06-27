@@ -87,8 +87,8 @@ class FlowsDocBuilderPluginTest {
     void outputSVGIsCorrect() throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
 
         //we check directly the XML file
-        final List<String> nodeContents = TestUtils.parseXMLFile(tmpOutputdir.toString()
-                + "/com.github.lucacampanella.testclasses.SimpleFlowTest$Initiator.svg");
+        final List<String> nodeContents = TestUtils.parseXMLFile(Paths.get(tmpOutputdir.getPath(), "images",
+                "com.github.lucacampanella.testclasses.SimpleFlowTest$Initiator.svg").toString());
 
         assertThat(nodeContents).hasSize(4);
         assertThat(nodeContents).contains("session = initiateFlow(this.otherParty)",
