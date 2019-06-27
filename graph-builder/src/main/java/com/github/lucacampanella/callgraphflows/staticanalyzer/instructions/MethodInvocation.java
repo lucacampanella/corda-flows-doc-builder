@@ -41,7 +41,9 @@ public class MethodInvocation extends InstructionStatement {
             CtAbstractInvocation inv = (CtAbstractInvocation) statement;
 
             if (MatcherHelper.isCordaMethod(inv)) { //this should never happen
-                LOGGER.warn("Error, a method invocation is created using a corda method"); //todo: this happens
+                LOGGER.trace("A method invocation is created using a corda method," +
+                        "this happens in case of receive().unwrap(), the receive is already analyzed and will" +
+                        "be skipped");
                 return null;
             }
 
@@ -49,8 +51,6 @@ public class MethodInvocation extends InstructionStatement {
                 CtInvocation methodInv = (CtInvocation) statement;
 
                 if (methodInv.getTarget() instanceof CtInvocation) { //the target is the "inner" invocation
-                    //todo: this makes the "Error" happen, if the corda method is a target invocation is called from here
-                    //think about how to resolve this and what implications in has
                     MethodInvocation targetInv = MethodInvocation.fromCtStatement((CtInvocation) methodInv.getTarget(), analyzer);
                     methodInvocation.internalMethodInvocations.addIfRelevantForAnalysis(targetInv);
                 }
