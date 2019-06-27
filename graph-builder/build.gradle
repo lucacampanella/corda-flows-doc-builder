@@ -82,6 +82,12 @@ processResources {
     from sourceSets.main.java.filter {it.toString().endsWith("MatcherContainer.java")}.first().toString()
 }
 
+task copySourceResForTests(type: Copy){
+    from sourceSets.test.java.filter {it.toString().contains("subclassestests")}
+    into file(sourceSets.test.output.resourcesDir.path + "/subclassestests")
+}
+processTestResources.dependsOn copySourceResForTests
+
 sourceSets {
     test.java.srcDirs += 'src/test/kotlin'
 }

@@ -43,12 +43,12 @@ public class JarAnalyzer extends AnalyzerWithModel {
         if(decompilerName != null && decompilerName.equalsIgnoreCase("CFR")) {
             LOGGER.trace("Using CFR (default) decompiler");
             jr = new CustomJarLauncher.Builder(jarsList)
-                    .withDecompilerEnum(CustomJarLauncher.DecompilerEnum.CFR).build();
+                    .withDecompilerEnum(DecompilerEnum.CFR).build();
         }
         else if(decompilerName != null && decompilerName.equalsIgnoreCase("Fernflower")) {
             LOGGER.trace("Using Fernflower decompiler");
             jr = new CustomJarLauncher.Builder(jarsList)
-                    .withDecompilerEnum(CustomJarLauncher.DecompilerEnum.FERNFLOWER).build();
+                    .withDecompilerEnum(DecompilerEnum.FERNFLOWER).build();
         }
         else {
             LOGGER.error("Decompiler name {} not recognised, using default decompiler", decompilerName);

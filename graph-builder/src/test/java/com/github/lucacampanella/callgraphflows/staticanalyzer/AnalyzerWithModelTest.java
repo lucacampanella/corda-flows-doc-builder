@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtType;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ class AnalyzerWithModelTest {
     static AnalyzerWithModel analyzerWithModel;
 
     @BeforeAll
-    static void setUp() {
+    static void setUp() throws IOException {
          analyzerWithModel = new SourceClassAnalyzer(fromClassSrcToPath(InitiatorBaseFlow.class),
                 fromClassSrcToPath(ExtendingSuperclassTestFlow.class),
                         fromClassSrcToPath(DoubleExtendingSuperclassTestFlow.class));

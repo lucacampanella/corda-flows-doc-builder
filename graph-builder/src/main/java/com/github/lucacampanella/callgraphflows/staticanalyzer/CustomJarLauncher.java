@@ -24,17 +24,6 @@ public class CustomJarLauncher extends Launcher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomJarLauncher.class);
 
-    public enum DecompilerEnum {
-        CFR, FERNFLOWER;
-
-        public Decompiler getDecompiler(File decompiledSrc) {
-            if(this == FERNFLOWER) {
-                return new FernflowerDecompiler(decompiledSrc);
-            }
-            return new CFRDecompiler(decompiledSrc);
-        }
-    }
-
     public static class Builder {
         String decompiledSrcPath = Paths.get(System.getProperty("java.io.tmpdir"), "spoon-tmp", "decompiledSrc").toString();
         DecompilerEnum decompilerEnum = DecompilerEnum.CFR;
@@ -117,7 +106,6 @@ public class CustomJarLauncher extends Launcher {
     private CustomJarLauncher(){
         //use builder
     }
-
 
 //    public CustomJarLauncher(List<String> jarPaths) {
 //        this(jarPaths, (String)null, null);
