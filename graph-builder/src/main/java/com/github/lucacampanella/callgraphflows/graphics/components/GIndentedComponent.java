@@ -19,6 +19,8 @@ public abstract class GIndentedComponent extends GBaseGraphicComponent {
 
     private Dimension rectDimensions;
 
+
+
     public GIndentedComponent(GBaseTextComponent enteringArrowText) {
         this(enteringArrowText, null);
     }
@@ -158,10 +160,12 @@ public abstract class GIndentedComponent extends GBaseGraphicComponent {
 
     public void setEnteringArrowText(GBaseTextComponent enteringArrowText) {
         this.enteringArrowText = enteringArrowText;
+        recomputeDimensions = true;
     }
 
     public void setExitingArrowText(GBaseTextComponent exitingArrowText) {
         this.exitingArrowText = exitingArrowText;
+        recomputeDimensions = true;
     }
 
     @Override
@@ -189,5 +193,21 @@ public abstract class GIndentedComponent extends GBaseGraphicComponent {
 
     public GBaseTextComponent getExitingArrowText() {
         return exitingArrowText;
+    }
+
+    /**
+     *
+     * @param g2 the graphics
+     * @return how many pixels the rectangle representing the flow will start after the
+     * designed starting point due to the dimension of the entering arrow (if present)
+     */
+    public int getStartingRectOffset(SVGGraphics2D g2) {
+        if(enteringArrowText != null) {
+            return Math.max(SPACE_BETWEEN_COMPONENTS * 2, getEnteringArrowText().getDimensions(g2).height)
+                    - SPACE_BETWEEN_COMPONENTS;
+        }
+        else {
+            return 0;
+        }
     }
 }

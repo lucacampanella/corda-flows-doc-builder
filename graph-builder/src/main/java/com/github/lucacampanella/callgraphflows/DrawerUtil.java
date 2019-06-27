@@ -2,6 +2,7 @@ package com.github.lucacampanella.callgraphflows;
 
 import com.github.lucacampanella.callgraphflows.asciidoc.AsciiDocBuilder;
 import com.github.lucacampanella.callgraphflows.asciidoc.AsciiDocIndexBuilder;
+import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
 import com.github.lucacampanella.callgraphflows.graphics.components.GGraphBuilder;
 import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
@@ -68,7 +69,9 @@ public final class DrawerUtil {
 
         GGraphBuilder graphBuilder = new GGraphBuilder();
 
-        graphBuilder.addSession(classDescription.getSimpleName(), analysisResult.getStatements());
+        graphBuilder.addSessionWithLeftArrow(classDescription.getSimpleName(),
+                analysisResult.getStatements(),
+                new GBaseTextComponent(classDescription.getNameWithParent() + "\n@InitiatingFlow\n@StartableByRPC"));
         final AnalysisResult initiatedClassResult = analysisResult.getCounterpartyClassResult();
         if(initiatedClassResult != null) {
             graphBuilder.addSession(initiatedClassResult.getClassDescription().getSimpleName(), initiatedClassResult.getStatements());

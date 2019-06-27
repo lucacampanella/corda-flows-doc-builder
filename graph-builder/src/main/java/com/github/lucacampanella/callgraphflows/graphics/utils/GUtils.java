@@ -1,6 +1,7 @@
 package com.github.lucacampanella.callgraphflows.graphics.utils;
 
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseGraphicComponent;
+import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlow;
 import com.github.lucacampanella.callgraphflows.graphics.preferences.PreferencesInterface;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
@@ -101,5 +102,21 @@ public class GUtils {
         g = Math.min(255.0,color.getGreen()*pref.getBrighterFactor());
         b = Math.min(255.0, color.getBlue()*pref.getBrighterFactor());
         return new Color((int) r, (int) g, (int) b);
+    }
+
+    public static void drawLineWithOptions(Graphics2D g2, int startX, int startY, int endX, int endY,
+                                           Color color, Stroke stroke) {
+        Color defaultColor = g2.getColor();
+        Stroke defaultStroke = g2.getStroke();
+        if(color != null) {
+            g2.setColor(color);
+        }
+        if(stroke != null) {
+            g2.setStroke(stroke);
+        }
+        g2.drawLine(startX, startY, endX, endY);
+
+        g2.setColor(defaultColor);
+        g2.setStroke(defaultStroke);
     }
 }

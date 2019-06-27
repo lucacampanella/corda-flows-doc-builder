@@ -16,7 +16,7 @@ import java.util.*;
 public class GGraphBuilder {
 
     private static final int BORDER = 10;
-    private static final int DISTANCE_TITLE_SESSION = 25;
+    private static final int MIN_DISTANCE_TITLE_SESSION = 15;
 
     Map<String, GSubFlow> gSessionsMap = new LinkedHashMap<>();
     //linked so we can iterate over it on same order of insertion
@@ -43,6 +43,20 @@ public class GGraphBuilder {
         }
         gSessionsMap.put(title, flow);
         return true;
+    }
+
+    public boolean addLeftArrowToSession(String sessionTitle, GBaseTextComponent arrowText) {
+        if(!gSessionsMap.containsKey(sessionTitle)) {
+            return false;
+        }
+        final GSubFlow gSubFlow = gSessionsMap.get(sessionTitle);
+        gSubFlow.setEnteringArrowText(arrowText);
+        return true;
+    }
+
+    public boolean addSessionWithLeftArrow(String title, Branch branch, GBaseTextComponent arrowText) {
+        addSession(title, branch);
+        return addLeftArrowToSession(title, arrowText);
     }
 
     public boolean addSession(String title, Branch  branch) {
@@ -86,17 +100,24 @@ public class GGraphBuilder {
         int height = 0;
         SVGGraphics2D g2 = new SVGGraphics2D(10000, 10000);
 
+        int maxDistanceTitleSession = MIN_DISTANCE_TITLE_SESSION;
+
         List<GTitleBox> titleBoxes = new ArrayList<>(gSessionsMap.size());
 
         for(Map.Entry<String, GSubFlow> entry : gSessionsMap.entrySet()) {
             String title = entry.getKey();
+            final GSubFlow subFLow = entry.getValue();
+
             GTitleBox titleBox = new GTitleBox(title);
             titleBoxes.add(titleBox);
 
-            Dimension dim = entry.getValue().getDimensions(g2);
+            Dimension dim = subFLow.getDimensions(g2);
             width += Math.max(dim.width, titleBox.getDimensions(g2).width);
 
             height = Math.max(height, dim.height + titleBox.getDimensions(g2).height + BORDER);
+
+            maxDistanceTitleSession = Math.max(maxDistanceTitleSession,
+                    MIN_DISTANCE_TITLE_SESSION + subFLow.getStartingRectOffset(g2));
         }
 
         width += BORDER + gSessionsMap.size()*BORDER;
@@ -118,14 +139,22 @@ public class GGraphBuilder {
             //draw the dashed line connecting the title to the session:
             //set the stroke of the copy, not the original
             Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
-            Stroke defaultStroke = g2.getStroke();
-            g2.setStroke(dashed);
-            g2.drawLine(currentX + GSubFlow.WIDTH/2, BORDER + titleBox.getDimensions(g2).height,
+            GUtils.drawLineWithOptions(g2, currentX + GSubFlow.WIDTH/2, BORDER + titleBox.getDimensions(g2).height,
                     currentX + GSubFlow.WIDTH/2,
-                    BORDER + titleBox.getDimensions(g2).height + DISTANCE_TITLE_SESSION);
-            g2.setStroke(defaultStroke);
+                    BORDER + titleBox.getDimensions(g2).height + maxDistanceTitleSession,
+                    Color.GRAY,
+                    dashed);
 
-            session.setStart(currentX,BORDER + titleBox.getDimensions(g2).height + DISTANCE_TITLE_SESSION);
+            int sessionStartY = BORDER + titleBox.getDimensions(g2).height +
+                    maxDistanceTitleSession - session.getStartingRectOffset(g2);
+            //draw the initial part of the entering arrow if the flow / session has an entering arrow
+            if(session.getEnteringArrowText() != null) {
+                g2.drawLine(currentX - BORDER, sessionStartY,
+                        currentX + GSubFlow.WIDTH/2,
+                        sessionStartY);
+            }
+
+            session.setStart(currentX,sessionStartY);
             session.draw(g2);
             currentX += Math.max(session.getDimensions(g2).width, titleBox.getDimensions(g2).width) + BORDER;
 
