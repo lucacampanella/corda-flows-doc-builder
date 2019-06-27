@@ -90,8 +90,11 @@ class FlowsDocBuilderPluginTest {
         final List<String> nodeContents = TestUtils.parseXMLFile(Paths.get(tmpOutputdir.getPath(), "images",
                 "com.github.lucacampanella.testclasses.SimpleFlowTest$Initiator.svg").toString());
 
-        assertThat(nodeContents).hasSize(4);
-        assertThat(nodeContents).contains("session = initiateFlow(this.otherParty)",
+        assertThat(nodeContents).hasSize(7);
+        assertThat(nodeContents).contains("SimpleFlowTest$Initiator",
+                "@InitiatingFlow",
+                "@StartableByRPC",
+                "session = initiateFlow(this.otherParty)",
                 "sendAndReceive(String, Boolean)",
                 "receive(Boolean)",
                 "send(String)");
