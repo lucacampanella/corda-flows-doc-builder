@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class Receive extends InstructionStatement implements StatementWithCompanionInterface {
 
-    private static final String SYMBOL = "<==";
+    private static final String SYMBOL = "";//"<==";
 
     String receivedType;
 
@@ -112,10 +112,9 @@ public class Receive extends InstructionStatement implements StatementWithCompan
     public String getStringDescription() {
         StringBuilder sb = new StringBuilder();
         sb.append(getSYMBOL());
-        sb.append(" ");
-        sb.append("receive(<<");
+        sb.append("receive(");
         sb.append(Utils.removePackageDescriptionIfWanted(receivedType));
-        sb.append(">>) ");
+        sb.append(")");
         sb.append(getSYMBOL());
 
         return sb.toString();

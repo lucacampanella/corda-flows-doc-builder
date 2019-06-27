@@ -2,6 +2,7 @@ package com.github.lucacampanella.plugin;
 
 import com.github.lucacampanella.TestUtils;
 import org.apache.commons.io.FileUtils;
+import org.gradle.internal.impldep.org.testng.annotations.Test;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.jupiter.api.*;
@@ -24,6 +25,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Test
 class FlowsDocBuilderPluginTest {
 
     private static Logger LOGGER = LoggerFactory.getLogger(FlowsDocBuilderPluginTest.class);
@@ -90,9 +92,9 @@ class FlowsDocBuilderPluginTest {
 
         assertThat(nodeContents).hasSize(4);
         assertThat(nodeContents).contains("session = initiateFlow(this.otherParty)",
-                "==><== sendAndReceive(<== <<String>>, ==> <<Boolean>>)==><==",
-                "<== receive(<<Boolean>>) <==",
-                "==> send(<<String>>) ==>");
+                "sendAndReceive(String, Boolean)",
+                "receive(Boolean)",
+                "send(String)");
 
     }
 

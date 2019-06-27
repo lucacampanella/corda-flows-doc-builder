@@ -87,7 +87,7 @@ public class InitiateFlow extends InstructionStatement {
             sb.append(partyArgument);
         }
         else {
-            sb.append("<<Party>>");
+            sb.append("Party");
         }
         sb.append(")");
 

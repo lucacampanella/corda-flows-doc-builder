@@ -11,7 +11,7 @@ import spoon.reflect.declaration.CtTypedElement;
 import java.util.Optional;
 
 public class Send extends InstructionStatement implements StatementWithCompanionInterface {
-    private static final String SYMBOL = "==>";
+    private static final String SYMBOL = "";//"==>";
 
 
     String sentType;
@@ -96,10 +96,9 @@ public class Send extends InstructionStatement implements StatementWithCompanion
     public String getStringDescription() {
         StringBuilder sb = new StringBuilder();
         sb.append(getSYMBOL());
-        sb.append(" ");
-        sb.append("send(<<");
+        sb.append("send(");
         sb.append(Utils.removePackageDescriptionIfWanted(sentType));
-        sb.append(">>) ");
+        sb.append(")");
         sb.append(getSYMBOL());
 
         return sb.toString();

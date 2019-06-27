@@ -134,16 +134,13 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
     public String getStringDescription() {
         StringBuilder sb = new StringBuilder();
         sb.append(getSYMBOL());
-        sb.append(" ");
         sb.append("sendAndReceive(");
         sb.append(Receive.getSYMBOL());
-        sb.append(" <<");
         sb.append(Utils.removePackageDescriptionIfWanted(receivedType));
-        sb.append(">>, ");
+        sb.append(", ");
         sb.append(Send.getSYMBOL());
-        sb.append(" <<");
         sb.append(Utils.removePackageDescriptionIfWanted(sentType));
-        sb.append(">>)");
+        sb.append(")");
         sb.append(getSYMBOL());
 
         return sb.toString();

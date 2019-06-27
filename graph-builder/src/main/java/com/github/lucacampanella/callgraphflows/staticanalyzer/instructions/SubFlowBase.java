@@ -87,10 +87,9 @@ abstract class SubFlowBase implements StatementInterface {
     @Override
     public String getStringDescription() {
         StringBuilder sb = new StringBuilder();
-        sb.append("subFlow ");
-        sb.append("<<");
+        sb.append("subFlow(");
         sb.append(Utils.removePackageDescriptionIfWanted(subFlowType.toString()));
-        sb.append(">>");
+        sb.append(")");
 
         return sb.toString();
     }
@@ -104,9 +103,7 @@ abstract class SubFlowBase implements StatementInterface {
 
         StringBuilder returnArrowTextBuilder = new StringBuilder();
         if(returnType.isPresent() && !returnType.get().equals("java.lang.Void")) {
-            returnArrowTextBuilder.append(" <<");
             returnArrowTextBuilder.append(Utils.removePackageDescriptionIfWanted(returnType.get()));
-            returnArrowTextBuilder.append(">>");
         }
         if(returnArrowTextBuilder.length() > 0) {
             final GBaseTextComponent exitingTextComponent = new GBaseTextComponent(returnArrowTextBuilder.toString());
