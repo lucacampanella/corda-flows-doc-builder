@@ -47,8 +47,12 @@ public class AsciiDocBuilder {
         sb.append(classDescription.getComments());
         sb.append("\n");
         sb.append("image::");
-        sb.append(classDescription.getFullyQualifiedName());
-        sb.append(".svg[]\n");
+        String filePath = "images/" + classDescription.getFullyQualifiedName() + ".svg";
+        sb.append(filePath);
+        sb.append("[link=\"");
+        sb.append(filePath);
+        sb.append("\"]\n");
+
 
 
         Files.write(Paths.get(path), sb.toString().getBytes());

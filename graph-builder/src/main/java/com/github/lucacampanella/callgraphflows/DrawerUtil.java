@@ -38,7 +38,7 @@ public final class DrawerUtil {
 
         final List<CtClass> startableByRPCClasses = analyzerWithModel.getClassesByAnnotation(StartableByRPC.class);
         LOGGER.info("Found these classes annotated with @StartableByRPC: ");
-        new File(outPath).mkdirs();
+        Paths.get(outPath, "images").toFile().mkdirs(); //create all directories necessary for the output
         for (CtClass klass : startableByRPCClasses) {
             LOGGER.info("**** Analyzing class {} ", klass.getQualifiedName());
             drawFromClass(analyzerWithModel, klass, outPath);
@@ -73,7 +73,7 @@ public final class DrawerUtil {
         if(initiatedClassResult != null) {
             graphBuilder.addSession(initiatedClassResult.getClassDescription().getSimpleName(), initiatedClassResult.getStatements());
         }
-        graphBuilder.drawToFile(Paths.get(outPath, classDescription.getFullyQualifiedName() + ".svg").toString());
+        graphBuilder.drawToFile(Paths.get(outPath, "images", classDescription.getFullyQualifiedName() + ".svg").toString());
 
         AsciiDocBuilder asciiDocBuilder = AsciiDocBuilder.fromAnalysisResult(analysisResult);
         asciiDocBuilder.writeToFile(Paths.get(outPath, classDescription.getFullyQualifiedName() + ".adoc").toString());
