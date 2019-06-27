@@ -1,5 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
+import net.corda.core.flows.StartableByRPC;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.slf4j.Logger;
@@ -7,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import spoon.Launcher;
 import spoon.SpoonException;
 import spoon.decompiler.Decompiler;
+import spoon.reflect.declaration.CtClass;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,13 +18,17 @@ import java.util.stream.Collectors;
 
 public class SourceAndJarAnalyzer extends AnalyzerWithModel {
 
+    private boolean analyzeOnlySources = false;
+    private Set<String> srcClassNamesSet;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(SourceAndJarAnalyzer.class);
 
     public SourceAndJarAnalyzer(List<String> pathsToFoldersOrSrc) throws IOException {
-        init(pathsToFoldersOrSrc, null, null);
+        init(pathsToFoldersOrSrc, null, null, false);
     }
 
-    public SourceAndJarAnalyzer(String[] unsortedTypesFiles, DecompilerEnum decompilerEnum) throws IOException {
+    public SourceAndJarAnalyzer(String[] unsortedTypesFiles, DecompilerEnum decompilerEnum,
+                                boolean analyzeOnlySources) throws IOException {
         List<String> jarPaths = new ArrayList<>();
         List<String> otherPaths = new ArrayList<>();
         for(String path : unsortedTypesFiles) {
@@ -33,14 +39,18 @@ public class SourceAndJarAnalyzer extends AnalyzerWithModel {
                 otherPaths.add(path);
             }
         }
-        init(otherPaths, jarPaths, decompilerEnum);
+        init(otherPaths, jarPaths, decompilerEnum, analyzeOnlySources);
     }
 
-    public SourceAndJarAnalyzer(List<String> pathsToFoldersOrSrc, List<String> pathsToJars, DecompilerEnum decompilerEnum) throws IOException {
-        init(pathsToFoldersOrSrc, pathsToJars, decompilerEnum);
+    public SourceAndJarAnalyzer(List<String> pathsToFoldersOrSrc, List<String> pathsToJars,
+                                DecompilerEnum decompilerEnum, boolean analyzeOnlySources) throws IOException {
+        init(pathsToFoldersOrSrc, pathsToJars, decompilerEnum, analyzeOnlySources);
     }
 
-    private void init(List<String> pathsToFoldersOrSrc, List<String> pathsToJars, DecompilerEnum decompilerEnum) throws IOException {
+    private void init(List<String> pathsToFoldersOrSrc, List<String> pathsToJars, DecompilerEnum decompilerEnum,
+                      boolean analyzeOnlySources) throws IOException {
+
+        this.analyzeOnlySources = analyzeOnlySources;
 
         analysisName = pathsToFoldersOrSrc.stream().map(
                 pathToJar -> pathToJar.substring(pathToJar.lastIndexOf(System.getProperty("file.separator"))+1)).
@@ -62,6 +72,11 @@ public class SourceAndJarAnalyzer extends AnalyzerWithModel {
                     addSingleFileToModel(addedClassesNamesSet, spoon, folderOrSrc);
                 }
             }
+        }
+
+        if(analyzeOnlySources) {
+            srcClassNamesSet = new HashSet<>(addedClassesNamesSet); //we save which classes derive from sources and
+            //not decompilation
         }
 
         if(pathsToJars != null) {
@@ -139,6 +154,15 @@ public class SourceAndJarAnalyzer extends AnalyzerWithModel {
                         path.indexOf(".java"));
 
         return res;
+    }
+
+    @Override
+    public List<CtClass> getClassesToBeAnalyzed() {
+        if(!analyzeOnlySources) {
+            return super.getClassesToBeAnalyzed();
+        }
+        return super.getClassesToBeAnalyzed().stream().filter(klass ->
+            srcClassNamesSet.contains(klass.getTopLevelType().getQualifiedName())).collect(Collectors.toList());
     }
 
 }

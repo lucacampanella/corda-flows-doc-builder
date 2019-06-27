@@ -3,6 +3,7 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer;
 import com.github.lucacampanella.callgraphflows.AnalysisErrorException;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import net.corda.core.flows.InitiatedBy;
+import net.corda.core.flows.StartableByRPC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spoon.reflect.CtModel;
@@ -126,7 +127,12 @@ public class AnalyzerWithModel {
                 .collect(Collectors.toList());
     }
 
-    public CtClass getDeeperClassInitiatedBy(CtClass initiatingClass) {
+    public List<CtClass> getClassesToBeAnalyzed() {
+        return getClassesByAnnotation(StartableByRPC.class);
+    }
+
+
+        public CtClass getDeeperClassInitiatedBy(CtClass initiatingClass) {
         CtClass deeperInitiatedByClass = null;
         final List<CtClass> generalInitiatedByList = getClassesByAnnotation(InitiatedBy.class);
         for(CtClass klass : generalInitiatedByList) {

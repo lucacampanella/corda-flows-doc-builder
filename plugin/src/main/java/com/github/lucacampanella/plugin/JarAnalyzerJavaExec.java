@@ -35,6 +35,7 @@ public class JarAnalyzerJavaExec extends JavaExec {
     boolean removeJavaAgents = true; //remove agents like quasar that might be pluggen in to any javaexec task by the quasar plugin
     String logLevel = null;
     List<String> sourceFilesPath = null;
+    boolean analyzeOnlySourceFiles = false;
 
     @TaskAction
     @Override
@@ -152,6 +153,11 @@ public class JarAnalyzerJavaExec extends JavaExec {
     @Optional
     public List<String> getSourceFilesPath() {
         return sourceFilesPath;
+    }
+
+    @Input
+    public boolean isAnalyzeOnlySourceFiles() {
+        return analyzeOnlySourceFiles;
     }
 
     private LogLevel getCurrentLogLevel() {

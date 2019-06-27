@@ -27,7 +27,7 @@ class SourceAndJarAnalyzerTest extends AnalyzerWithModelTest {
         LOGGER.trace("{}", folderPath);
         analyzerWithModel = new SourceAndJarAnalyzer(Arrays.asList(folderPath),
                 Arrays.asList(jarURL.getPath()),
-                DecompilerEnum.CFR);
+                DecompilerEnum.CFR, false);
     }
 
     @Test

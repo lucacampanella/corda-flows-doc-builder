@@ -37,7 +37,7 @@ public final class DrawerUtil {
 
         AsciiDocIndexBuilder asciiDocIndexBuilder = new AsciiDocIndexBuilder(analyzerWithModel.getAnalysisName());
 
-        final List<CtClass> startableByRPCClasses = analyzerWithModel.getClassesByAnnotation(StartableByRPC.class);
+        final List<CtClass> startableByRPCClasses = analyzerWithModel.getClassesToBeAnalyzed();
         LOGGER.info("Found these classes annotated with @StartableByRPC: ");
         Paths.get(outPath, "images").toFile().mkdirs(); //create all directories necessary for the output
         for (CtClass klass : startableByRPCClasses) {

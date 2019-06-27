@@ -26,6 +26,10 @@ public class Main implements Callable<Integer> {
     @CommandLine.Option(names = {"-l", "--draw-line-numbers"}, description = "draw the line numbers")
     boolean drawLineNumbers = false;
 
+    @CommandLine.Option(names = {"-s", "--only-source-files"}, description = "analyze only the source files and not " +
+            "the decompiled code")
+    boolean analyzeOnlySources = false;
+
     public static void main(String []args) throws IOException {
 
         final Main app = CommandLine.populateCommand(new Main(), args);
@@ -42,7 +46,7 @@ public class Main implements Callable<Integer> {
         }
         LoggerFactory.getLogger(Main.class).trace("Logger level = {}", loggerLevel);
         SourceAndJarAnalyzer analyzer = new SourceAndJarAnalyzer(filesPaths,
-                DecompilerEnum.fromStringOrDefault(decompilerName));
+                DecompilerEnum.fromStringOrDefault(decompilerName), analyzeOnlySources);
 
         LoggerFactory.getLogger(Main.class).trace("drawLineNumbers = {}", drawLineNumbers);
         DrawerUtil.setDrawLineNumbers(drawLineNumbers);
