@@ -2,6 +2,8 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spoon.Launcher;
 import spoon.SpoonException;
 import spoon.decompiler.Decompiler;
@@ -13,6 +15,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class SourceAndJarAnalyzer extends AnalyzerWithModel {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SourceAndJarAnalyzer.class);
 
     public SourceAndJarAnalyzer(List<String> pathsToFoldersOrSrc) throws IOException {
         init(pathsToFoldersOrSrc, null, null);
@@ -87,6 +91,9 @@ public class SourceAndJarAnalyzer extends AnalyzerWithModel {
         if(!addedClassesNamesSet.contains(qualifiedName)) {
             addedClassesNamesSet.add(qualifiedName);
             spoon.addInputResource(srcFile.getAbsolutePath());
+        }
+        else {
+            LOGGER.trace("File {} represents class {}, which was already added to the model, skipping", srcFile, qualifiedName);
         }
     }
 

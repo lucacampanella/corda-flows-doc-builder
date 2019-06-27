@@ -34,6 +34,7 @@ public class JarAnalyzerJavaExec extends JavaExec {
     boolean drawLineNumbers = false;
     boolean removeJavaAgents = true; //remove agents like quasar that might be pluggen in to any javaexec task by the quasar plugin
     String logLevel = null;
+    List<String> sourceFilesPath = null;
 
     @TaskAction
     @Override
@@ -43,8 +44,12 @@ public class JarAnalyzerJavaExec extends JavaExec {
             pathToExecJar = JarExecPathFinderUtils.getPathToExecJar(getProject());
         }
 
-        List<String> args = new ArrayList<>(Arrays.asList(pathToExecJar, pathToJar, "-o", outPath, "-d", decompilerName));
+        List<String> args = new ArrayList<>(Arrays.asList(pathToExecJar, pathToJar));
 
+        if(sourceFilesPath != null) {
+            args.addAll(sourceFilesPath);
+        }
+        args.addAll(Arrays.asList("-o", outPath, "-d", decompilerName));
         if(drawLineNumbers) {
             getLogger().info("drawLineNumbers = true");
             args.add("-l");
@@ -52,7 +57,6 @@ public class JarAnalyzerJavaExec extends JavaExec {
         getLogger().info("args = {}", args);
 
         this.setArgs(args);
-        //this.args(pathToExecJar, pathToJar, "-o", outPath, "-d", decompilerName);
 
         Level slf4jLogLevel = null;
         if(logLevel != null) {
@@ -142,6 +146,12 @@ public class JarAnalyzerJavaExec extends JavaExec {
     @OutputDirectory
     public String getOutPath() {
         return outPath;
+    }
+
+    @Input
+    @Optional
+    public List<String> getSourceFilesPath() {
+        return sourceFilesPath;
     }
 
     private LogLevel getCurrentLogLevel() {

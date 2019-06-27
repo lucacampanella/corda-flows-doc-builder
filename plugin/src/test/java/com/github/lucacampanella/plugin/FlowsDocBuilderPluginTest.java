@@ -94,7 +94,7 @@ class FlowsDocBuilderPluginTest {
         assertThat(nodeContents).contains("SimpleFlowTest$Initiator",
                 "@InitiatingFlow",
                 "@StartableByRPC",
-                "session = initiateFlow(this.otherParty)",
+                "session = initiateFlow(otherParty)",
                 "sendAndReceive(String, Boolean)",
                 "receive(Boolean)",
                 "send(String)");
