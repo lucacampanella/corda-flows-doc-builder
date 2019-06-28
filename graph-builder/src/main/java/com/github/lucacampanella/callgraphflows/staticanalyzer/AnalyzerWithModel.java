@@ -138,8 +138,16 @@ public class AnalyzerWithModel {
         for(CtClass klass : generalInitiatedByList) {
 
             Optional<CtAnnotation<? extends Annotation>> initiatedByAnnotationOptional =
-                    klass.getAnnotations().stream().filter(ctAnnotation ->
-                    ctAnnotation.getActualAnnotation().annotationType() == InitiatedBy.class).findFirst();
+                    klass.getAnnotations().stream().filter(ctAnnotation -> {
+                        boolean result = false;
+                        try {
+                            result = ctAnnotation.getActualAnnotation().annotationType() == InitiatedBy.class;
+                        } catch (Exception e) {
+                            LOGGER.warn("Couldn't retrieve real representation for annotation {} for class {}, " +
+                                    "continuing without analyzing this one", ctAnnotation, klass.getQualifiedName());
+                        }
+                        return result;
+                    }).findFirst();
             if(initiatedByAnnotationOptional.isPresent()) {
                 final CtExpression referenceToClass = (CtExpression)
                         initiatedByAnnotationOptional.get().getAllValues().get("value");
