@@ -27,21 +27,29 @@ public class AsciiDocBuilder {
     public void writeToFile(String path) throws IOException {
         StringBuilder sb = new StringBuilder();
         sb.append("## ");
-        sb.append("Class " + classDescription.getNameWithParent());
+        sb.append(classDescription.getContainingClassNameOrItself());
         sb.append("\n");
         sb.append("Package: ");
         sb.append(classDescription.getPackageName());
         sb.append("\n\n");
+
+        sb.append("*");
+        sb.append(classDescription.getNameWithParent());
+        sb.append("*");
         if(counterpartyClassDescription == null) {
-            sb.append("This class is a wrapper class, has no initiateFlow call, but calls other subflows. " +
+            sb.append(" is a wrapper class, has no initiateFlow call, but calls other subflows. " +
                     "Thus this class has no direct counterparty class\n");
         }
         else {
-            sb.append("This class calls initiateFlow directly and thus has a counterparty class named *");
+            sb.append(" calls initiateFlow directly and thus has a counterparty class named *");
             sb.append(counterpartyClassDescription.getNameWithParent());
-            sb.append("* (Package: ");
-            sb.append(counterpartyClassDescription.getPackageName());
-            sb.append(")\n");
+            sb.append("* ");
+            if(!counterpartyClassDescription.getPackageName().equals(classDescription.getPackageName())) {
+                sb.append("(From different package: ");
+                sb.append(counterpartyClassDescription.getPackageName());
+                sb.append(")");
+            }
+            sb.append("\n");
         }
         sb.append("\n");
         sb.append(classDescription.getComments());

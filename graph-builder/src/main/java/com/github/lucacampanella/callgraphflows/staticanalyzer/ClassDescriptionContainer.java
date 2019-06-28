@@ -51,6 +51,10 @@ public class ClassDescriptionContainer {
         return containingClassName;
     }
 
+    public String getContainingClassNameOrItself() {
+        return hasContainingClass() ? getContainingClassName() : getSimpleName();
+    }
+
     public String getPackageName() {
         return packageName;
     }
