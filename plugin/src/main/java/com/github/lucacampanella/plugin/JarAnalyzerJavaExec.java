@@ -55,6 +55,10 @@ public class JarAnalyzerJavaExec extends JavaExec {
             getLogger().info("drawLineNumbers = true");
             args.add("-l");
         }
+        if(analyzeOnlySourceFiles) {
+            getLogger().info("analyzeOnlySourceFiles = true");
+            args.add("-s");
+        }
         getLogger().info("args = {}", args);
 
         this.setArgs(args);
