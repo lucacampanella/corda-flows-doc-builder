@@ -17,24 +17,31 @@ public class DoubleExtendingSuperclassTestFlow {
         @Override
         protected void realCallMethod(FlowSession session) {
             session.send("StrignPayload");
+            super.realCallMethod(session);
+            this.printingMethod();
+            printingMethod();
+        }
+
+        private void printingMethod() {
+            System.out.println("test");
         }
     }
 
     @InitiatedBy(ExtendingSuperclassTestFlow.Initiator.class)
-        public static class Acceptor extends ExtendingSuperclassTestFlow.Acceptor {
+    public static class Acceptor extends ExtendingSuperclassTestFlow.Acceptor {
 
-            public Acceptor(FlowSession otherSession) {
-                super(otherSession);
-            }
-            @Suspendable
-            @Override
-            public Void call() throws FlowException {
-                otherSession.send(1);
-                otherSession.receive(String.class);
-                SendTransactionFlow stf = new SendTransactionFlow(otherSession, null);
-                stf.getLogger().info("info");
-                return null;
-            }
-
+        public Acceptor(FlowSession otherSession) {
+            super(otherSession);
         }
+        @Suspendable
+        @Override
+        public Void call() throws FlowException {
+            otherSession.send(1);
+            otherSession.receive(String.class);
+            SendTransactionFlow stf = new SendTransactionFlow(otherSession, null);
+            stf.getLogger().info("info");
+            return null;
+        }
+
+    }
 }

@@ -51,6 +51,9 @@ public class Receive extends InstructionStatement implements StatementWithCompan
             receive.receivedType = ((CtAbstractInvocation) firstArgument).getExecutable().getType().box().toString();
             //todo: if the method returns a Class object with a generic attached, here is not recognized
             //be careful when comparing flows, also because here we call .toString and before getTarget
+
+            //todo: probably is enough to do
+            // ((CtAbstractInvocation) firstArgument)/*.getExecutable()*/.getType().box().toString();
         }
 
         receive.targetSessionName = Optional.ofNullable(invocation.getTarget().toString());

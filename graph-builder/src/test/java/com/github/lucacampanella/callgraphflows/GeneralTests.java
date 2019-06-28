@@ -3,6 +3,7 @@ package com.github.lucacampanella.callgraphflows;
 import com.github.lucacampanella.TestUtils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.IfElse;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.MethodInvocation;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.While;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.DoubleExtendingSuperclassTestFlow;
@@ -117,10 +118,23 @@ public class GeneralTests {
 
     @Test
     public void InitiatedByInnerClassAcceptorTest() throws IOException, AnalysisErrorException {
-        final AnalysisResult analysisResult = drawAndReturnAnalysis(InitiatedByInnerClassAcceptorTestFlow.class,
-                SimpleFlowTestFlow.class);
+        final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(fromClassSrcToPath(InitiatorBaseFlow.class),
+                fromClassSrcToPath(ExtendingSuperclassTestFlow.class),
+                fromClassSrcToPath(DoubleExtendingSuperclassTestFlow.class));
+        final AnalysisResult analysisResult =
+                analyzer.analyzeFlowLogicClass(analyzer.getClass(DoubleExtendingSuperclassTestFlow.Initiator.class));
+        DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
         LOGGER.trace("{}", analysisResult.getStatements());
+        assertThat(analysisResult.getStatements().getStatements().get(1)).isInstanceOf(MethodInvocation.class);
+        assertThat(((MethodInvocation) analysisResult.getStatements().getStatements().get(1)).getBody()).hasSize(2);
     }
+
+    @Test
+    public void dynamicallyDispatchedMethod() throws AnalysisErrorException, IOException {
+        AnalysisResult analysisResult = drawAndReturnAnalysis(InitiatorBaseFlow.class, ExtendingSuperclassTestFlow.class,
+                DoubleExtendingSuperclassTestFlow.class);
+        LOGGER.info("{}", analysisResult.getStatements());
+   }
 
     public AnalysisResult drawAndReturnAnalysis(Class... toBeAnalyzed) throws AnalysisErrorException, IOException {
         final List<String> pathToClasses = Arrays.stream(toBeAnalyzed).map(TestUtils::fromClassSrcToPath).collect(Collectors.toList());
