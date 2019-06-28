@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spoon.reflect.code.*;
 import spoon.reflect.cu.position.NoSourcePosition;
+import spoon.reflect.declaration.CtExecutable;
+import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.declaration.CtParameter;
 
 import java.util.*;
@@ -39,12 +41,20 @@ public class MethodInvocation extends InstructionStatement {
 
         if(statement instanceof CtAbstractInvocation) {
             CtAbstractInvocation inv = (CtAbstractInvocation) statement;
+            CtExecutable dynamicallyDispatchedExecutable;
+            CtExecutable declaration = null;
 
-            if (MatcherHelper.isCordaMethod(inv)) { //this should never happen
+            if (MatcherHelper.isCordaMethod(inv)) {
                 LOGGER.trace("A method invocation is created using a corda method," +
                         "this happens in case of receive().unwrap(), the receive is already analyzed and will" +
                         "be skipped");
                 return null;
+            }
+
+            try {
+                declaration = inv.getExecutable().getDeclaration();
+            } catch (NullPointerException e) {
+                LOGGER.warn("Couldn't retrieve the declaration of method {} adding an empty one", inv);
             }
 
             if(statement instanceof CtInvocation) {
@@ -54,6 +64,19 @@ public class MethodInvocation extends InstructionStatement {
                     MethodInvocation targetInv = MethodInvocation.fromCtStatement((CtInvocation) methodInv.getTarget(), analyzer);
                     methodInvocation.internalMethodInvocations.addIfRelevantForAnalysis(targetInv);
                 }
+            }
+
+            //this and the preceding if should mean the same, but they don't in case of a call to "this(...)"
+            //which is still represented as a CtInvocation even if it's a constructor call
+            if(declaration instanceof CtMethod) {
+                dynamicallyDispatchedExecutable =
+                        analyzer.getCurrClassCallStackHolder().
+                                fromCtAbstractInvocationToDynamicExecutableRef((CtInvocation) statement);
+            }
+            else { //a constructor call
+                //could use getExecutableDeclaration instaead of getDeclaration, but this would also mean
+                //analyzing the body of corda methods, for now this is ok
+                dynamicallyDispatchedExecutable = declaration;
             }
 
             final List<CtExpression> arguments = inv.getArguments();
@@ -86,7 +109,7 @@ public class MethodInvocation extends InstructionStatement {
             }
             try {
                 final Branch bodyStatements = MatcherHelper.fromCtStatementsToStatements(
-                        inv.getExecutable().getDeclaration().getBody().getStatements(), analyzer);
+                        dynamicallyDispatchedExecutable.getBody().getStatements(), analyzer);
                 methodInvocation.body.addIfRelevantForAnalysis(bodyStatements);
             } catch (NullPointerException e) {
                 LOGGER.warn("Couldn't retrieve the body of method {} adding an empty one", inv);

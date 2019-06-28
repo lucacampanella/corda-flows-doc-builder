@@ -26,6 +26,13 @@ public class StaticAnalyzerUtils {
         //private constructor to hide public one
     }
 
+    static CtClass getLowerContainingClass(CtElement elem) {
+        if(elem instanceof CtClass || elem == null) {
+            return (CtClass) elem;
+        }
+        return getLowerContainingClass(elem.getParent());
+    }
+
     private static class Session {
         private final StatementInterface initiatingStatement; //this can either be an initiateFlow or any other
         //call that has as target a variable we never saw before (so it's a field or an argument)

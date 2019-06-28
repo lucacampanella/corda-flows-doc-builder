@@ -29,6 +29,7 @@ public class AnalyzerWithModel {
 
     protected CtModel model;
     protected String analysisName;
+    protected ClassCallStackHolder currClassCallStackHolder = null;
 
     public CtModel getModel() {
         return model;
@@ -57,6 +58,8 @@ public class AnalyzerWithModel {
             throw new AnalysisErrorException(klass, exMessage);
         }
 
+        setCurrentAnalyzingClass(klass);
+
         AnalysisResult res = new AnalysisResult(ClassDescriptionContainer.fromClass(klass));
 
         final Branch interestingStatements = MatcherHelper.fromCtStatementsToStatements(
@@ -77,6 +80,14 @@ public class AnalyzerWithModel {
         }
 
         return res;
+    }
+
+    public void setCurrentAnalyzingClass(CtClass<?> klass) {
+        currClassCallStackHolder = ClassCallStackHolder.fromCtClass(klass);
+    }
+
+    public ClassCallStackHolder getCurrClassCallStackHolder() {
+        return currClassCallStackHolder;
     }
 
     //    ** A new responder written to override an existing responder must _still_ be annotated with `@InitiatedBy`
@@ -164,7 +175,8 @@ public class AnalyzerWithModel {
                 final CtClass correspondingInitiatingClass = (CtClass) ((CtFieldReadImpl) referenceToClass).getVariable()
                         .getDeclaringType().getTypeDeclaration();
 
-                if (correspondingInitiatingClass.getReference().isSubtypeOf(initiatingClass.getReference()) &&
+                if ((correspondingInitiatingClass.getReference().isSubtypeOf(initiatingClass.getReference())
+                || initiatingClass.getReference().isSubtypeOf(correspondingInitiatingClass.getReference())) &&
                         (deeperInitiatedByClass == null ||
                                 klass.getReference().isSubtypeOf(deeperInitiatedByClass.getReference()))) {
                     deeperInitiatedByClass = klass;
