@@ -133,6 +133,10 @@ public class MatcherContainer extends FlowLogic {
         IdentitySyncFlow.Receive var;
     }
 
+    private void typeTemplateForClass() {
+        Class var;
+    }
+
     /*private void typeTemplateForSwapIdentitiesFlow() {
         SwapIdentitiesFlow var;
     }*/

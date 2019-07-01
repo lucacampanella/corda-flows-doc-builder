@@ -34,7 +34,7 @@ public class FlowConstructor extends InstructionStatement {
             flowConstructor.lhsName = ((CtAssignmentImpl) statement).getAssigned().toString();
         }
 
-        flowConstructor.targetSessionName =  StaticAnalyzerUtils.findTargetSessionName(statement);
+        flowConstructor.targetSessionName =  StaticAnalyzerUtils.findTargetSessionName(statement, analyzer);
 
         return flowConstructor;
     }

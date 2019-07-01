@@ -7,7 +7,9 @@ import net.corda.core.identity.Party;
 
 public class DoubleExtendingSuperclassTestFlow {
 
-    public static class Initiator extends ExtendingSuperclassTestFlow.Initiator {
+    public static class Initiator extends ExtendingSuperclassTestFlow.Initiator<String> {
+
+        String returnValue;
 
         public Initiator(Party otherParty) {
             super(otherParty);
@@ -15,11 +17,13 @@ public class DoubleExtendingSuperclassTestFlow {
 
         @Suspendable
         @Override
-        protected void realCallMethod(FlowSession session) {
+        protected String realCallMethod(FlowSession session) {
             session.send("StrignPayload");
             super.realCallMethod(session);
             this.printingMethod();
             printingMethod();
+
+            return returnValue;
         }
 
         private void printingMethod() {
@@ -27,7 +31,7 @@ public class DoubleExtendingSuperclassTestFlow {
         }
     }
 
-    @InitiatedBy(ExtendingSuperclassTestFlow.Initiator.class)
+    @InitiatedBy(Initiator.class)
     public static class Acceptor extends ExtendingSuperclassTestFlow.Acceptor {
 
         public Acceptor(FlowSession otherSession) {

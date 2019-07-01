@@ -7,7 +7,8 @@ import net.corda.core.identity.Party;
 public class ExtendingSuperclassTestFlow {
 
         @StartableByRPC
-        public static class Initiator extends InitiatorBaseFlow {
+        public static class Initiator<T> extends InitiatorBaseFlow<T> {
+            T returnValue;
 
             public Initiator(Party otherParty) {
                 super(otherParty);
@@ -15,12 +16,13 @@ public class ExtendingSuperclassTestFlow {
 
             @Suspendable
             @Override
-            protected void realCallMethod(FlowSession session) {
+            protected T realCallMethod(FlowSession session) {
                 session.send(1);
+                return returnValue;
             }
         }
 
-        @InitiatedBy(Initiator.class)
+        @InitiatedBy(DoubleExtendingSuperclassTestFlow.Initiator.class)
         public static class Acceptor extends FlowLogic<Void> {
 
             protected final FlowSession otherSession;

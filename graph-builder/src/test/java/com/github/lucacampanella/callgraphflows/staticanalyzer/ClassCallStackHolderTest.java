@@ -6,8 +6,10 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subcl
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import spoon.reflect.code.CtInvocation;
+import spoon.reflect.code.CtLocalVariable;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtMethod;
+import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.filter.NamedElementFilter;
 
 import static com.github.lucacampanella.TestUtils.fromClassSrcToPath;
@@ -49,5 +51,14 @@ class ClassCallStackHolderTest {
                 new NamedElementFilter<CtMethod>(CtMethod.class, "realCallMethod")).stream().findAny().get();
 
         assertThat(discoveredMethod).isEqualTo(realCallMethod);
+    }
+
+    @Test
+    void resolveEventualGenerics() {
+        final ClassCallStackHolder classCallStackHolder = ClassCallStackHolder.fromCtClass(doubleExtClass);
+        final CtMethod callMethod = StaticAnalyzerUtils.findCallMethod(initiatorBaseClass);
+        final CtLocalVariable localVariable = (CtLocalVariable) callMethod.getBody().getStatements().get(2);
+        final CtTypeReference typeReference = classCallStackHolder.resolveEventualGenerics(localVariable.getType());
+        System.out.println(typeReference.toString());
     }
 }
