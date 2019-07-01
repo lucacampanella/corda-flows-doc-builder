@@ -6,7 +6,6 @@ import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlow;
 import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlowWithCounterparty;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.ClassDescriptionContainer;
 
 
 public class InitiatingSubFlow extends SubFlowBaseWithAnalysis {
@@ -59,8 +58,8 @@ public class InitiatingSubFlow extends SubFlowBaseWithAnalysis {
         return new Branch(this);
     }
 
-    public boolean containsValidProtocol() {
-        return resultOfClassAnalysis.containsValidProtocol();
+    public boolean checkIfContainsValidProtocolAndDraw() {
+        return resultOfClassAnalysis.checkIfContainsValidProtocolAndDraw();
     }
 }
 

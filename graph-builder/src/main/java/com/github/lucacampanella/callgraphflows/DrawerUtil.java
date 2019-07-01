@@ -8,12 +8,10 @@ import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.ClassDescriptionContainer;
-import net.corda.core.flows.StartableByRPC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spoon.reflect.declaration.CtClass;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
@@ -62,7 +60,7 @@ public final class DrawerUtil {
         }
 
         LOGGER.error("Flow logic analysis: class {} contains valid flow logic? {}", klass.getQualifiedName(),
-                analysisResult.containsValidProtocol()); //todo: expensive operation
+                analysisResult.checkIfContainsValidProtocolAndDraw()); //todo: expensive operation
 
         drawFromAnalysis(analysisResult, outPath);
     }

@@ -8,6 +8,7 @@ public class AnalysisResult {
     ClassDescriptionContainer classDescription;
     Branch statements = new Branch();
     AnalysisResult counterpartyClassResult = null;
+    Boolean containsValidProtocolAndDrawn = null;
 
     public AnalysisResult(ClassDescriptionContainer classDescription) {
         this.classDescription = classDescription;
@@ -37,21 +38,27 @@ public class AnalysisResult {
         this.statements = statements;
     }
 
-    public boolean containsValidProtocol() {
+    public boolean checkIfContainsValidProtocolAndDraw() {
+        if(containsValidProtocolAndDrawn == null) {
+            containsValidProtocolAndDrawn = checkIfContainsValidProtocolAndDrawNotLazy();
+        }
+        return containsValidProtocolAndDrawn;
+    }
+
+    private boolean checkIfContainsValidProtocolAndDrawNotLazy() {
         CombinationsHolder allCombinations = CombinationsHolder.fromBranch(statements);
-        if(hasCounterpartyResult()) {
+        if (hasCounterpartyResult()) {
             CombinationsHolder counterpartyAllCombinations =
                     CombinationsHolder.fromBranch(counterpartyClassResult.getStatements());
 
-            return allCombinations.hasOneMatchWith(counterpartyAllCombinations);
-        }
-        else {
-            for(StatementInterface stmt : statements) {
-                if(stmt.isSendOrReceive()) {
+            return allCombinations.checkIfMatchesAndDraw(counterpartyAllCombinations);
+        } else {
+            for (StatementInterface stmt : statements) {
+                if (stmt.isSendOrReceive()) {
                     return false;
                 }
-                if(stmt instanceof InitiatingSubFlow) {
-                    if(!((InitiatingSubFlow) stmt).containsValidProtocol()) {
+                if (stmt instanceof InitiatingSubFlow) {
+                    if (!((InitiatingSubFlow) stmt).checkIfContainsValidProtocolAndDraw()) {
                         return false;
                     }
                 }

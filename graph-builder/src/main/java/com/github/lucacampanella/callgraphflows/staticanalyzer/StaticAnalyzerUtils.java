@@ -345,7 +345,7 @@ public class StaticAnalyzerUtils {
         while(!queue.isEmpty()) {
             StatementInterface statement = queue.peek();
             if(statement instanceof InitiatingSubFlow) {
-                if(((InitiatingSubFlow) statement).containsValidProtocol()) {
+                if(((InitiatingSubFlow) statement).checkIfContainsValidProtocolAndDraw()) {
                     queue.remove();
                     continue;
                 }

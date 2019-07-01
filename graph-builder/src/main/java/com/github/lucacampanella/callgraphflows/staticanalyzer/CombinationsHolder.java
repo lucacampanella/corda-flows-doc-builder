@@ -4,6 +4,7 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -99,25 +100,54 @@ public class CombinationsHolder {
         return allCombinations.isEmpty();
     }
 
-    public boolean hasOneMatchWith(CombinationsHolder otherCombinationsHolder) {
+    public boolean checkIfMatchesAndDraw(CombinationsHolder otherCombinationsHolder) {
+        boolean foundOneMatch = false;
         for(Branch combLeft : this.allCombinations) {
             for(Branch combRight : otherCombinationsHolder.allCombinations) {
-                if(twoCombinationsMatch(combLeft, combRight)) {
-                    return true;
+                final List<MatchingStatements> matchingStatements = twoCombinationsMatch(combLeft, combRight);
+                if(matchingStatements != null) {
+                    foundOneMatch = true;
+                    matchingStatements.forEach(MatchingStatements::createGraphLink);
                 }
             }
         }
-        return false;
+        return foundOneMatch;
     }
 
-    private static boolean twoCombinationsMatch(Branch combLeft,
+    private static class MatchingStatements {
+        StatementWithCompanionInterface leftStatement;
+        StatementWithCompanionInterface rightStatement;
+
+        public MatchingStatements(StatementWithCompanionInterface leftStatement, StatementWithCompanionInterface rightStatement) {
+            this.leftStatement = leftStatement;
+            this.rightStatement = rightStatement;
+        }
+
+        public void createGraphLink() {
+            leftStatement.createGraphLink(rightStatement);
+        }
+    }
+
+    /**
+     * Checks if two branches have a matching combination and returns a list of all the
+     * matching statements if they match, an empty list if there is nothing to match (still a valid
+     * protocol) or null if the two combinations don't match
+     * @param combLeft initiating branch
+     * @param combRight initiated branch
+     * @return a list of all the
+     *       matching statements if they match, an empty list if there is nothing to match (still a valid
+     *       protocol) or null if the two combinations don't match
+     */
+    private static List<MatchingStatements> twoCombinationsMatch(Branch combLeft,
                                                 Branch combRight) {
         Deque<StatementInterface> initiatingQueue = new LinkedList<>(combLeft.getStatements());
         Deque<StatementInterface> initiatedQueue = new LinkedList<>(combRight.getStatements());
 
+        List<MatchingStatements> matchingStatements = new ArrayList<>();
         int i = 0;
 
         while(!initiatingQueue.isEmpty() || !initiatedQueue.isEmpty()) {
+
             StatementInterface instrLeft = null;
             StatementInterface instrRight = null;
             try {
@@ -127,10 +157,10 @@ public class CombinationsHolder {
                 LOGGER.error(e.getMessage());
             }
             if (instrLeft == null && instrRight == null) {
-                return true;
+                return matchingStatements;
             }
             if((instrLeft == null && instrRight != null) || (instrLeft != null && instrRight == null)) {
-                return false;
+                return null;
             }
             if (instrLeft instanceof BranchingStatement) {
                 //if it has a blocking statement in the condition than we need to keep it in the stack and
@@ -170,10 +200,13 @@ public class CombinationsHolder {
             if(!statementLeft.acceptCompanion(statementRight)) {
                 LOGGER.warn("**** ERROR in flow logic!");
 
-                return false;
+                return null;
+            }
+            else {
+                matchingStatements.add(new MatchingStatements(statementLeft, statementRight));
             }
         }
 
-        return true;
+        return matchingStatements;
     }
 }

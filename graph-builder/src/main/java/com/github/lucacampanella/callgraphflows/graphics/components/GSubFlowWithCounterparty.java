@@ -1,5 +1,6 @@
 package com.github.lucacampanella.callgraphflows.graphics.components;
 
+import com.github.lucacampanella.callgraphflows.graphics.utils.GUtils;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
 import java.awt.*;
@@ -33,6 +34,8 @@ public class GSubFlowWithCounterparty extends GBaseGraphicComponent {
                     - GSubFlow.INDENTATION-1;
             g2.drawLine(arrowBetweenFlowStartX, arrowBetweenFlowY, arrowBetweenFlowFinishX, arrowBetweenFlowY);
         }
+        drawBrothersAndLinks(g2); //need to anticipate here, otherwise if this flow with counterparty is used
+        //again only the last usage will have links
     }
 
     @Override
@@ -95,5 +98,14 @@ public class GSubFlowWithCounterparty extends GBaseGraphicComponent {
 
     public void setArrowText(GBaseTextComponent arrowText) {
         this.arrowText = arrowText;
+    }
+
+    @Override
+    public void drawBrothersAndLinks(SVGGraphics2D g2) {
+        super.drawBrothersAndLinks(g2);
+        mainSubFlow.drawBrothersAndLinks(g2);
+        if(hasCounterpartySubFlow()) {
+            counterpartySubFlow.drawBrothersAndLinks(g2);
+        }
     }
 }
