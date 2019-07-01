@@ -541,7 +541,7 @@ public class StaticAnalyzerUtils {
         return null; //we return null if we consumed all the queue without finding aa blocking statement
     }
 
-    public static Optional<String> findTargetSessionName(CtStatement ctStatement) {
+    public static Optional<String> findTargetSessionName(CtStatement ctStatement, AnalyzerWithModel analyzer) {
         final List<CtVariableRead> mentionedSessions = ctStatement.
                 getElements(new TypeFilter<>(CtVariableRead.class))
                 .stream().filter(varRead -> {
@@ -551,7 +551,8 @@ public class StaticAnalyzerUtils {
                                 + "\nThis could result in a problem in the produced graph", varRead, ctStatement);
                         return false;
                     }
-                    return  varRead.getType().box().getQualifiedName().equals(FlowSession.class.getCanonicalName());
+                    return  analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(varRead.getType())
+                            .box().getQualifiedName().equals(FlowSession.class.getCanonicalName());
                 })
                 .collect(Collectors.toList());
 

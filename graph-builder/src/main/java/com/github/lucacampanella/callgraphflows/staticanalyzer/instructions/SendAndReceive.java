@@ -43,17 +43,21 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
             //maybe there is a more rubust way to do this, for example with a while
             if(firstArgument instanceof CtFieldRead) {
                 CtTypeAccess fieldRead = (CtTypeAccess) ((CtFieldRead) (firstArgument)).getTarget();
-                sendAndReceive.receivedType = fieldRead.getAccessedType().box().getSimpleName();
+                sendAndReceive.receivedType = analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(
+                        fieldRead.getAccessedType())
+                        .box().getSimpleName();
             }
             else if(firstArgument instanceof CtLambda) {
                 invocation = (CtInvocation) invocation.getTarget();
                 //receivedType = invocation.getArguments().get(0).getTarget().getAccessedType()
-                sendAndReceive.receivedType = ((CtTypeAccess) ((CtFieldRead) (invocation.getArguments().get(0)))
-                        .getTarget()).getAccessedType().box().getSimpleName();
+                sendAndReceive.receivedType = analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(
+                        (((CtTypeAccess) ((CtFieldRead) (invocation.getArguments().get(0))).getTarget()).getAccessedType()))
+                        .box().getSimpleName();
             }
 
         final CtTypeReference secondArgument = ((CtTypedElement) invocation.getArguments().get(1)).getType();
-        sendAndReceive.sentType = secondArgument.box().getSimpleName();
+        sendAndReceive.sentType = analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(secondArgument)
+                .box().getSimpleName();
 
         sendAndReceive.targetSessionName = Optional.ofNullable(invocation.getTarget().toString());
 

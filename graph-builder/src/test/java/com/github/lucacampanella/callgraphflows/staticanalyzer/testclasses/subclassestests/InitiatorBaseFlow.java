@@ -10,7 +10,7 @@ import java.util.List;
 
 @InitiatingFlow
 @StartableByRPC
-public abstract class InitiatorBaseFlow extends FlowLogic<Void> {
+public abstract class InitiatorBaseFlow<T> extends FlowLogic<Void> {
 
     protected final Party otherParty;
 
@@ -26,11 +26,13 @@ public abstract class InitiatorBaseFlow extends FlowLogic<Void> {
         FlowSession session = initiateFlow(otherParty);
         
         realCallMethod(session);
+
+        T genType = realCallMethod(session);
         
         session.send("END");
         return null;
     }
 
     @Suspendable
-    protected abstract void realCallMethod(FlowSession session);
+    protected abstract T realCallMethod(FlowSession session);
 }

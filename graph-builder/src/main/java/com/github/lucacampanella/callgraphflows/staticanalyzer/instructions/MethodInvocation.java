@@ -84,20 +84,24 @@ public class MethodInvocation extends InstructionStatement {
                 CtExpression expr = arguments.get(i);
                 if(expr instanceof CtVariableRead && expr.getType() != null) {
                     CtVariableRead varRead = (CtVariableRead) expr;
-                    if(varRead.getType().isSubtypeOf(MatcherHelper.getTypeReference(FlowSession.class))) {
+                    if(analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(varRead.getType())
+                            .isSubtypeOf(MatcherHelper.getTypeReference(FlowSession.class))) {
                         addToMapIfNoException(methodInvocation.callerSessionNameToCalleeSessionName, inv, i);
                     }
-                    else if(varRead.getType().isSubtypeOf(MatcherHelper.getTypeReference(FlowLogic.class))) {
+                    else if(analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(varRead.getType())
+                            .isSubtypeOf(MatcherHelper.getTypeReference(FlowLogic.class))) {
                         addToMapIfNoException(methodInvocation.callerFlowNameToCalleeFlowName, inv, i);
                     }
                 }
                 else {
                     LOGGER.trace("expr: {} of type {} {}", expr, expr.getType(), expr.getShortRepresentation());
                     if(expr.getType() != null) { //todo: I think this just means void, but test
-                        if (expr.getType().isSubtypeOf(MatcherHelper.getTypeReference(FlowSession.class))) {
+                        if (analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(expr.getType())
+                                .isSubtypeOf(MatcherHelper.getTypeReference(FlowSession.class))) {
                             addToMapIfNoException(methodInvocation.callerSessionNameToCalleeSessionName, inv, i);
                             //todo: how to handle methods here?
-                        } else if (expr.getType().isSubtypeOf(MatcherHelper.getTypeReference(FlowLogic.class))) {
+                        } else if (analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(expr.getType())
+                                .isSubtypeOf(MatcherHelper.getTypeReference(FlowLogic.class))) {
                             addToMapIfNoException(methodInvocation.callerFlowNameToCalleeFlowName, inv, i);
                             //todo: how to handle methods here?
                         }

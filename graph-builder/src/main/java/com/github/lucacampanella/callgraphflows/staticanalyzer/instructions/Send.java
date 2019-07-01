@@ -35,7 +35,9 @@ public class Send extends InstructionStatement implements StatementWithCompanion
             invocation = (CtInvocation) MatcherHelper.getFirstMatchedExpression(statement,
                     "sendWithBoolMatcher");
         }
-        send.sentType = ((CtTypedElement) invocation.getArguments().get(0)).getType().box().getSimpleName();
+        send.sentType = analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(
+                (((CtTypedElement) invocation.getArguments().get(0))).getType())
+                .box().getSimpleName();
 
         send.targetSessionName = Optional.ofNullable(invocation.getTarget().toString());
 

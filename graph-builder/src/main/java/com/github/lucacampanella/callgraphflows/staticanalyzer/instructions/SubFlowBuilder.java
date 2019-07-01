@@ -117,15 +117,17 @@ public class SubFlowBuilder {
             Object firstArgument = invocation.getArguments().get(0);
             if(firstArgument instanceof CtAbstractInvocation) {
 
-                subFlowInfo.subFlowType = ((CtAbstractInvocation) firstArgument).getExecutable().getType();
+                subFlowInfo.subFlowType = analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(
+                        ((CtAbstractInvocation) firstArgument).getExecutable().getType());
 
                 //this works if the subflow is created with a "new" in the subFlow invocation itself, otherwise it doesn't
                 //if it doesn't a more profound search must be done, looking for which flow is passed and what
                 //session this passed flow references
-                subFlowInfo.targetSessionName =  StaticAnalyzerUtils.findTargetSessionName(statement);
+                subFlowInfo.targetSessionName =  StaticAnalyzerUtils.findTargetSessionName(statement, analyzer);
             }
             else if(firstArgument instanceof CtVariableRead) {
-                subFlowInfo.subFlowType = ((CtVariableRead) firstArgument).getVariable().getType();
+                subFlowInfo.subFlowType = analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(
+                        ((CtVariableRead) firstArgument).getVariable().getType());
                 subFlowInfo.subFlowVariableName = Optional.ofNullable(((CtVariableRead) firstArgument).getVariable().getSimpleName());
 
             }

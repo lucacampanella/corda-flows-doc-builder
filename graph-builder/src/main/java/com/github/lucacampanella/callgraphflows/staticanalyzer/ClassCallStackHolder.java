@@ -1,12 +1,18 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
+import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import spoon.reflect.code.CtAbstractInvocation;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.code.CtThisAccess;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtMethod;
+import spoon.reflect.declaration.CtType;
+import spoon.reflect.declaration.CtTypedElement;
+import spoon.reflect.reference.CtTypeParameterReference;
 import spoon.reflect.reference.CtTypeReference;
+import spoon.support.reflect.declaration.CtConstructorImpl;
 
 import java.util.*;
 
@@ -14,21 +20,23 @@ public class ClassCallStackHolder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClassCallStackHolder.class);
 
-    private List<CtClass<?>> classStack = new ArrayList<>(1);
+    private List<CtTypeReference<?>> classStack = new ArrayList<>(1);
+    private Map<CtClass, Map<String, CtTypeReference>> classToGenericsMapMap = new HashMap<>();
+    //maps each class to a map containing the link between the generics name and the actual type declared by subclasses
 
     public static ClassCallStackHolder fromCtClass(CtClass klass) {
         ClassCallStackHolder classCallStackHolder = new ClassCallStackHolder();
 
-        classCallStackHolder.classStack.add(klass);
+        classCallStackHolder.classStack.add(klass.getReference());
+
         CtTypeReference<?> superclassRef = klass.getSuperclass();
         while(superclassRef != null && !superclassRef.getQualifiedName().startsWith("net.corda")) {
-            CtClass curr = (CtClass) superclassRef.getTypeDeclaration();
-            if(curr == null) {
+            if(superclassRef.getTypeDeclaration() == null) {
                 break;
             }
-            classCallStackHolder.classStack.add(curr);
+            classCallStackHolder.classStack.add(superclassRef);
 
-            superclassRef = curr.getSuperclass();
+            superclassRef = superclassRef.getSuperclass();
         }
 
         return classCallStackHolder;
@@ -44,7 +52,8 @@ public class ClassCallStackHolder {
 
         CtClass callerClass = StaticAnalyzerUtils.getLowerContainingClass(inv);
 
-        for(CtClass<?> curr : classStack) {
+        for(CtTypeReference<?> currRef : classStack) {
+            final CtClass<?> curr = (CtClass<?>) currRef.getDeclaration();
             if (curr == callerClass)
             //we arrived at the class calling the method without finding an implementation lower in the class stack
             //this means the method is implemented here for the first time
@@ -66,7 +75,30 @@ public class ClassCallStackHolder {
         return correspondingMethod;
     }
 
-    public List<CtClass<?>> getClassStack() {
+    public CtTypeReference resolveEventualGenerics(CtTypeReference elem) {
+        if(elem instanceof CtTypeParameterReference) { //is a generics
+            CtTypeParameterReference typeParameterRef = (CtTypeParameterReference) elem;
+            //klass.getSuperclass().getActualTypeArguments().get(0).getTypeParameterDeclaration()
+            for(CtTypeReference currRef : classStack) {
+                final List<CtTypeReference<?>> actualTypeArguments = currRef.getActualTypeArguments();
+                for(CtTypeReference actualTypeArg : actualTypeArguments) {
+                    if(actualTypeArg.getTypeParameterDeclaration().equals(typeParameterRef.getDeclaration())) {
+                        return resolveEventualGenerics(actualTypeArg);
+                    }
+                }
+            }
+        }
+        else if(elem.isSubtypeOf(MatcherHelper.getTypeReference(Class.class))) {
+            final List<CtTypeReference<?>> typeArgs = elem.getActualTypeArguments();
+            if(typeArgs != null && !typeArgs.isEmpty()) {
+                return resolveEventualGenerics(typeArgs.get(0));
+            }
+        }
+        //is not a generics
+        return elem;
+    }
+
+    public List<CtTypeReference<?>> getClassStack() {
         return classStack;
     }
 }

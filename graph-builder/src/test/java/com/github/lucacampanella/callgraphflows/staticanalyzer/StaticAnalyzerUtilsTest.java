@@ -42,15 +42,17 @@ public class StaticAnalyzerUtilsTest {
 
     @Test
     void findTargetSessionName() throws FileNotFoundException {
-        final CtClass ctClass = TestUtils.fromClassToCtClass(InitiatorBaseFlow.class);
+        final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(TestUtils.fromClassSrcToPath(InitiatorBaseFlow.class));
+        final CtClass ctClass = analyzer.getClass(InitiatorBaseFlow.class);
+        analyzer.setCurrentAnalyzingClass(ctClass);
         final CtMethod callMethod = StaticAnalyzerUtils.findCallMethod(ctClass);
 
         final CtStatement nonContainingStatement = callMethod.getBody().getStatements().get(0);//FlowSession session = initiateFlow(otherParty);
-        final Optional<String> emptyTargetSessionName = StaticAnalyzerUtils.findTargetSessionName(nonContainingStatement);
+        final Optional<String> emptyTargetSessionName = StaticAnalyzerUtils.findTargetSessionName(nonContainingStatement, analyzer);
         assertThat(emptyTargetSessionName).isEqualTo(Optional.empty());
 
         final CtStatement containingStatement = callMethod.getBody().getStatements().get(1);//realCallMethod(session);
-        final Optional<String> targetSessionName = StaticAnalyzerUtils.findTargetSessionName(containingStatement);
+        final Optional<String> targetSessionName = StaticAnalyzerUtils.findTargetSessionName(containingStatement, analyzer);
         assertThat(targetSessionName.get()).isEqualTo("session");
     }
 
