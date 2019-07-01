@@ -1,5 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
+import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.InitiatingSubFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.StatementInterface;
 
 public class AnalysisResult {
@@ -42,17 +43,21 @@ public class AnalysisResult {
             CombinationsHolder counterpartyAllCombinations =
                     CombinationsHolder.fromBranch(counterpartyClassResult.getStatements());
 
-            return allCombinations.hasOneMatchWith(allCombinations);
+            return allCombinations.hasOneMatchWith(counterpartyAllCombinations);
         }
         else {
             for(StatementInterface stmt : statements) {
                 if(stmt.isSendOrReceive()) {
                     return false;
                 }
-                //todo
+                if(stmt instanceof InitiatingSubFlow) {
+                    if(!((InitiatingSubFlow) stmt).containsValidProtocol()) {
+                        return false;
+                    }
+                }
             }
+            return true;
         }
-        return false;
     }
 
     public ClassDescriptionContainer getClassDescription() {

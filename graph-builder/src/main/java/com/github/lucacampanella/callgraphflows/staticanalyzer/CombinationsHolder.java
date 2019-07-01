@@ -28,6 +28,10 @@ public class CombinationsHolder {
         allCombinations.forEach(branch -> branch.add(statement));
     }
 
+    public void appendToAllCombinations(Branch statements) {
+        allCombinations.forEach(branch -> branch.add(statements));
+    }
+
     public void combineWithBranch(Branch branch) {
         combineWith(fromBranch(branch));
     }
@@ -65,7 +69,7 @@ public class CombinationsHolder {
                 holder.combineWithBranch(flatInternalInvocations);
             }
             if(instr instanceof InitiatingSubFlow) {
-                holder.combineWithBranch(((InitiatingSubFlow) instr).getInstructionsForCombinations());
+                holder.appendToAllCombinations(((InitiatingSubFlow) instr).getInstructionsForCombinations());
             } else {
                 holder.appendToAllCombinations(instr);
             }
@@ -114,8 +118,14 @@ public class CombinationsHolder {
         int i = 0;
 
         while(!initiatingQueue.isEmpty() || !initiatedQueue.isEmpty()) {
-            StatementInterface instrLeft = StaticAnalyzerUtils.consumeUntilBlockingOrBranch(initiatingQueue);
-            StatementInterface instrRight = StaticAnalyzerUtils.consumeUntilBlockingOrBranch(initiatedQueue);
+            StatementInterface instrLeft = null;
+            StatementInterface instrRight = null;
+            try {
+                instrLeft = StaticAnalyzerUtils.consumeUntilBlockingOrBranch(initiatingQueue);
+                instrRight = StaticAnalyzerUtils.consumeUntilBlockingOrBranch(initiatedQueue);
+            } catch (StaticAnalyzerUtils.WrongFlowLogicInSubflowException e) {
+                LOGGER.error(e.getMessage());
+            }
             if (instrLeft == null && instrRight == null) {
                 return true;
             }

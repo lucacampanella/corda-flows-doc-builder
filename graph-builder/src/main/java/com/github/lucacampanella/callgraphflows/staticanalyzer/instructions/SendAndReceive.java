@@ -45,19 +45,19 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
                 CtTypeAccess fieldRead = (CtTypeAccess) ((CtFieldRead) (firstArgument)).getTarget();
                 sendAndReceive.receivedType = analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(
                         fieldRead.getAccessedType())
-                        .box().getSimpleName();
+                        .box().toString();
             }
             else if(firstArgument instanceof CtLambda) {
                 invocation = (CtInvocation) invocation.getTarget();
                 //receivedType = invocation.getArguments().get(0).getTarget().getAccessedType()
                 sendAndReceive.receivedType = analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(
                         (((CtTypeAccess) ((CtFieldRead) (invocation.getArguments().get(0))).getTarget()).getAccessedType()))
-                        .box().getSimpleName();
+                        .box().toString();
             }
 
         final CtTypeReference secondArgument = ((CtTypedElement) invocation.getArguments().get(1)).getType();
         sendAndReceive.sentType = analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(secondArgument)
-                .box().getSimpleName();
+                .box().toString();
 
         sendAndReceive.targetSessionName = Optional.ofNullable(invocation.getTarget().toString());
 
@@ -70,7 +70,7 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
     public boolean acceptCompanion(StatementWithCompanionInterface companion) {
         boolean accepted = false;
 
-        if(isSentConsumed) { // we treat it as a send
+        if(!isSentConsumed) { // we treat it as a send
             accepted = Send.isAccepted(companion, accepted, sentType);
             isSentConsumed = true;
         }

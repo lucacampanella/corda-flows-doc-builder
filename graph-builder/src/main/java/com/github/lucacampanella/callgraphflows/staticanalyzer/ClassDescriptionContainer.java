@@ -70,4 +70,18 @@ public class ClassDescriptionContainer {
     public String getNameWithParent() {
         return hasContainingClass() ? containingClassName + "$" + simpleName : simpleName;
     }
+
+    @Override
+    public boolean equals(Object classDescriptionContainer) {
+        if(classDescriptionContainer instanceof ClassDescriptionContainer) {
+            return ((ClassDescriptionContainer) classDescriptionContainer).getFullyQualifiedName()
+                    .equals(getFullyQualifiedName());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getFullyQualifiedName().hashCode();
+    }
 }

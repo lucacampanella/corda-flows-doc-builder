@@ -39,13 +39,16 @@ public class Receive extends InstructionStatement implements StatementWithCompan
         //maybe there is a more rubust way to do this, for example with a while
         if(firstArgument instanceof CtFieldRead) {
             CtTypeAccess fieldRead = (CtTypeAccess) ((CtFieldRead) (firstArgument)).getTarget();
-            receive.receivedType = fieldRead.getAccessedType().box().getSimpleName();
+            receive.receivedType = analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(
+                    fieldRead.getAccessedType())
+                    .box().toString();
         }
         else if(firstArgument instanceof CtLambda) {
             invocation = (CtInvocation) invocation.getTarget();
             //receivedType = invocation.getArguments().get(0).getTarget().getAccessedType()
-            receive.receivedType = ((CtTypeAccess) ((CtFieldRead) (invocation.getArguments().get(0))).getTarget())
-                    .getAccessedType().box().getSimpleName();
+            receive.receivedType = analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(
+                    ((CtTypeAccess) ((CtFieldRead) (invocation.getArguments().get(0))).getTarget()).getAccessedType())
+                    .box().toString();
         }
         else if(firstArgument instanceof CtAbstractInvocation) {
             receive.receivedType = analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(

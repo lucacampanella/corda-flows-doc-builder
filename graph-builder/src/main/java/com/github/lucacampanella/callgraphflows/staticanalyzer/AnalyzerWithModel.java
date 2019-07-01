@@ -31,6 +31,8 @@ public class AnalyzerWithModel {
     protected String analysisName;
     protected ClassCallStackHolder currClassCallStackHolder = null;
 
+    private Map<CtClass, AnalysisResult> classToAnalysisResultMap = new HashMap<>();
+
     public CtModel getModel() {
         return model;
     }
@@ -45,41 +47,47 @@ public class AnalyzerWithModel {
 
 
     public AnalysisResult analyzeFlowLogicClass(CtClass klass) throws AnalysisErrorException {
-        LOGGER.info("*** analyzing sub-class {}", klass.getQualifiedName());
-        final CtMethod callMethod = StaticAnalyzerUtils.findCallMethod(klass);
-        if(callMethod == null) {
-            throw new AnalysisErrorException(klass, "No call method found");
+        if(classToAnalysisResultMap.containsKey(klass)) {
+            LOGGER.info("*** class {} already analyzed, using cached result", klass.getQualifiedName());
+            return classToAnalysisResultMap.get(klass);
         }
-        if(callMethod.isAbstract()) {
-            String exMessage = "Found only an abstract call method";
-            if(callMethod.getParent() instanceof CtClass) {
-                exMessage += " in class " + ((CtClass) (callMethod).getParent()).getQualifiedName();
+        else {
+            LOGGER.info("*** analyzing class {}", klass.getQualifiedName());
+            final CtMethod callMethod = StaticAnalyzerUtils.findCallMethod(klass);
+            if (callMethod == null) {
+                throw new AnalysisErrorException(klass, "No call method found");
             }
-            throw new AnalysisErrorException(klass, exMessage);
-        }
-
-        setCurrentAnalyzingClass(klass);
-
-        AnalysisResult res = new AnalysisResult(ClassDescriptionContainer.fromClass(klass));
-
-        final Branch interestingStatements = MatcherHelper.fromCtStatementsToStatements(
-                callMethod.getBody().getStatements(), this);
-        res.setStatements(interestingStatements);
-
-        //is it only a "container" flow with no initiating call or also calls initiateFlow(...)?
-        final boolean isInitiatingFlow =
-                interestingStatements.getInitiateFlowStatementAtThisLevel().isPresent();
-
-        LOGGER.debug("Contains initiate call? {}", isInitiatingFlow);
-        if(isInitiatingFlow) {
-            CtClass initiatedFlowClass = getDeeperClassInitiatedBy(klass);
-
-            if(initiatedFlowClass != null) {
-                res.setCounterpartyClassResult(analyzeFlowLogicClass(initiatedFlowClass));
+            if (callMethod.isAbstract()) {
+                String exMessage = "Found only an abstract call method";
+                if (callMethod.getParent() instanceof CtClass) {
+                    exMessage += " in class " + ((CtClass) (callMethod).getParent()).getQualifiedName();
+                }
+                throw new AnalysisErrorException(klass, exMessage);
             }
-        }
 
-        return res;
+            setCurrentAnalyzingClass(klass);
+
+            AnalysisResult res = new AnalysisResult(ClassDescriptionContainer.fromClass(klass));
+
+            final Branch interestingStatements = MatcherHelper.fromCtStatementsToStatements(
+                    callMethod.getBody().getStatements(), this);
+            res.setStatements(interestingStatements);
+
+            //is it only a "container" flow with no initiating call or also calls initiateFlow(...)?
+            final boolean isInitiatingFlow =
+                    interestingStatements.getInitiateFlowStatementAtThisLevel().isPresent();
+
+            LOGGER.debug("Contains initiate call? {}", isInitiatingFlow);
+            if (isInitiatingFlow) {
+                CtClass initiatedFlowClass = getDeeperClassInitiatedBy(klass);
+
+                if (initiatedFlowClass != null) {
+                    res.setCounterpartyClassResult(analyzeFlowLogicClass(initiatedFlowClass));
+                }
+            }
+            classToAnalysisResultMap.put(klass, res);
+            return res;
+        }
     }
 
     public void setCurrentAnalyzingClass(CtClass<?> klass) {

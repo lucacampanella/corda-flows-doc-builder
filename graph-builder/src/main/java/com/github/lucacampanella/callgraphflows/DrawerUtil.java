@@ -61,6 +61,9 @@ public final class DrawerUtil {
             return;
         }
 
+        LOGGER.error("Flow logic analysis: class {} contains valid flow logic? {}", klass.getQualifiedName(),
+                analysisResult.containsValidProtocol()); //todo: expensive operation
+
         drawFromAnalysis(analysisResult, outPath);
     }
 
