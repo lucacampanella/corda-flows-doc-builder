@@ -1,6 +1,5 @@
 package com.github.lucacampanella.callgraphflows.graphics.components;
 
-import com.github.lucacampanella.callgraphflows.graphics.utils.GUtils;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
 import java.awt.*;
@@ -20,20 +19,52 @@ public class GSubFlowWithCounterparty extends GBaseGraphicComponent {
 
     @Override
     public void draw(SVGGraphics2D g2) {
+//        mainSubFlow.setStart(getStartX(), getStartY());
+//        mainSubFlow.draw(g2);
+//        if(hasCounterpartySubFlow()) {
+//            int counterpartyStartX = getStartX() + mainSubFlow.getDimensions(g2).width + SPACE_BETWEEN_FLOWS;
+//            int counterpartyStartY = initiateFlowInstruction.getMiddleY(g2);
+//
+//            counterpartySubFlow.setStart(counterpartyStartX, counterpartyStartY);
+//            counterpartySubFlow.draw(g2);
+//            int arrowBetweenFlowY = initiateFlowInstruction.getMiddleY(g2);
+//            int arrowBetweenFlowStartX = initiateFlowInstruction.getRightBorder(g2);
+//            int arrowBetweenFlowFinishX = counterpartyStartX + GSubFlow.WIDTH
+//                    - GSubFlow.INDENTATION-1;
+//            g2.drawLine(arrowBetweenFlowStartX, arrowBetweenFlowY, arrowBetweenFlowFinishX, arrowBetweenFlowY);
+//        }
         mainSubFlow.setStart(getStartX(), getStartY());
-        mainSubFlow.draw(g2);
-        if(hasCounterpartySubFlow()) {
+        if(!hasCounterpartySubFlow()) {
+            mainSubFlow.draw(g2);
+        }
+        else {
             int counterpartyStartX = getStartX() + mainSubFlow.getDimensions(g2).width + SPACE_BETWEEN_FLOWS;
-            int counterpartyStartY = initiateFlowInstruction.getMiddleY(g2);
+            int counterpartyStartY = getStartY();//initiateFlowInstruction.getMiddleY(g2);
 
             counterpartySubFlow.setStart(counterpartyStartX, counterpartyStartY);
-            counterpartySubFlow.draw(g2);
-            int arrowBetweenFlowY = initiateFlowInstruction.getMiddleY(g2);
-            int arrowBetweenFlowStartX = initiateFlowInstruction.getRightBorder(g2);
-            int arrowBetweenFlowFinishX = counterpartyStartX + GSubFlow.WIDTH
-                    - GSubFlow.INDENTATION-1;
-            g2.drawLine(arrowBetweenFlowStartX, arrowBetweenFlowY, arrowBetweenFlowFinishX, arrowBetweenFlowY);
+            GBaseGraphicComponent blockingLeft = mainSubFlow.drawAndConsumeUntilBlocking(g2);
+            GBaseGraphicComponent blockingRight = counterpartySubFlow.drawAndConsumeUntilBlocking(g2);
+            while(blockingLeft != null && blockingRight != null) {
+                if(blockingLeft.isBrotherWith(blockingRight)) {
+                    int currY = Math.max(mainSubFlow.getCurrY(), counterpartySubFlow.getCurrY());
+                    mainSubFlow.setCurrY(currY);
+                    counterpartySubFlow.setCurrY(currY);
+                    blockingLeft = mainSubFlow.drawAndConsumeUntilBlocking(g2);
+                    blockingRight = counterpartySubFlow.drawAndConsumeUntilBlocking(g2);
+                }
+                else {
+                    blockingLeft = mainSubFlow.drawAndConsumeUntilBlocking(g2);
+                }
+            }
+            //finish in case they where not aligned
+            while(blockingLeft != null) {
+                blockingLeft = mainSubFlow.drawAndConsumeUntilBlocking(g2);
+            }
+            while(blockingRight != null) {
+                blockingRight = mainSubFlow.drawAndConsumeUntilBlocking(g2);
+            }
         }
+
         drawBrothersAndLinks(g2); //need to anticipate here, otherwise if this flow with counterparty is used
         //again only the last usage will have links
     }
@@ -107,5 +138,11 @@ public class GSubFlowWithCounterparty extends GBaseGraphicComponent {
         if(hasCounterpartySubFlow()) {
             counterpartySubFlow.drawBrothersAndLinks(g2);
         }
+    }
+
+    @Override
+    public GBaseGraphicComponent drawAndConsumeUntilBlocking(SVGGraphics2D g2) {
+        draw(g2);
+        return null;
     }
 }

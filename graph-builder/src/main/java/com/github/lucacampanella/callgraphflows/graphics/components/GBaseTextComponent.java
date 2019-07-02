@@ -100,4 +100,19 @@ public class GBaseTextComponent extends GBaseGraphicComponent {
     public void setBackgroundColor(Color backgroundColor) {
         this.backgroundColor = backgroundColor;
     }
+
+    public void setCurrY(int currY) {
+        super.setCurrY(currY);
+        super.setStartY(currY);
+    }
+
+    public GBaseGraphicComponent drawAndConsumeUntilBlocking(SVGGraphics2D g2) {
+        if(hasAnyBrother() && !isAlreadyReturned()) {
+            setAlreadyReturned(true);
+            return this;
+        }
+        draw(g2);
+        resetDrawingInfo();
+        return null;
+    }
 }

@@ -18,11 +18,36 @@ public abstract class GBaseGraphicComponent {
     boolean recomputeDimensions = true;
     Dimension dimension = null;
     protected Set<GBaseGraphicComponent> brothers = new HashSet<>();
+    protected Set<GBaseGraphicComponent> enteringBrothers = new HashSet<>();
     protected Set<GBaseGraphicComponent> links = new HashSet<>();
     private int startX = 0;
+    private int currY = 0;
     private int startY = 0;
     private PreferencesInterface pref = DefaultPreferences.getInstance();
 
+    private boolean alreadyReturned = false;
+
+    public boolean isAlreadyReturned() {
+        return alreadyReturned;
+    }
+
+    public void setAlreadyReturned(boolean alreadyReturned) {
+        this.alreadyReturned = alreadyReturned;
+    }
+
+    public void resetDrawingInfo() {
+        startX = 0;
+        startY = 0;
+        alreadyReturned = false;
+    }
+
+    public int getCurrY() {
+        return currY;
+    }
+
+    public void setCurrY(int currY) {
+        this.currY = currY;
+    }
 
     public abstract void draw(SVGGraphics2D g2);
 
@@ -91,6 +116,11 @@ public abstract class GBaseGraphicComponent {
 
     public void addBrother(GBaseGraphicComponent brother) {
         brothers.add(brother);
+        brother.addEnteringBrother(this);
+    }
+
+    public void addEnteringBrother(GBaseGraphicComponent brother) {
+        enteringBrothers.add(brother);
     }
 
     public void addLink(GBaseGraphicComponent link) {
@@ -98,8 +128,17 @@ public abstract class GBaseGraphicComponent {
     }
 
     public void setStart(int startX, int startY) {
+        setStartX(startX);
+        setStartY(startY);
+    }
+
+    public void setStartX(int startX) {
         this.startX = startX;
+    }
+
+    public void setStartY(int startY) {
         this.startY = startY;
+        this.currY = startY;
     }
 
     public int getStartX() {
@@ -134,4 +173,30 @@ public abstract class GBaseGraphicComponent {
     public void setPref(PreferencesInterface pref) {
         this.pref = pref;
     }
+
+    public boolean hasBrothers() {
+        return !brothers.isEmpty();
+    }
+
+    public boolean hasEnteringBrothers() {
+        return !enteringBrothers.isEmpty();
+    }
+
+    public boolean hasAnyBrother() {
+        return hasBrothers() || hasEnteringBrothers();
+    }
+
+    public boolean hasAsBrother(GBaseGraphicComponent brother) {
+        return brothers.contains(brother);
+    }
+
+    public boolean isBrotherWith(GBaseGraphicComponent brother) {
+        return brothers.contains(brother) || brother.hasAsBrother(this);
+    }
+
+    public boolean isContainerComponent() {
+        return false;
+    }
+
+    public abstract GBaseGraphicComponent drawAndConsumeUntilBlocking(SVGGraphics2D g2);
 }

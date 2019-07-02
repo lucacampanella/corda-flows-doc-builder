@@ -17,6 +17,14 @@ public class GIfElse extends GBaseGraphicComponent {
 
     private final List<GConditionalBranch> blocks = new ArrayList<>();
 
+    private int currBlockIndex = 0;
+
+    @Override
+    public void resetDrawingInfo() {
+        super.resetDrawingInfo();
+        currBlockIndex = 0;
+    }
+
     public void addBlock(GBaseTextComponent condition, Branch branch) {
         GConditionalBranch block = new GConditionalBranch(condition);
         block.setParent(this);
@@ -57,5 +65,24 @@ public class GIfElse extends GBaseGraphicComponent {
     public void drawBrothersAndLinks(SVGGraphics2D g2) {
         super.drawBrothersAndLinks(g2);
         blocks.forEach(comp -> comp.drawBrothersAndLinks(g2));
+    }
+
+    @Override
+    public void setStartX(int startX) {
+        super.setStartX(startX);
+        blocks.forEach(block -> block.setStartX(startX));
+    }
+
+    @Override
+    public GBaseGraphicComponent drawAndConsumeUntilBlocking(SVGGraphics2D g2) {
+        for(; currBlockIndex < blocks.size(); ++currBlockIndex) {
+            final GConditionalBranch currBlock = blocks.get(currBlockIndex);
+            currBlock.setCurrY(getCurrY());
+            final GBaseGraphicComponent currBlockRes = currBlock.drawAndConsumeUntilBlocking(g2);
+            if(currBlockRes != null) {
+                return currBlockRes;
+            }
+        }
+        return null;
     }
 }
