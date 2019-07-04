@@ -80,8 +80,8 @@ public class GGraphBuilder {
     public void drawToFile(String path) throws IOException {
 
         SVGGraphics2D g2 = new SVGGraphics2D(10000, 10000);
-        int width = gTwoSidedContainerWithTitles.getWidth(g2);
-        int height = gTwoSidedContainerWithTitles.getHeight(g2);
+        int width = gTwoSidedContainerWithTitles.getWidth(g2) + 2*BORDER;
+        int height = gTwoSidedContainerWithTitles.getHeight(g2) + 2*BORDER;
 
         LOGGER.info("{}", gTwoSidedContainerWithTitles);
 
@@ -90,7 +90,10 @@ public class GGraphBuilder {
         g2 = new SVGGraphics2D(width, height);
         GUtils.fillWithColor(g2, new Rectangle(0,0,width, height), Color.WHITE);
 
-        gTwoSidedContainerWithTitles.draw(g2, 0,0);
+        gTwoSidedContainerWithTitles.draw(g2, BORDER,BORDER);
+        g2.drawLine(0, BORDER,
+                        BORDER + GSubFlowIndented.WIDTH/2,
+                        BORDER);
 
         String svgElement = g2.getSVGElement();
 

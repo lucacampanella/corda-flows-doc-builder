@@ -70,7 +70,8 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
         int arrowRightBorderX = x + WIDTH + WIDTH/2;
 
         int rectStart = y;
-        int rectHeight = height;
+        int rectEnd = y + height;
+        //int rectHeight = height;
 
         if(enteringArrowText != null) {
             int startArrowY = y + enteringArrowText.getY();
@@ -84,14 +85,16 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
 
             enteringArrowText.drawRelative(g2, arrowRightBorderX + INDENTATION/2, y);
 
-            rectStart = startArrowY + SPACE_BETWEEN_COMPONENTS;
-            height -= verticalHeight + SPACE_BETWEEN_COMPONENTS;
+            rectStart = startArrowY  + verticalHeight - SPACE_BETWEEN_COMPONENTS;
+//            rectHeight -= enteringArrowText.getY();
+//            rectHeight += SPACE_BETWEEN_COMPONENTS;
         }
 
         if(exitingArrowText != null) {
-            rectHeight -= exitingArrowText.getComp().getHeight(g2) + SPACE_BETWEEN_COMPONENTS;
+            rectEnd -= exitingArrowText.getComp().getHeight(g2);
+            rectEnd += SPACE_BETWEEN_COMPONENTS;
         }
-        final Rectangle rect = new Rectangle(x, rectStart, WIDTH, rectHeight);
+        final Rectangle rect = new Rectangle(x, rectStart, WIDTH, rectEnd-rectStart);
 
         GUtils.fillWithColor(g2, rect, getAwtColor());
         g2.draw(rect);
@@ -100,8 +103,24 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
 //            enteringArrowText.drawRelative(g2, x, y);
 //        }
         components.forEach(comp -> comp.drawRelative(g2, x + INDENTATION, y));
+//        if(exitingArrowText != null) {
+//            exitingArrowText.drawRelative(g2, x, y);
+//        }
+
         if(exitingArrowText != null) {
-            exitingArrowText.drawRelative(g2, x, y);
+            int startArrowY = y + exitingArrowText.getY();
+            int verticalHeight = exitingArrowText.getComp().getHeight(g2);
+
+            g2.draw(new Line2D.Double((double) (x) + WIDTH, startArrowY,
+                    arrowRightBorderX, startArrowY));
+            g2.draw(new Line2D.Double(arrowRightBorderX, startArrowY, arrowRightBorderX,
+                    (double) (startArrowY) + verticalHeight));
+
+            GUtils.drawArrow(g2, new Line2D.Double(arrowRightBorderX, (double) (startArrowY) + verticalHeight,
+                    parentRightBorderX, (double) (startArrowY) + verticalHeight));
+
+
+            exitingArrowText.drawRelative(g2, arrowRightBorderX + INDENTATION/2, y);
         }
     }
 
@@ -170,7 +189,7 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
                         "the entering arrow");
             }
             enteringArrowText.setY(lastCompWithNewY.getY());
-            currY = lastCompWithNewY.getY();
+            currY = lastCompWithNewY.getY() + enteringArrowText.getComp().getHeight(g2);
             currCompIndex = 0;
         }
 
@@ -205,9 +224,9 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
 //        if(!components.isEmpty()) {
 //            currY += components.get(components.size()-1).getComp().getHeight(g2);
 //        }
+        currY += SPACE_BETWEEN_COMPONENTS;
         //if we arrive here it means we have finished all components
         if(exitingArrowText != null) {
-            currY += SPACE_BETWEEN_COMPONENTS;
             if(exitingArrowText.getComp().hasAnyBrother()) {
                 if(lastCompWithNewY.getComp() == exitingArrowText.getComp()) {
                     currY = exitingArrowText.getY() + exitingArrowText.getComp().getHeight(g2);
@@ -222,7 +241,6 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
                 currY += exitingArrowText.getComp().getHeight(g2);
             }
         }
-
         height = currY;
         resetDrawingInfo();
         return null;
@@ -353,13 +371,13 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
     protected int computeWidth(SVGGraphics2D g2) {
         int maxWidth = 0;
         if(enteringArrowText != null) {
-            maxWidth = Math.max(maxWidth, enteringArrowText.getComp().getWidth(g2)); //todo
+            maxWidth = Math.max(maxWidth, enteringArrowText.getComp().getWidth(g2) + WIDTH + WIDTH/2); //todo
         }
         for (ComponentWithRelativeY comp : components) {
             maxWidth = Math.max(maxWidth, comp.getComp().getWidth(g2) + INDENTATION);
         }
         if(exitingArrowText != null) {
-            maxWidth = Math.max(maxWidth, exitingArrowText.getComp().getWidth(g2));
+            maxWidth = Math.max(maxWidth, exitingArrowText.getComp().getWidth(g2) + WIDTH + WIDTH/2);
         }
         return maxWidth;
     }

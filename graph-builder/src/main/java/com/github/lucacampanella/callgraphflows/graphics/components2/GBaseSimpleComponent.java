@@ -1,10 +1,10 @@
 package com.github.lucacampanella.callgraphflows.graphics.components2;
 
 
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseGraphicComponent;
 import com.github.lucacampanella.callgraphflows.graphics.utils.GUtils;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
+import java.awt.*;
 import java.awt.geom.Line2D;
 import java.util.HashSet;
 import java.util.Set;
@@ -70,14 +70,14 @@ public abstract class GBaseSimpleComponent extends GBaseComponent {
     @Override
     public void drawBrothersAndLinks(SVGGraphics2D g2) {
         if(brother != null) {
-            drawHorizontalArrowFromFirstToSecond(g2, this, brother);
+            drawLinkArrowFromFirstToSecond(g2, this, brother);
         }
-        links.forEach(link -> drawHorizontalArrowFromFirstToSecond(g2, this, link));
+        links.forEach(link -> drawLinkArrowFromFirstToSecond(g2, this, link));
     }
 
-    private static void drawHorizontalArrowFromFirstToSecond(SVGGraphics2D g2,
-                                                             GBaseSimpleComponent first,
-                                                             GBaseSimpleComponent second) {
+    private static void drawLinkArrowFromFirstToSecond(SVGGraphics2D g2,
+                                                       GBaseSimpleComponent first,
+                                                       GBaseSimpleComponent second) {
         int firstMiddleX = first.lastDrawnStartX + (first.getWidth(g2)/2);
         int secondMiddleX = second.lastDrawnStartX + (second.getWidth(g2)/2);
         int firstMiddleY = first.lastDrawnStartY + (first.getHeight(g2)/2);
@@ -92,7 +92,17 @@ public abstract class GBaseSimpleComponent extends GBaseComponent {
             firstX = first.lastDrawnStartX;
             secondX = second.lastDrawnStartX + second.getWidth(g2);
         }
+        Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
 
-        GUtils.drawArrow(g2, new Line2D.Double(firstX, firstMiddleY, secondX, secondMiddleY));
+        GUtils.drawArrowWithOptions(g2, new Line2D.Double(firstX, firstMiddleY, secondX, secondMiddleY),
+                Color.GRAY, dashed);
+    }
+
+    public int getLastDrawnStartX() {
+        return lastDrawnStartX;
+    }
+
+    public int getLastDrawnStartY() {
+        return lastDrawnStartY;
     }
 }

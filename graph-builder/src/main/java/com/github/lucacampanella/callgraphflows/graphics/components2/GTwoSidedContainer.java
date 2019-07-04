@@ -1,9 +1,5 @@
 package com.github.lucacampanella.callgraphflows.graphics.components2;
 
-
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
-import com.github.lucacampanella.callgraphflows.graphics.components.GIndentedComponent;
-import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlow;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
 public abstract class GTwoSidedContainer extends GBaseComponent {
@@ -32,11 +28,13 @@ public abstract class GTwoSidedContainer extends GBaseComponent {
             counterpartySubFlow.draw(g2, counterpartyStartX,y + counterpartyStartY);
 //todo arrow between the two
 
-//            int arrowBetweenFlowY = initiateFlowInstruction.getMiddleY(g2);
-//            int arrowBetweenFlowStartX = initiateFlowInstruction.getRightBorder(g2);
-//            int arrowBetweenFlowFinishX = counterpartyStartX + GSubFlow.WIDTH
-//                    - GSubFlow.INDENTATION-1;
-//            g2.drawLine(arrowBetweenFlowStartX, arrowBetweenFlowY, arrowBetweenFlowFinishX, arrowBetweenFlowY);
+            int arrowBetweenFlowY = initiateFlowInstruction.getLastDrawnStartY() +
+                    (initiateFlowInstruction.getHeight(g2)/2);
+            int arrowBetweenFlowStartX = initiateFlowInstruction.getLastDrawnStartX() +
+                    initiateFlowInstruction.getWidth(g2);
+            int arrowBetweenFlowFinishX = counterpartyStartX + GSubFlowIndented.WIDTH
+                    - GSubFlowIndented.INDENTATION-1;
+            g2.drawLine(arrowBetweenFlowStartX, arrowBetweenFlowY, arrowBetweenFlowFinishX, arrowBetweenFlowY);
         }
         mainSubFlow.drawBrothersAndLinks(g2);
         if(hasCounterpartySubFlow()) {

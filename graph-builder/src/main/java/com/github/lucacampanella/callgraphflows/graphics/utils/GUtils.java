@@ -16,9 +16,14 @@ public class GUtils {
         //hides public constructor
     }
 
-    public static void drawArrow(Graphics2D g2d, Line2D.Double line) {
-        drawArrowLine(g2d, (int) line.x1, (int) line.y1, (int) line.x2, (int) line.y2, 7, 4);
+    public static void drawArrow(SVGGraphics2D g2d, Line2D.Double line) {
+        drawArrowLine(g2d, (int) line.x1, (int) line.y1, (int) line.x2, (int) line.y2, 7, 4, null, null);
     }
+
+    public static void drawArrowWithOptions(SVGGraphics2D g2d, Line2D.Double line, Color color, Stroke stroke) {
+        drawArrowLine(g2d, (int) line.x1, (int) line.y1, (int) line.x2, (int) line.y2, 7, 4, color, stroke);
+    }
+
 
     public static void drawHorizontalArrowFromFirstToSecond(SVGGraphics2D g2d, GBaseGraphicComponent first, GBaseGraphicComponent second) {
         int firstX;
@@ -45,7 +50,7 @@ public class GUtils {
      * @param d  the width of the arrow.
      * @param h  the height of the arrow.
      */
-    private static void drawArrowLine(Graphics g, int x1, int y1, int x2, int y2, int d, int h) {
+    private static void drawArrowLine(SVGGraphics2D g, int x1, int y1, int x2, int y2, int d, int h, Color color, Stroke stroke) {
         int dx = x2 - x1;
         int dy = y2 - y1;
         double f = Math.sqrt((double) (dx*dx) + dy*dy);
@@ -68,8 +73,14 @@ public class GUtils {
         int[] xpoints = {x2, (int) xm, (int) xn};
         int[] ypoints = {y2, (int) ym, (int) yn};
 
-        g.drawLine(x1, y1, x2, y2);
+        //g.drawLine(x1, y1, x2, y2);
+        drawLineWithOptions(g, x1, y1, x2, y2, color, stroke);
+        Color defaultColor = g.getColor();
+        if(color != null) {
+            g.setColor(color);
+        }
         g.fillPolygon(xpoints, ypoints, 3);
+        g.setColor(defaultColor);
     }
 
     public static int doubleToInt(double d) {
