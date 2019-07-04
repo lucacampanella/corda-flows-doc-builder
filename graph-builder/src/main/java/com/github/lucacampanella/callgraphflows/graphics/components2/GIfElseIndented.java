@@ -31,6 +31,10 @@ public class GIfElseIndented extends GBaseContainer {
 
     private int currBlockIndex = 0;
 
+    private void resetDrawingInfo() {
+        currBlockIndex = 0;
+    }
+
 
     public void addBlock(GBaseText condition, Branch branch) {
         GConditionalBranchIndented block = new GConditionalBranchIndented(condition);
@@ -64,7 +68,7 @@ public class GIfElseIndented extends GBaseContainer {
                             currBlockWithY.getY()));
 
             if(componentWithRelativeY == null) { //there were no (more) blocking components
-                currY = currBlockWithY.getY() + currBlock.getHeight(g2);
+                currY = currBlockWithY.getY() + currBlock.getHeight(g2) + SPACE_BETWEEN_COMPONENTS;
                 currBlockIndex++;
             }
             else {
@@ -75,15 +79,15 @@ public class GIfElseIndented extends GBaseContainer {
         while(currBlockIndex < blocks.size()) {
             final GConditionalBranchIndentedWithRelativeY currBlockWithY = blocks.get(currBlockIndex);
             final GConditionalBranchIndented currBlock = currBlockWithY.getComp();
-            currY += SPACE_BETWEEN_COMPONENTS;
             currBlockWithY.setY(currY);
             final ComponentWithRelativeY currBlockRes = currBlock.setUpDimensions(g2, null);
             if(currBlockRes != null) {
-                return currBlockRes;
+                return currBlockRes.addingToY(currBlockWithY.getY());
             }
             currBlockIndex++;
             currY += currBlock.getHeight(g2);
         }
+        resetDrawingInfo();
         return null;
     }
 
@@ -97,11 +101,12 @@ public class GIfElseIndented extends GBaseContainer {
             currBlockWithY.setY(currY);
             final ComponentWithRelativeY currBlockRes = currBlock.setUpDimensionsUntilInitiateFlow(g2, initiateFlowComp);
             if(currBlockRes != null) {
-                return currBlockRes;
+                return currBlockRes.addingToY(currBlockWithY.getY());
             }
             currBlockIndex++;
             currY += currBlock.getHeight(g2);
         }
+        resetDrawingInfo();
         return null;
     }
 

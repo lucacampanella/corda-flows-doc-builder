@@ -37,6 +37,10 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
 
     int currCompIndex = -2; //-2 = not started, -1 == enteringArrowText, 0 == first component...
 
+    private void resetDrawingInfo() {
+        currCompIndex = -2;
+    }
+
     public GBaseIndentedContainer() {
 
     }
@@ -168,27 +172,29 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
                 currY += currComp.getHeight(g2); //get height will trigger the internal process in this one
             }
         }
-
+//        if(!components.isEmpty()) {
+//            currY += components.get(components.size()-1).getComp().getHeight(g2);
+//        }
         //if we arrive here it means we have finished all components
         if(exitingArrowText != null) {
             currY += SPACE_BETWEEN_COMPONENTS;
-            exitingArrowText.setY(currY);
             if(exitingArrowText.getComp().hasAnyBrother()) {
                 if(lastCompWithNewY.getComp() == exitingArrowText.getComp()) {
                     currY = exitingArrowText.getY() + exitingArrowText.getComp().getHeight(g2);
                 }
                 else {
+                    exitingArrowText.setY(currY);
                     return exitingArrowText;
                 }
             }
             else {
                 exitingArrowText.setY(currY);
-                currY += enteringArrowText.getComp().getHeight(g2);
+                currY += exitingArrowText.getComp().getHeight(g2);
             }
         }
 
         height = currY;
-
+        resetDrawingInfo();
         return null;
     }
 
@@ -215,12 +221,12 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
                         currY += currComp.getHeight(g2);
                     }
                     else {
-                        return initiateFlow;
+                        return initiateFlow.addingToY(currCompWithY.getY());
                     }
             }
             else if(currComp.isSimpleComponent()) {
                 if(currComp == initiateFlowComp) {
-                    return currCompWithY;
+                    return currCompWithY; //todo: adding to?
                 }
                 if(((GBaseSimpleComponent) currComp).hasAnyBrother()) {
                     throw new IllegalStateException("Blocking component " +
@@ -245,6 +251,7 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
             currY += exitingArrowText.getComp().getHeight(g2);
         }
         height = currY;
+        resetDrawingInfo();
         return null; //initiateFlow not found
     }
 
