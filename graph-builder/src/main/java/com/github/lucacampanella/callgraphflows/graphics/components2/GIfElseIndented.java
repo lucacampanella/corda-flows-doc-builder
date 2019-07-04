@@ -57,7 +57,7 @@ public class GIfElseIndented extends GBaseContainer {
             final GConditionalBranchIndentedWithRelativeY currBlockWithY = blocks.get(currBlockIndex);
             final GConditionalBranchIndented currBlock = currBlockWithY.getComp();
             if(!lastCompWithNewY.getComp().isSimpleComponent()) {
-                throw  new IllegalArgumentException("You didn't pass a simple component");
+                throw new IllegalArgumentException("You didn't pass a simple component");
             }
             final ComponentWithRelativeY componentWithRelativeY =
                     currBlock.setUpDimensions(g2, lastCompWithNewY.subtractingToY(

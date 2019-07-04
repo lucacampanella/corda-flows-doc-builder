@@ -11,7 +11,7 @@ import spoon.reflect.reference.CtTypeReference;
 
 import java.util.Optional;
 
-abstract class SubFlowBase implements StatementInterface {
+public abstract class SubFlowBase implements StatementInterface {
 
     CtTypeReference<? extends FlowLogic> subFlowType = null;
     Optional<String> assignedVariableName = Optional.empty(); //if the subflow returns an object and assigns it
@@ -118,13 +118,6 @@ abstract class SubFlowBase implements StatementInterface {
 
     protected abstract void buildGraphElem();
 
-    //we return just the flow if is a corda flow or if is an initiating flow
-    //this will result on acceptCompanion being called on this instance
-    //for carda flows we'll just check if the flow matchesAnyChildren
-    //for initiating flow we'll get the other class and compare if they have at least one matching combination
-
-    //if the flow doesn't initiate anything than we just inline it, for analysis is the same
-    //we keep the subFlow call because we need the map of sessions passed
-    public abstract Branch getInstructionsForCombinations();
-
+    @Override
+    public abstract String toString();
 }

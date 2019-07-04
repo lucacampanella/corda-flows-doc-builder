@@ -82,6 +82,9 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
                     return enteringArrowText;
                 }
                 else {
+                    if(currCompIndex < -1) {
+                        enteringArrowText.setY(0);
+                    }
                     currCompIndex = 0;
                     currY += enteringArrowText.getY() + enteringArrowText.getComp().getHeight(g2);
                 }

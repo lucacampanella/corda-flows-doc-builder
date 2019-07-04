@@ -56,9 +56,9 @@ public class CordaSubFlow extends SubFlowBase implements StatementWithCompanionI
         }
     }
 
-    public Branch getInstructionsForCombinations() {
-        //we return just the flow if is a corda flow
-        return new Branch(this);
+    @Override
+    public String toString() {
+        return "CordaSubFlow<<" + subFlowType.toString() + ">>";
     }
 }
 

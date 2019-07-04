@@ -2,7 +2,6 @@ package com.github.lucacampanella.callgraphflows;
 
 import com.github.lucacampanella.callgraphflows.asciidoc.AsciiDocBuilder;
 import com.github.lucacampanella.callgraphflows.asciidoc.AsciiDocIndexBuilder;
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GGraphBuilder;
 import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
@@ -59,14 +58,14 @@ public final class DrawerUtil {
             return;
         }
 
-        LOGGER.error("Flow logic analysis: class {} contains valid flow logic? {}", klass.getQualifiedName(),
-                analysisResult.checkIfContainsValidProtocolAndDraw()); //todo: expensive operation
-
         drawFromAnalysis(analysisResult, outPath);
     }
 
     public static void drawFromAnalysis(AnalysisResult analysisResult, String outPath) throws IOException {
         final ClassDescriptionContainer classDescription = analysisResult.getClassDescription();
+
+        LOGGER.error("Flow logic analysis: class {} contains valid flow logic? {}", classDescription.getNameWithParent(),
+                analysisResult.checkIfContainsValidProtocolAndSetupLinks()); //todo: expensive operation
 
         GGraphBuilder graphBuilder = GGraphBuilder.fromAnalysisResult(analysisResult);
         graphBuilder.drawToFile(Paths.get(outPath, "images", classDescription.getFullyQualifiedName() + ".svg").toString());

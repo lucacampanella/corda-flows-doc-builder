@@ -1,10 +1,7 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseText;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GInstruction;
-import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlow;
-import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlowWithCounterparty;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GSubFlowIndented;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GTwoSidedContainerInitiatingFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
@@ -53,16 +50,13 @@ public class InitiatingSubFlow extends SubFlowBaseWithAnalysis {
         }
     }
 
-    public Branch getInstructionsForCombinations() {
-        //we return just the flow if is an initiating flow
-        //this will result on acceptCompanion being called on this instance
-        //for corda flows we'll just check if the flow matchesAnyChildren
-        //for initiating flow we'll get the other class and compare if they have at least one matching combination
-        return new Branch(this);
+    @Override
+    public String toString() {
+        return "InitiatingSubFlow<<" + resultOfClassAnalysis.getClassDescription().getNameWithParent() + ">> :" + graphElem.toString();
     }
 
     public boolean checkIfContainsValidProtocolAndDraw() {
-        return resultOfClassAnalysis.checkIfContainsValidProtocolAndDraw();
+        return resultOfClassAnalysis.checkIfContainsValidProtocolAndSetupLinks();
     }
 }
 

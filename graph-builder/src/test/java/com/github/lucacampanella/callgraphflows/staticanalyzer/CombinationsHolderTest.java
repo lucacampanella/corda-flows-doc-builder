@@ -16,7 +16,7 @@ class CombinationsHolderTest {
         final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(TestUtils.fromClassSrcToPath(DoWhileTestFlow.class));
         final CtClass startableClass = analyzer.getClassesToBeAnalyzed().get(0);
         final AnalysisResult analysisResult = analyzer.analyzeFlowLogicClass(startableClass);
-        final boolean validProtocol = analysisResult.checkIfContainsValidProtocolAndDraw();
+        final boolean validProtocol = analysisResult.checkIfContainsValidProtocolAndSetupLinks();
         assertThat(validProtocol).isEqualTo(true);
     }
 
@@ -25,7 +25,7 @@ class CombinationsHolderTest {
         final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(TestUtils.fromClassSrcToPath(IfFailingTestFlow.class));
         final CtClass startableClass = analyzer.getClassesToBeAnalyzed().get(0);
         final AnalysisResult analysisResult = analyzer.analyzeFlowLogicClass(startableClass);
-        final boolean validProtocol = analysisResult.checkIfContainsValidProtocolAndDraw();
+        final boolean validProtocol = analysisResult.checkIfContainsValidProtocolAndSetupLinks();
         assertThat(validProtocol).isEqualTo(false);
     }
 

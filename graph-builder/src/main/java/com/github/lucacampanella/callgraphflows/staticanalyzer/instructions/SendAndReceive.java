@@ -85,7 +85,7 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
 
     @Override
     public void createGraphLink(StatementWithCompanionInterface companion) {
-        if(isSentConsumed) { // we treat it as a send
+        if(!isSentConsumed) { // we treat it as a send
             if(companion instanceof Receive) {
                 graphElem.setBrother((GBaseSimpleComponent) companion.getGraphElem());
             }
@@ -95,7 +95,7 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
             }
             isSentConsumed = true;
         }
-        else {
+        else { //we treat it as a receive
             if (companion instanceof SendAndReceive) {
                 ((SendAndReceive) companion).setSentConsumed(true); //we consumed the send state of SendAndReceive
             }

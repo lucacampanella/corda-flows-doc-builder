@@ -38,7 +38,7 @@ public class AnalysisResult {
         this.statements = statements;
     }
 
-    public boolean checkIfContainsValidProtocolAndDraw() {
+    public boolean checkIfContainsValidProtocolAndSetupLinks() {
         if(containsValidProtocolAndDrawn == null) {
             containsValidProtocolAndDrawn = checkIfContainsValidProtocolAndDrawNotLazy();
         }

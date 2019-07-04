@@ -29,7 +29,7 @@ public abstract class GTwoSidedContainer extends GBaseComponent {
         mainSubFlow.draw(g2, x, y);
         if(hasCounterpartySubFlow()) {
             int counterpartyStartX = x + mainSubFlow.getWidth(g2) + SPACE_BETWEEN_FLOWS;
-            counterpartySubFlow.draw(g2, counterpartyStartX, counterpartyStartY);
+            counterpartySubFlow.draw(g2, counterpartyStartX,y + counterpartyStartY);
 //todo arrow between the two
 
 //            int arrowBetweenFlowY = initiateFlowInstruction.getMiddleY(g2);
@@ -68,6 +68,7 @@ public abstract class GTwoSidedContainer extends GBaseComponent {
 
             GBaseSimpleComponent blockingLeft;
             GBaseSimpleComponent blockingRight;
+            boolean doneLeft = false;
             while(blockingLeftWithY != null && blockingRightWithY != null) {
                 blockingLeft = (GBaseSimpleComponent) blockingLeftWithY.getComp();
                 blockingRight = (GBaseSimpleComponent) blockingRightWithY.getComp();
@@ -75,15 +76,23 @@ public abstract class GTwoSidedContainer extends GBaseComponent {
                     int maxY = Math.max(blockingLeftWithY.getY(), blockingRightWithY.getY() + counterpartyStartY);
                     blockingLeftWithY.setY(maxY);
                     blockingRightWithY.setY(maxY - counterpartyStartY);
-                    blockingLeftWithY = mainSubFlow.setUpDimensions(g2, blockingLeftWithY);
+                    if(!doneLeft) {
+                        blockingLeftWithY = mainSubFlow.setUpDimensions(g2, blockingLeftWithY);
+                    }
                     blockingRightWithY = counterpartySubFlow.setUpDimensions(g2, blockingRightWithY);
                 }
                 else {
+                    ComponentWithRelativeY blockingLeftWithYBackup = blockingLeftWithY;
                     blockingLeftWithY = mainSubFlow.setUpDimensions(g2, blockingLeftWithY);
+                    if(blockingLeftWithY == null) {
+                        blockingLeftWithY = blockingLeftWithYBackup;
+                        doneLeft = true;
+                        blockingRightWithY = counterpartySubFlow.setUpDimensions(g2, blockingRightWithY);
+                    }
                 }
             }
             //finish in case they where not aligned, strange, probably error
-            while(blockingLeftWithY != null) {
+            while(blockingLeftWithY != null && !doneLeft) {
                 blockingLeftWithY = mainSubFlow.setUpDimensions(g2, blockingLeftWithY);
             }
             while(blockingRightWithY != null) {

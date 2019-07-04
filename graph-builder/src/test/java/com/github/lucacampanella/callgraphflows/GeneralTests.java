@@ -56,6 +56,12 @@ public class GeneralTests {
     }
 
     @Test
+    public void testSimplifiedNestedIfs() throws IOException {
+        testAnalyzeByRPCWithClass(SimplifiedNestedIfsTestFlow.class);
+    }
+
+
+    @Test
     public void testFor() throws IOException {
         testAnalyzeByRPCWithClass(ForTestFlow.class);
     }

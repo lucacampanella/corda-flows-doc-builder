@@ -28,12 +28,18 @@ public class InlinableSubFlow extends SubFlowBaseWithAnalysis {
         graphElem = getMainSubFlowElement();
     }
 
-    public Branch getInstructionsForCombinations() {
+    //we don't want to analyze the call, but just the body of the subflow
+    public Branch getBodyInstructionsForCombinations() {
         //if the flow doesn't initiate anything than we just inline it, for analysis is the same
         //we keep the subFlow call because we need the map of sessions passed
-        Branch res = new Branch(this);
+        Branch res = new Branch();
         res.add(resultOfClassAnalysis.getStatements());
         return res;
+    }
+
+    @Override
+    public String toString() {
+        return "InlinableSubFlow<<" + resultOfClassAnalysis.getClassDescription().getNameWithParent() + ">> :" + graphElem.toString();
     }
 }
 

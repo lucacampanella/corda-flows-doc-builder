@@ -69,8 +69,8 @@ public class CombinationsHolder {
                 final Branch flatInternalInvocations = instr.flattenInternalMethodInvocations();
                 holder.combineWithBranch(flatInternalInvocations);
             }
-            if(instr instanceof InitiatingSubFlow) {
-                holder.appendToAllCombinations(((InitiatingSubFlow) instr).getInstructionsForCombinations());
+            if(instr instanceof InlinableSubFlow) {
+                holder.combineWith(fromBranch(((InlinableSubFlow) instr).getBodyInstructionsForCombinations()));
             } else {
                 holder.appendToAllCombinations(instr);
             }
