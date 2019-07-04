@@ -1,9 +1,10 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
+import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseText;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GSubFlowIndented;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
-import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
-import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlow;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GInstruction;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import net.corda.core.flows.FlowLogic;
 import spoon.reflect.reference.CtTypeReference;
@@ -94,10 +95,10 @@ abstract class SubFlowBase implements StatementInterface {
         return sb.toString();
     }
 
-    protected GSubFlow getMainSubFlowElement() {
+    protected GSubFlowIndented getMainSubFlowElement() {
         initiatingInstruction = new GInstruction(line, getStringDescription());
 
-        final GSubFlow mainSubFlow = new GSubFlow();
+        final GSubFlowIndented mainSubFlow = new GSubFlowIndented();
 
         mainSubFlow.setEnteringArrowText(initiatingInstruction);
 
@@ -106,7 +107,7 @@ abstract class SubFlowBase implements StatementInterface {
             returnArrowTextBuilder.append(Utils.removePackageDescriptionIfWanted(returnType.get()));
         }
         if(returnArrowTextBuilder.length() > 0) {
-            final GBaseTextComponent exitingTextComponent = new GBaseTextComponent(returnArrowTextBuilder.toString());
+            final GBaseText exitingTextComponent = new GBaseText(returnArrowTextBuilder.toString());
             exitingTextComponent.setTextColor(GBaseTextComponent.LESS_IMPORTANT_TEXT_COLOR);
 
             mainSubFlow.setExitingArrowText(exitingTextComponent);

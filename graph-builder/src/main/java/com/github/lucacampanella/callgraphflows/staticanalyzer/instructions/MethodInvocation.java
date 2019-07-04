@@ -1,5 +1,8 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
+import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseComponent;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseText;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GSubFlowIndented;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseGraphicComponent;
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
@@ -27,7 +30,7 @@ public class MethodInvocation extends InstructionStatement {
     Branch body = new Branch();
     Map<String, String> callerSessionNameToCalleeSessionName = new HashMap<>();
     Map<String, String> callerFlowNameToCalleeFlowName = new HashMap<>();
-    GSubFlow indentedComponent = new GSubFlow();
+    GSubFlowIndented indentedComponent = new GSubFlowIndented();
 
     protected MethodInvocation(CtStatement statement) {
         super(statement.getPosition() instanceof  NoSourcePosition ? 0 : statement.getPosition().getLine(),
@@ -135,7 +138,7 @@ public class MethodInvocation extends InstructionStatement {
     }
 
     @Override
-    public GBaseGraphicComponent getGraphElem() {
+    public GBaseComponent getGraphElem() {
         if (toBePainted()) {
             return body.isEmpty() ? super.getGraphElem() : indentedComponent;
         }
@@ -146,7 +149,7 @@ public class MethodInvocation extends InstructionStatement {
 
     @Override
     protected void buildGraphElem() {
-        indentedComponent.setEnteringArrowText((GBaseTextComponent) super.getGraphElem());
+        indentedComponent.setEnteringArrowText((GBaseText) super.getGraphElem());
         body.forEach(stmt -> indentedComponent.addComponent(stmt.getGraphElem()));
     }
 

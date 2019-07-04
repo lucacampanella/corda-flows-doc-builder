@@ -10,6 +10,8 @@ import java.awt.geom.Line2D;
 
 public class GUtils {
 
+    private static final double DEFAULT_BRIGHTER_FACTOR = 1.2;
+
     private GUtils() {
         //hides public constructor
     }
@@ -104,6 +106,19 @@ public class GUtils {
         return new Color((int) r, (int) g, (int) b);
     }
 
+    public static Color makeBrighter(double brighterFactor, Color color) {
+        double r;
+        double g;
+        double b;
+        r = Math.min(255.0,color.getRed()*brighterFactor);
+        g = Math.min(255.0,color.getGreen()*brighterFactor);
+        b = Math.min(255.0, color.getBlue()*brighterFactor);
+        return new Color((int) r, (int) g, (int) b);
+    }
+
+    public static Color makeBrighter(Color color) {
+        return makeBrighter(DEFAULT_BRIGHTER_FACTOR, color);
+    }
     public static void drawLineWithOptions(Graphics2D g2, int startX, int startY, int endX, int endY,
                                            Color color, Stroke stroke) {
         Color defaultColor = g2.getColor();

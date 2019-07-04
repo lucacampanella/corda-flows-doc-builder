@@ -1,6 +1,12 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
+import net.corda.core.flows.InitiatingFlow;
+import net.corda.core.flows.StartableByRPC;
 import spoon.reflect.declaration.CtClass;
+
+import java.lang.annotation.Annotation;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ClassDescriptionContainer {
     private String simpleName;
@@ -8,13 +14,18 @@ public class ClassDescriptionContainer {
     private String packageName;
     private String fullyQualifiedName;
     private String comments;
+    private static final List<Class<? extends Annotation>> importantAnnotations =
+            Arrays.asList(InitiatingFlow.class, StartableByRPC.class);
+    private Set<String> annotations = new HashSet<>();
 
-    public ClassDescriptionContainer(String simpleName, String containingClassName, String packageName, String fullyQualifiedName, String comments) {
+    public ClassDescriptionContainer(String simpleName, String containingClassName, String packageName,
+                                     String fullyQualifiedName, String comments, Set<String> annotations) {
         this.simpleName = simpleName;
         this.containingClassName = containingClassName;
         this.packageName = packageName;
         this.fullyQualifiedName = fullyQualifiedName;
         this.comments = comments;
+        this.annotations = annotations;
     }
 
     public static ClassDescriptionContainer fromClass(CtClass klass) {
@@ -31,13 +42,25 @@ public class ClassDescriptionContainer {
         fullyQualifiedName = klass.getQualifiedName();
         comments = klass.getDocComment();
 
-        return new ClassDescriptionContainer(simpleName, containingClassName, packageName, fullyQualifiedName, comments);
+        final Set<String> presentAnnotations = importantAnnotations.stream().filter(annotClass ->
+                klass.hasAnnotation(annotClass)).map(annotClass -> annotClass.getSimpleName())
+                .collect(Collectors.toSet());
+
+        return new ClassDescriptionContainer(simpleName, containingClassName, packageName, fullyQualifiedName,
+                comments, presentAnnotations);
     }
 
     public static ClassDescriptionContainer getEmpty() {
-        return new ClassDescriptionContainer(null, null, null, null, null);
+        return new ClassDescriptionContainer(null, null, null, null, null, null);
     }
 
+    public void addImportantAnnotation(String annotationWithAt) {
+        annotations.add(annotationWithAt);
+    }
+
+    public Set<String> getAnnotations() {
+        return annotations;
+    }
 
     public String getSimpleName() {
         return simpleName;

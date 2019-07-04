@@ -1,5 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
+import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseSimpleComponent;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
@@ -69,7 +70,7 @@ public class Send extends InstructionStatement implements StatementWithCompanion
 
     @Override
     public void createGraphLink(StatementWithCompanionInterface companion) {
-        this.getGraphElem().addBrother(companion.getGraphElem());
+        graphElem.setBrother((GBaseSimpleComponent) companion.getGraphElem());
         if(companion instanceof SendAndReceive) {
             // it must be equal to a Receive statement
             ((SendAndReceive) companion).setSentConsumed(false); //reset counter

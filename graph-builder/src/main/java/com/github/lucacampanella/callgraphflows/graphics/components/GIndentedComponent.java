@@ -8,7 +8,7 @@ import java.awt.geom.Line2D;
 import java.util.*;
 import java.util.List;
 
-public abstract class GIndentedComponent extends GBaseGraphicComponent {
+public abstract class GIndentedComponent extends GBaseGraphicContainerComponent {
     public static final int WIDTH = 30;
     static final int INDENTATION = WIDTH/2;
     static final int SPACE_BETWEEN_COMPONENTS = WIDTH/3;
@@ -20,32 +20,16 @@ public abstract class GIndentedComponent extends GBaseGraphicComponent {
     private Dimension rectDimensions;
 
     //info about current drawing situation
-    private int currY = 0;
     private int currentToDrawIndex = 0;
-    private boolean drawnEntering = false;
-    private boolean drawnExiting = false;
+    private boolean computedEntering = false;
+    private boolean computedExiting = false;
 
     @Override
     public void resetDrawingInfo() {
-        currY = 0;
-        setStart(0,0);
+        super.resetDrawingInfo();
         currentToDrawIndex = 0;
-        drawnEntering = false;
-        drawnExiting = false;
-    }
-
-    @Override
-    public void setStart(int startX, int startY) {
-        super.setStart(startX, startY);
-        currY = startY;
-    }
-
-    public int getCurrY() {
-        return currY;
-    }
-
-    public void setCurrY(int currY) {
-        this.currY = currY;
+        computedEntering = false;
+        computedExiting = false;
     }
 
     public GIndentedComponent(GBaseTextComponent enteringArrowText) {
@@ -68,11 +52,66 @@ public abstract class GIndentedComponent extends GBaseGraphicComponent {
         }
     }
 
+//    @Override
+//    public void draw(SVGGraphics2D g2) {
+//        final Dimension rectDimensions = getRectDimensions(g2);
+//
+//        Rectangle rect;
+//        int currStartY = getStartY();
+//
+//        int parentRightBorderX = getStartX() + WIDTH - INDENTATION;
+//        int arrowRightBorderX = getStartX() + WIDTH + WIDTH/2;
+//
+//        if(enteringArrowText != null) {
+//            final Dimension enteringArrowTextDimensions = enteringArrowText.getDimensions(g2);
+//            int verticalHeight = Math.max(SPACE_BETWEEN_COMPONENTS * 2, enteringArrowTextDimensions.height);
+//
+//            g2.draw(new Line2D.Double(parentRightBorderX, getStartY(), arrowRightBorderX, getStartY()));
+//            g2.draw(new Line2D.Double(arrowRightBorderX, getStartY(), arrowRightBorderX,
+//                    (double) (getStartY()) + verticalHeight));
+//
+//            GUtils.drawArrow(g2, new Line2D.Double(arrowRightBorderX, (double) (getStartY()) + verticalHeight,
+//                    (double) (getStartX()) + WIDTH, (double) (getStartY()) + verticalHeight));
+//
+//            enteringArrowText.setStart(arrowRightBorderX + INDENTATION/2,
+//                    getStartY() + verticalHeight/2 - enteringArrowTextDimensions.height/2);
+//            enteringArrowText.draw(g2);
+//
+//            currStartY += verticalHeight - SPACE_BETWEEN_COMPONENTS;
+//        }
+//        rect = new Rectangle(getStartX(), currStartY, rectDimensions.width, rectDimensions.height);
+//
+//        GUtils.fillWithColor(g2, rect, getAwtColor());
+//        g2.draw(rect);
+//        currStartY += SPACE_BETWEEN_COMPONENTS;
+//        if(enteringArrowText != null) {
+//            currStartY += SPACE_BETWEEN_COMPONENTS;
+//        }
+//        for(GBaseGraphicComponent comp : components) {
+//            comp.setStart(getStartX() + INDENTATION, currStartY);
+//            comp.draw(g2);
+//            currStartY += comp.getDimensions(g2).height + SPACE_BETWEEN_COMPONENTS;
+//        }
+//
+//        if(exitingArrowText != null) {
+//            final Dimension exitingArrowTextDimensions = exitingArrowText.getDimensions(g2);
+//            int verticalHeight = Math.max(SPACE_BETWEEN_COMPONENTS * 2, exitingArrowTextDimensions.height);
+//
+//            g2.draw(new Line2D.Double((double) (getStartX()) + WIDTH, currStartY, arrowRightBorderX, currStartY));
+//            g2.draw(new Line2D.Double(arrowRightBorderX, currStartY, arrowRightBorderX,
+//                    (double) (currStartY) + verticalHeight));
+//
+//            GUtils.drawArrow(g2, new Line2D.Double(arrowRightBorderX, (double) (currStartY) + verticalHeight,
+//                    parentRightBorderX, (double) (currStartY) + verticalHeight));
+//
+//            exitingArrowText.setStart( arrowRightBorderX+INDENTATION/2,
+//                    currStartY + verticalHeight/2 - exitingArrowTextDimensions.height/2);
+//            exitingArrowText.draw(g2);
+//        }
+//    }
+
     @Override
     public void draw(SVGGraphics2D g2) {
-        final Dimension rectDimensions = getRectDimensions(g2);
-
-        Rectangle rect;
         int currStartY = getStartY();
 
         int parentRightBorderX = getStartX() + WIDTH - INDENTATION;
@@ -89,22 +128,23 @@ public abstract class GIndentedComponent extends GBaseGraphicComponent {
             GUtils.drawArrow(g2, new Line2D.Double(arrowRightBorderX, (double) (getStartY()) + verticalHeight,
                     (double) (getStartX()) + WIDTH, (double) (getStartY()) + verticalHeight));
 
-            enteringArrowText.setStart(arrowRightBorderX + INDENTATION/2,
-                    getStartY() + verticalHeight/2 - enteringArrowTextDimensions.height/2);
+//            enteringArrowText.setStart(arrowRightBorderX + INDENTATION/2,
+//                    getStartY() + verticalHeight/2 - enteringArrowTextDimensions.height/2);
             enteringArrowText.draw(g2);
 
             currStartY += verticalHeight - SPACE_BETWEEN_COMPONENTS;
         }
-        rect = new Rectangle(getStartX(), currStartY, rectDimensions.width, rectDimensions.height);
+        Rectangle rect;
+        rect = new Rectangle(getStartX(), currStartY, WIDTH, getHeight(g2));
 
         GUtils.fillWithColor(g2, rect, getAwtColor());
         g2.draw(rect);
         currStartY += SPACE_BETWEEN_COMPONENTS;
+
         if(enteringArrowText != null) {
             currStartY += SPACE_BETWEEN_COMPONENTS;
         }
         for(GBaseGraphicComponent comp : components) {
-            comp.setStart(getStartX() + INDENTATION, currStartY);
             comp.draw(g2);
             currStartY += comp.getDimensions(g2).height + SPACE_BETWEEN_COMPONENTS;
         }
@@ -126,99 +166,107 @@ public abstract class GIndentedComponent extends GBaseGraphicComponent {
         }
     }
 
-    private void drawBackground(SVGGraphics2D g2, int startBkgY, int endBkgY) {
-        int rightBorder = getStartX() + WIDTH;
-
-        Rectangle rect;
-        rect = new Rectangle(getStartX(), startBkgY, rightBorder, endBkgY);
-
-        GUtils.fillWithColor(g2, rect, getAwtColor());
-        g2.drawLine(getStartX(), startBkgY, getStartX(), endBkgY);
-        g2.drawLine(rightBorder, startBkgY, rightBorder, endBkgY);
-    }
 
     @Override
-    public GBaseGraphicComponent drawAndConsumeUntilBlocking(SVGGraphics2D g2) {
-
+    public GBaseGraphicComponent computeDimsStartingFrom(SVGGraphics2D g2, GBaseGraphicComponent comp) {
         int parentRightBorderX = getStartX() + WIDTH - INDENTATION;
         int arrowRightBorderX = getStartX() + WIDTH + WIDTH/2;
+        if(comp == null) {
+            resetDrawingInfo();
+        }
 
-        if(enteringArrowText != null && !drawnEntering) {
+        if(enteringArrowText != null && !computedEntering) {
             final Dimension enteringArrowTextDimensions = enteringArrowText.getDimensions(g2);
             int verticalHeight = Math.max(SPACE_BETWEEN_COMPONENTS * 2, enteringArrowTextDimensions.height);
 
-            if(!isAlreadyReturned() && enteringArrowText.hasAnyBrother()) {
+            if(comp != enteringArrowText && enteringArrowText.hasAnyBrother()) {
                 enteringArrowText.setStart(arrowRightBorderX + INDENTATION/2,
-                        currY + verticalHeight/2 - enteringArrowTextDimensions.height/2);
-                setAlreadyReturned(true);
+                        getCurrY() + verticalHeight/2 - enteringArrowTextDimensions.height/2);
                 return enteringArrowText;
             }
             else {
-                g2.draw(new Line2D.Double(parentRightBorderX, currY, arrowRightBorderX, currY));
-                g2.draw(new Line2D.Double(arrowRightBorderX, getStartY(), arrowRightBorderX,
-                        (double) (currY) + verticalHeight));
-
-                GUtils.drawArrow(g2, new Line2D.Double(arrowRightBorderX, (double) (currY) + verticalHeight,
-                        (double) (getStartX()) + WIDTH, (double) (currY) + verticalHeight));
-
-                enteringArrowText.setStart(arrowRightBorderX + INDENTATION / 2,
-                        currY + verticalHeight / 2 - enteringArrowTextDimensions.height / 2);
-                enteringArrowText.draw(g2);
-
-                currY += verticalHeight - SPACE_BETWEEN_COMPONENTS;
-
-                drawnEntering = true;
-                setAlreadyReturned(false);
-
-                //draw the top of the background rectangle
-                //drawBackground(g2, currY, currY+SPACE_BETWEEN_COMPONENTS);
-                g2.drawLine(getStartX(), currY, getStartX() + WIDTH, currY);
-                currY += SPACE_BETWEEN_COMPONENTS;
+//                g2.draw(new Line2D.Double(parentRightBorderX, currY, arrowRightBorderX, currY));
+//                g2.draw(new Line2D.Double(arrowRightBorderX, getStartY(), arrowRightBorderX,
+//                        (double) (currY) + verticalHeight));
+//
+//                GUtils.drawArrow(g2, new Line2D.Double(arrowRightBorderX, (double) (currY) + verticalHeight,
+//                        (double) (getStartX()) + WIDTH, (double) (currY) + verticalHeight));
+//
+//                enteringArrowText.setStart(arrowRightBorderX + INDENTATION / 2,
+//                        currY + verticalHeight / 2 - enteringArrowTextDimensions.height / 2);
+//                enteringArrowText.draw(g2);
+//
+//                currY += verticalHeight - SPACE_BETWEEN_COMPONENTS;
+//
+//                computedEntering = true;
+//                setAlreadyReturned(false);
+//
+//                //draw the top of the background rectangle
+//                //drawBackground(g2, currY, currY+SPACE_BETWEEN_COMPONENTS);
+//                g2.drawLine(getStartX(), currY, getStartX() + WIDTH, currY);
+//                currY += SPACE_BETWEEN_COMPONENTS;
+                //comp.draw(g2);
+                enteringArrowText.setStart(getStartX(), getCurrY());
+                addToCurrY(enteringArrowText.getHeight(g2) + SPACE_BETWEEN_COMPONENTS);
+                computedEntering = true;
             }
         }
 
        while(currentToDrawIndex < components.size()) {
 
-            final GBaseGraphicComponent comp = components.get(currentToDrawIndex);
-            comp.setStart(getStartX() + INDENTATION, currY);
+            final GBaseGraphicComponent currComp = components.get(currentToDrawIndex);
 
-           final GBaseGraphicComponent blockingComponent = comp.drawAndConsumeUntilBlocking(g2);
-
-            if(blockingComponent != null) {
-                return blockingComponent;
+            if(currComp == comp) { //we have to draw it according to the y we where passed
+                comp.setStartX(getStartX());
+                setCurrY(comp.getStartY() + comp.getHeight(g2) + SPACE_BETWEEN_COMPONENTS);
             }
-           ++currentToDrawIndex;
-//            drawBackground(g2, currY, comp.getDimensions(g2).height + SPACE_BETWEEN_COMPONENTS);
-//            comp.draw(g2);
-//            currY += comp.getDimensions(g2).height + SPACE_BETWEEN_COMPONENTS;
+            else if(currComp.isContainerComponent()) {
+                currComp.setStart(getStartX(), getCurrY());
+                final GBaseGraphicComponent result =
+                        ((GBaseGraphicContainerComponent) currComp).computeDimsStartingFrom(g2, comp);
+                if(result != null) {
+                    return result;
+                }
+            }
+            else if(!currComp.hasAnyBrother()){
+                currComp.setStart(getStartX(), getCurrY());
+                addToCurrY(currComp.getHeight(g2) + SPACE_BETWEEN_COMPONENTS);
+            }
+            else {
+                currComp.setStart(getStartX(), getCurrY());
+                return currComp;
+            }
+            ++currentToDrawIndex;
         }
 
         //if we reach here it means we've drawn all the components
         if(exitingArrowText != null) {
             final Dimension exitingArrowTextDimensions = exitingArrowText.getDimensions(g2);
             int verticalHeight = Math.max(SPACE_BETWEEN_COMPONENTS * 2, exitingArrowTextDimensions.height);
-            if(!isAlreadyReturned() && exitingArrowText.hasAnyBrother()) {
+            if(exitingArrowText.hasAnyBrother()) {
                 exitingArrowText.setStart(arrowRightBorderX + INDENTATION/2,
-                        currY + verticalHeight/2 - exitingArrowTextDimensions.height/2);
-                setAlreadyReturned(true);
+                        getCurrY() + verticalHeight/2 - exitingArrowTextDimensions.height/2);
                 return exitingArrowText;
             }
             else {
-                g2.draw(new Line2D.Double((double) (getStartX()) + WIDTH, currY, arrowRightBorderX, currY));
-                g2.draw(new Line2D.Double(arrowRightBorderX, currY, arrowRightBorderX,
-                        (double) (currY) + verticalHeight));
-
-                GUtils.drawArrow(g2, new Line2D.Double(arrowRightBorderX, (double) (currY) + verticalHeight,
-                        parentRightBorderX, (double) (currY) + verticalHeight));
-
-                exitingArrowText.setStart(arrowRightBorderX + INDENTATION / 2,
-                        currY + verticalHeight / 2 - exitingArrowTextDimensions.height / 2);
-                exitingArrowText.draw(g2);
-
-                //finish drawing
-                int endY = currY + verticalHeight - SPACE_BETWEEN_COMPONENTS;
-                //drawBackground(g2, currY, endY);
-                g2.drawLine(getStartX(), endY, getStartX()  + WIDTH, endY);
+//                g2.draw(new Line2D.Double((double) (getStartX()) + WIDTH, currY, arrowRightBorderX, currY));
+//                g2.draw(new Line2D.Double(arrowRightBorderX, currY, arrowRightBorderX,
+//                        (double) (currY) + verticalHeight));
+//
+//                GUtils.drawArrow(g2, new Line2D.Double(arrowRightBorderX, (double) (currY) + verticalHeight,
+//                        parentRightBorderX, (double) (currY) + verticalHeight));
+//
+//                exitingArrowText.setStart(arrowRightBorderX + INDENTATION / 2,
+//                        currY + verticalHeight / 2 - exitingArrowTextDimensions.height / 2);
+//                exitingArrowText.draw(g2);
+//
+//                //finish drawing
+//                int endY = currY + verticalHeight - SPACE_BETWEEN_COMPONENTS;
+//                //drawBackground(g2, currY, endY);
+//                g2.drawLine(getStartX(), endY, getStartX()  + WIDTH, endY);
+                //comp.draw(g2);
+                enteringArrowText.setStart(getStartX(), getCurrY());
+                addToCurrY(exitingArrowText.getHeight(g2) + SPACE_BETWEEN_COMPONENTS);
             }
         }
 
@@ -226,21 +274,21 @@ public abstract class GIndentedComponent extends GBaseGraphicComponent {
         return null;
     }
 
-    @Override
-    public Dimension computeDimensions(SVGGraphics2D g2) {
-        Dimension res = new Dimension(getRectDimensions(g2));
-
-        res.width = 0;
-
-        addDimOfArrowText(g2, res, enteringArrowText);
-
-        addDimOfArrowText(g2, res, exitingArrowText);
-
-        res.width = Math.max(res.width, INDENTATION + components.stream()
-                .mapToInt(comp -> comp.getDimensions(g2).width).max().orElse(0));
-
-        return res;
-    }
+//    @Override
+//    public Dimension computeDimensions(SVGGraphics2D g2) {
+//        Dimension res = new Dimension(getRectDimensions(g2));
+//
+//        res.width = 0;
+//
+//        addDimOfArrowText(g2, res, enteringArrowText);
+//
+//        addDimOfArrowText(g2, res, exitingArrowText);
+//
+//        res.width = Math.max(res.width, INDENTATION + components.stream()
+//                .mapToInt(comp -> comp.getDimensions(g2).width).max().orElse(0));
+//
+//        return res;
+//    }
 
     private void addDimOfArrowText(SVGGraphics2D g2, Dimension res, GBaseTextComponent arrowText) {
         if(arrowText != null) {
@@ -336,5 +384,14 @@ public abstract class GIndentedComponent extends GBaseGraphicComponent {
         else {
             return 0;
         }
+    }
+
+    @Override
+    protected int computeWidth(SVGGraphics2D g2) {
+        int maxWidth = 0;
+        for (GBaseGraphicComponent comp : components) {
+            maxWidth = Math.max(maxWidth, comp.getWidth(g2));
+        }
+        return maxWidth;
     }
 }

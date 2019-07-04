@@ -1,12 +1,13 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
 import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlow;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GSubFlowIndented;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 
 
 public class InlinableSubFlow extends SubFlowBaseWithAnalysis {
 
-    GSubFlow graphElem = new GSubFlow();
+    GSubFlowIndented graphElem = new GSubFlowIndented();
 
     protected InlinableSubFlow() {
 
@@ -18,7 +19,7 @@ public class InlinableSubFlow extends SubFlowBaseWithAnalysis {
     }
 
     @Override
-    public GSubFlow getGraphElem() {
+    public GSubFlowIndented getGraphElem() {
         return toBePainted() ? graphElem : null;
     }
 

@@ -16,7 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spoon.reflect.declaration.CtClass;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
@@ -153,6 +155,7 @@ public class GeneralTests {
 
     private void testRPCFromAnalyzer(AnalyzerWithModel analyzer) throws IOException {
         final List<CtClass> Classes = analyzer.getClassesByAnnotation(StartableByRPC.class);
+        Paths.get(DrawerUtil.DEFAULT_OUT_DIR, "images").toFile().mkdirs();
         for (CtClass clazz : Classes) {
             DrawerUtil.drawFromClass(analyzer, clazz, DrawerUtil.DEFAULT_OUT_DIR);
         }

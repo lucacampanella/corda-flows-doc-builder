@@ -3,7 +3,7 @@ package com.github.lucacampanella.callgraphflows;
 import com.github.lucacampanella.callgraphflows.asciidoc.AsciiDocBuilder;
 import com.github.lucacampanella.callgraphflows.asciidoc.AsciiDocIndexBuilder;
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
-import com.github.lucacampanella.callgraphflows.graphics.components.GGraphBuilder;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GGraphBuilder;
 import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
@@ -68,15 +68,7 @@ public final class DrawerUtil {
     public static void drawFromAnalysis(AnalysisResult analysisResult, String outPath) throws IOException {
         final ClassDescriptionContainer classDescription = analysisResult.getClassDescription();
 
-        GGraphBuilder graphBuilder = new GGraphBuilder();
-
-        graphBuilder.addSessionWithLeftArrow(classDescription.getSimpleName(),
-                analysisResult.getStatements(),
-                new GBaseTextComponent(classDescription.getNameWithParent() + "\n@InitiatingFlow\n@StartableByRPC"));
-        final AnalysisResult initiatedClassResult = analysisResult.getCounterpartyClassResult();
-        if(initiatedClassResult != null) {
-            graphBuilder.addSession(initiatedClassResult.getClassDescription().getSimpleName(), initiatedClassResult.getStatements());
-        }
+        GGraphBuilder graphBuilder = GGraphBuilder.fromAnalysisResult(analysisResult);
         graphBuilder.drawToFile(Paths.get(outPath, "images", classDescription.getFullyQualifiedName() + ".svg").toString());
 
         AsciiDocBuilder asciiDocBuilder = AsciiDocBuilder.fromAnalysisResult(analysisResult);

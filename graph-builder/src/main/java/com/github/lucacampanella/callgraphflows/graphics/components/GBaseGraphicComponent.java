@@ -16,42 +16,34 @@ public abstract class GBaseGraphicComponent {
 
     GBaseGraphicComponent parent;
     boolean recomputeDimensions = true;
-    Dimension dimension = null;
     protected Set<GBaseGraphicComponent> brothers = new HashSet<>();
     protected Set<GBaseGraphicComponent> enteringBrothers = new HashSet<>();
     protected Set<GBaseGraphicComponent> links = new HashSet<>();
     private int startX = 0;
-    private int currY = 0;
     private int startY = 0;
     private PreferencesInterface pref = DefaultPreferences.getInstance();
-
-    private boolean alreadyReturned = false;
-
-    public boolean isAlreadyReturned() {
-        return alreadyReturned;
-    }
-
-    public void setAlreadyReturned(boolean alreadyReturned) {
-        this.alreadyReturned = alreadyReturned;
-    }
-
-    public void resetDrawingInfo() {
-        startX = 0;
-        startY = 0;
-        alreadyReturned = false;
-    }
-
-    public int getCurrY() {
-        return currY;
-    }
-
-    public void setCurrY(int currY) {
-        this.currY = currY;
-    }
+    private int width = 0;
+    private int height = 0;
 
     public abstract void draw(SVGGraphics2D g2);
 
-    public abstract Dimension computeDimensions(SVGGraphics2D g2);
+    public int getWidth(SVGGraphics2D g2) {
+        if(recomputeDimensions) {
+            width = computeWidth(g2);
+        }
+        return width;
+    }
+
+    protected abstract int computeWidth(SVGGraphics2D g2);
+
+    public int getHeight(SVGGraphics2D g2) {
+        if(recomputeDimensions) {
+            height = computeHeight(g2);
+        }
+        return height;
+    }
+
+    protected abstract int computeHeight(SVGGraphics2D g2);
 
     /**
      * Lazily evaluate dimensions
@@ -59,11 +51,7 @@ public abstract class GBaseGraphicComponent {
      * @return the dimensions of this component
      */
     public Dimension getDimensions(SVGGraphics2D g2) {
-        if(recomputeDimensions) {
-            dimension = computeDimensions(g2);
-            recomputeDimensions = false;
-        }
-        return dimension;
+        return new Dimension(getWidth(g2), getHeight(g2));
     }
 
     public int getMiddleX(SVGGraphics2D g2) {
@@ -109,11 +97,6 @@ public abstract class GBaseGraphicComponent {
         }
         return getParent().getContainerBranch();
     }
-
-    public boolean needsSync() {
-        return false;
-    }
-
     public void addBrother(GBaseGraphicComponent brother) {
         brothers.add(brother);
         brother.addEnteringBrother(this);
@@ -138,7 +121,6 @@ public abstract class GBaseGraphicComponent {
 
     public void setStartY(int startY) {
         this.startY = startY;
-        this.currY = startY;
     }
 
     public int getStartX() {
@@ -194,9 +176,5 @@ public abstract class GBaseGraphicComponent {
         return brothers.contains(brother) || brother.hasAsBrother(this);
     }
 
-    public boolean isContainerComponent() {
-        return false;
-    }
-
-    public abstract GBaseGraphicComponent drawAndConsumeUntilBlocking(SVGGraphics2D g2);
+    public abstract boolean isContainerComponent();
 }

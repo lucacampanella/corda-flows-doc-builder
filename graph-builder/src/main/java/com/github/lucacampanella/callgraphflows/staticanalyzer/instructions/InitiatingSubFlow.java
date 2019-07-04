@@ -1,16 +1,19 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
-import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseText;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GInstruction;
 import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlow;
 import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlowWithCounterparty;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GSubFlowIndented;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GTwoSidedContainerInitiatingFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 
 
 public class InitiatingSubFlow extends SubFlowBaseWithAnalysis {
 
-    GSubFlowWithCounterparty graphElem = new GSubFlowWithCounterparty();
+    GTwoSidedContainerInitiatingFlow graphElem = new GTwoSidedContainerInitiatingFlow();
 
     protected InitiatingSubFlow() {
 
@@ -22,7 +25,7 @@ public class InitiatingSubFlow extends SubFlowBaseWithAnalysis {
     }
 
     @Override
-    public GSubFlowWithCounterparty getGraphElem() {
+    public GTwoSidedContainerInitiatingFlow getGraphElem() {
         return toBePainted() ? graphElem : null;
     }
 
@@ -40,9 +43,9 @@ public class InitiatingSubFlow extends SubFlowBaseWithAnalysis {
             String enteringArrowText = counterpartyClassResult.getClassDescription().getNameWithParent() +
                     "\n" + "@InitiatedBy(" + initiateFlow.getInitiatingClassDescription().getNameWithParent() + ")";
 
-            GSubFlow counterpartyFlow = new GSubFlow();
+            GSubFlowIndented counterpartyFlow = new GSubFlowIndented();
             counterpartyFlow.setEnteringArrowText(
-                    new GBaseTextComponent(enteringArrowText));
+                    new GBaseText(enteringArrowText));
 
             counterpartyClassResult.getStatements().forEach(stmt -> counterpartyFlow.addComponent(stmt.getGraphElem()));
             graphElem.setCounterpartySubFlow(counterpartyFlow,

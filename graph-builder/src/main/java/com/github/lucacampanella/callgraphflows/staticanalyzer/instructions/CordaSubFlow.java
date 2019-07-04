@@ -1,12 +1,13 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
 import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlow;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GSubFlowIndented;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 
 
 public class CordaSubFlow extends SubFlowBase implements StatementWithCompanionInterface {
 
-    GSubFlow graphElem = new GSubFlow();
+    GSubFlowIndented graphElem = new GSubFlowIndented();
 
     protected CordaSubFlow() {
 
@@ -18,7 +19,7 @@ public class CordaSubFlow extends SubFlowBase implements StatementWithCompanionI
     }
 
     @Override
-    public GSubFlow getGraphElem() {
+    public GSubFlowIndented getGraphElem() {
         return toBePainted() ? graphElem : null;
     }
 
@@ -48,9 +49,9 @@ public class CordaSubFlow extends SubFlowBase implements StatementWithCompanionI
     public void createGraphLink(StatementWithCompanionInterface companion) {
         if(companion instanceof CordaSubFlow) {
             if (isInitiatingFlow() != null && isInitiatingFlow()) {
-                this.getInitiatingInstruction().addBrother(((CordaSubFlow) companion).getInitiatingInstruction());
+                this.getInitiatingInstruction().setBrother(((CordaSubFlow) companion).getInitiatingInstruction());
             } else {
-                ((CordaSubFlow) companion).getInitiatingInstruction().addBrother(this.getInitiatingInstruction());
+                ((CordaSubFlow) companion).getInitiatingInstruction().setBrother(this.getInitiatingInstruction());
             }
         }
     }

@@ -1,7 +1,6 @@
-package com.github.lucacampanella.callgraphflows.graphics.components;
+package com.github.lucacampanella.callgraphflows.graphics.components2;
 
-public class GInstruction extends GBaseTextComponent {
-
+public class GInstruction extends GBaseText {
     private static boolean drawLineNumbers = false;
 
     protected int lineNumber;
@@ -21,7 +20,7 @@ public class GInstruction extends GBaseTextComponent {
 
     @Override
     public String toString() {
-            return getDisplayText();
+        return getDisplayText();
     }
 
     public static void setDrawLineNumbers(boolean drawLineNumbers) {
