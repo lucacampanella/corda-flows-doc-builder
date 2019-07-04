@@ -4,7 +4,6 @@ import com.github.lucacampanella.callgraphflows.graphics.utils.SubFlowColor;
 import com.github.lucacampanella.callgraphflows.graphics.utils.SubFlowsColorsEnum;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.StatementInterface;
-import org.jfree.graphics2d.svg.SVGGraphics2D;
 
 import java.awt.*;
 

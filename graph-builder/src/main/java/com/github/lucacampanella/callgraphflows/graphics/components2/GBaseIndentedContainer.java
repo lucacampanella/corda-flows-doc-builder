@@ -1,9 +1,11 @@
 package com.github.lucacampanella.callgraphflows.graphics.components2;
 
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
+import com.github.lucacampanella.callgraphflows.graphics.utils.GUtils;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
 import java.awt.*;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,11 +66,39 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
 
     @Override
     public void draw(SVGGraphics2D g2, int x, int y) {
+        int parentRightBorderX = x + WIDTH - INDENTATION;
+        int arrowRightBorderX = x + WIDTH + WIDTH/2;
 
-        //todo: draw it properly
+        int rectStart = y;
+        int rectHeight = height;
+
         if(enteringArrowText != null) {
-            enteringArrowText.drawRelative(g2, x, y);
+            int startArrowY = y + enteringArrowText.getY();
+            int verticalHeight = enteringArrowText.getComp().getHeight(g2);
+            g2.draw(new Line2D.Double(parentRightBorderX, startArrowY, arrowRightBorderX, startArrowY));
+            g2.draw(new Line2D.Double(arrowRightBorderX, startArrowY, arrowRightBorderX,
+                    (double) (startArrowY) + verticalHeight));
+
+            GUtils.drawArrow(g2, new Line2D.Double(arrowRightBorderX, (double) (startArrowY) + verticalHeight,
+                    (double) (x) + WIDTH, (double) (startArrowY) + verticalHeight));
+
+            enteringArrowText.drawRelative(g2, arrowRightBorderX + INDENTATION/2, y);
+
+            rectStart = startArrowY + SPACE_BETWEEN_COMPONENTS;
+            height -= verticalHeight + SPACE_BETWEEN_COMPONENTS;
         }
+
+        if(exitingArrowText != null) {
+            rectHeight -= exitingArrowText.getComp().getHeight(g2) + SPACE_BETWEEN_COMPONENTS;
+        }
+        final Rectangle rect = new Rectangle(x, rectStart, WIDTH, rectHeight);
+
+        GUtils.fillWithColor(g2, rect, getAwtColor());
+        g2.draw(rect);
+        //todo: draw it properly
+//        if(enteringArrowText != null) {
+//            enteringArrowText.drawRelative(g2, x, y);
+//        }
         components.forEach(comp -> comp.drawRelative(g2, x + INDENTATION, y));
         if(exitingArrowText != null) {
             exitingArrowText.drawRelative(g2, x, y);
