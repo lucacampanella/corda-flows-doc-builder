@@ -24,26 +24,7 @@ public class InitiatingSubFlow extends SubFlowBaseWithAnalysis {
 
     @Override
     protected void buildGraphElem() {
-        graphElem.setMainSubFlow(getMainSubFlowElement());
-        if(resultOfClassAnalysis.hasCounterpartyResult()) {
-            final AnalysisResult counterpartyClassResult = resultOfClassAnalysis.getCounterpartyClassResult();
-
-            final InitiateFlow initiateFlow = resultOfClassAnalysis.getStatements().getInitiateFlowStatementAtThisLevel()
-                    .orElseThrow(() -> new RuntimeException("Error building the graph elem for " +
-                            this.toString() + " because couldn't find the corresponding initiateFlow" +
-                            " call"));
-
-            String enteringArrowText = counterpartyClassResult.getClassDescription().getNameWithParent() +
-                    "\n" + "@InitiatedBy(" + initiateFlow.getInitiatingClassDescription().getNameWithParent() + ")";
-
-            GSubFlowIndented counterpartyFlow = new GSubFlowIndented();
-            counterpartyFlow.setEnteringArrowText(
-                    new GBaseText(enteringArrowText));
-
-            counterpartyClassResult.getStatements().forEach(stmt -> counterpartyFlow.addComponent(stmt.getGraphElem()));
-            graphElem.setCounterpartySubFlow(counterpartyFlow,
-                    (GInstruction) initiateFlow.getGraphElem());
-        }
+        graphElem = resultOfClassAnalysis.getGraphicRepresentationNoTitles();
     }
 
     @Override

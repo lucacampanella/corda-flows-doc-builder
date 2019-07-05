@@ -1,8 +1,10 @@
 package com.github.lucacampanella.callgraphflows.graphics.components2;
 
+import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.ClassDescriptionContainer;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.InitiateFlow;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
 public class GTwoSidedContainer extends GBaseComponent {
@@ -180,6 +182,14 @@ public class GTwoSidedContainer extends GBaseComponent {
             enteringArrowTextSB.append(annotation);
         }
         mainFlow.setEnteringArrowText(new GBaseText(enteringArrowTextSB.toString()));
+
+        final String returnType = classDescription.getReturnType();
+        if(returnType != null && !returnType.equals("java.lang.Void")) {
+            final GBaseText exitingTextComponent = new GBaseText(Utils.removePackageDescriptionIfWanted(returnType));
+            exitingTextComponent.setTextColor(GBaseTextComponent.LESS_IMPORTANT_TEXT_COLOR);
+            mainFlow.setExitingArrowText(exitingTextComponent);
+        }
+
         twoSidedContainer.setMainSubFlow(mainFlow);
 
         final AnalysisResult initiatedClassResult = analysisResult.getCounterpartyClassResult();

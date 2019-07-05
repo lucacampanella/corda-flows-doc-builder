@@ -59,7 +59,8 @@ public class SubFlowBuilder {
             flow.subFlowVariableName = subFlowVariableName;
             flow.targetSessionName = targetSessionName;
             flow.isInitiatingFlow = isInitiatingFlow;
-            flow.initiatingInstruction = initiatingInstruction;
+            flow.initiatingInstruction = new GInstruction(line, flow.getStringDescription());
+
 
             flow.buildGraphElem();
         }

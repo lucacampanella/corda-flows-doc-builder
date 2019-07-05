@@ -95,27 +95,6 @@ public abstract class SubFlowBase implements StatementInterface {
         return sb.toString();
     }
 
-    protected GSubFlowIndented getMainSubFlowElement() {
-        initiatingInstruction = new GInstruction(line, getStringDescription());
-
-        final GSubFlowIndented mainSubFlow = new GSubFlowIndented();
-
-        mainSubFlow.setEnteringArrowText(initiatingInstruction);
-
-        StringBuilder returnArrowTextBuilder = new StringBuilder();
-        if(returnType.isPresent() && !returnType.get().equals("java.lang.Void")) {
-            returnArrowTextBuilder.append(Utils.removePackageDescriptionIfWanted(returnType.get()));
-        }
-        if(returnArrowTextBuilder.length() > 0) {
-            final GBaseText exitingTextComponent = new GBaseText(returnArrowTextBuilder.toString());
-            exitingTextComponent.setTextColor(GBaseTextComponent.LESS_IMPORTANT_TEXT_COLOR);
-
-            mainSubFlow.setExitingArrowText(exitingTextComponent);
-        }
-
-        return mainSubFlow;
-    }
-
     protected abstract void buildGraphElem();
 
     @Override

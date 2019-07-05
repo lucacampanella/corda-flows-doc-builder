@@ -1,5 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
+import com.github.lucacampanella.callgraphflows.graphics.components2.GTwoSidedContainer;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.InitiatingSubFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.StatementInterface;
 
@@ -9,6 +10,7 @@ public class AnalysisResult {
     Branch statements = new Branch();
     AnalysisResult counterpartyClassResult = null;
     Boolean containsValidProtocolAndDrawn = null;
+    private GTwoSidedContainer graphicRepresentation = null;
 
     public AnalysisResult(ClassDescriptionContainer classDescription) {
         this.classDescription = classDescription;
@@ -69,5 +71,12 @@ public class AnalysisResult {
 
     public ClassDescriptionContainer getClassDescription() {
         return classDescription;
+    }
+
+    public GTwoSidedContainer getGraphicRepresentationNoTitles() {
+        if(graphicRepresentation == null) {
+            graphicRepresentation = GTwoSidedContainer.fromAnalysisResult(this);
+        }
+        return graphicRepresentation;
     }
 }

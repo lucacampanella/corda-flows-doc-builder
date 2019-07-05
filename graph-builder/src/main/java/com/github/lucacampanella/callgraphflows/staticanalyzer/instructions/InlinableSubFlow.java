@@ -25,7 +25,7 @@ public class InlinableSubFlow extends SubFlowBaseWithAnalysis {
 
     @Override
     protected void buildGraphElem() {
-        graphElem = getMainSubFlowElement();
+        graphElem = resultOfClassAnalysis.getGraphicRepresentationNoTitles().getMainSubFlow();
     }
 
     //we don't want to analyze the call, but just the body of the subflow

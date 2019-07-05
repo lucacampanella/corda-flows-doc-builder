@@ -42,7 +42,7 @@ public class GTwoSidedContainerWithTitles extends GBaseComponent {
 
     @Override
     public int computeHeight(SVGGraphics2D g2) {
-        return twoSidedContainer.computeHeight(g2) + getTitleSectionHeight(g2);
+        return twoSidedContainer.getHeight(g2) + getTitleSectionHeight(g2);
     }
 
     @Override
@@ -110,7 +110,7 @@ public class GTwoSidedContainerWithTitles extends GBaseComponent {
         GTwoSidedContainerWithTitles twoSidedContainerWithTitles = new GTwoSidedContainerWithTitles();
         final ClassDescriptionContainer classDescription = analysisResult.getClassDescription();
 
-        twoSidedContainerWithTitles.twoSidedContainer = GTwoSidedContainer.fromAnalysisResult(analysisResult);
+        twoSidedContainerWithTitles.twoSidedContainer = analysisResult.getGraphicRepresentationNoTitles();
 
         twoSidedContainerWithTitles.mainSubFlowTitle = getTitleBox(classDescription.getSimpleName());
 

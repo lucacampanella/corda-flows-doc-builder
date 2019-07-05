@@ -292,6 +292,7 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
 //        throw new IllegalArgumentException("Checked all the components, but no initiate flow found," +
 //                "probably this is not an initiating flow");
 
+        currY += SPACE_BETWEEN_COMPONENTS;
         if(exitingArrowText != null) {
             if(exitingArrowText.getComp().hasAnyBrother()) {
                 throw new IllegalStateException("The exiting arrow text has brothers before the initiate flow call");

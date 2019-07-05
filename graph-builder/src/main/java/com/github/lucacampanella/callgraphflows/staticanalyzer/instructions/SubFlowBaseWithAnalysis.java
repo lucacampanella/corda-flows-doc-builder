@@ -10,11 +10,4 @@ public abstract class SubFlowBaseWithAnalysis extends SubFlowBase {
     public AnalysisResult getResultOfClassAnalysis() {
         return resultOfClassAnalysis;
     }
-
-    @Override
-    protected GSubFlowIndented getMainSubFlowElement() {
-        final GSubFlowIndented mainSubFlow = super.getMainSubFlowElement();
-        resultOfClassAnalysis.getStatements().forEach(stmt -> mainSubFlow.addComponent(stmt.getGraphElem()));
-        return mainSubFlow;
-    }
 }

@@ -14,6 +14,7 @@ public class ClassDescriptionContainer {
     private String packageName;
     private String fullyQualifiedName;
     private String comments;
+    private String returnType = null; //the type returned by the call method
     private static final List<Class<? extends Annotation>> importantAnnotations =
             Arrays.asList(InitiatingFlow.class, StartableByRPC.class);
     private Set<String> annotations = new HashSet<>();
@@ -106,5 +107,13 @@ public class ClassDescriptionContainer {
     @Override
     public int hashCode() {
         return getFullyQualifiedName().hashCode();
+    }
+
+    public void setReturnType(String returnType) {
+        this.returnType = returnType;
+    }
+
+    public String getReturnType() {
+        return returnType;
     }
 }
