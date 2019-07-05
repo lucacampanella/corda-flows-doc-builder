@@ -366,6 +366,15 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
         return exitingArrowText.getComp();
     }
 
+    public int getRectStartOffset(SVGGraphics2D g2) {
+        return enteringArrowText == null ?
+                0 : enteringArrowText.getY() + enteringArrowText.getComp().getHeight(g2) - SPACE_BETWEEN_COMPONENTS;
+    }
+
+    public int getRealStart(SVGGraphics2D g2) {
+        return enteringArrowText == null ?
+                0 : enteringArrowText.getY();
+    }
 
     @Override
     protected int computeWidth(SVGGraphics2D g2) {

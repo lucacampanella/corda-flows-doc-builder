@@ -32,41 +32,12 @@ public class GGraphBuilder {
         //empty constructor
     }
 
+    public GGraphBuilder(GTwoSidedContainerWithTitles twoSidedContainer) {
+        this.gTwoSidedContainerWithTitles = twoSidedContainer;
+    }
+
     public static GGraphBuilder fromAnalysisResult(AnalysisResult analysisResult) {
-        GGraphBuilder graphBuilder = new GGraphBuilder();
-        final ClassDescriptionContainer classDescription = analysisResult.getClassDescription();
-
-        final GSubFlowIndented mainFlow = GSubFlowIndented.fromBranch(analysisResult.getStatements());
-
-        StringBuilder enteringArrowTextSB = new StringBuilder(classDescription.getNameWithParent());
-        for(String annotation : classDescription.getAnnotations()) {
-            enteringArrowTextSB.append("\n@");
-            enteringArrowTextSB.append(annotation);
-        }
-
-        mainFlow.setEnteringArrowText(new GBaseText(enteringArrowTextSB.toString()));
-        graphBuilder.setLeftSession(classDescription.getSimpleName(), mainFlow);
-
-        final AnalysisResult initiatedClassResult = analysisResult.getCounterpartyClassResult();
-        if(initiatedClassResult != null) {
-            final InitiateFlow initiateFlow = analysisResult.getStatements().getInitiateFlowStatementAtThisLevel()
-                    .orElseThrow(() -> new IllegalStateException("Analysis with initiated counterparty, " +
-                            "but no initiate Flow instruction at this level"));
-
-            final GSubFlowIndented counterpartyFlow = GSubFlowIndented.fromBranch(initiatedClassResult.getStatements());
-
-            enteringArrowTextSB = new StringBuilder(initiatedClassResult.getClassDescription().getNameWithParent());
-            enteringArrowTextSB.append("\n@InitiatedBy(");
-            enteringArrowTextSB.append(classDescription.getNameWithParent());
-            enteringArrowTextSB.append(")");
-
-            counterpartyFlow.setEnteringArrowText(new GBaseText(enteringArrowTextSB.toString()));
-            graphBuilder.setRightSession(initiatedClassResult.getClassDescription().getSimpleName(),
-                    counterpartyFlow,
-                    (GInstruction) initiateFlow.getGraphElem());
-        }
-
-        return graphBuilder;
+        return new GGraphBuilder(GTwoSidedContainerWithTitles.fromAnalysisResult(analysisResult));
     }
 
     public void setLeftSession(String title, GSubFlowIndented flow) {
@@ -91,9 +62,6 @@ public class GGraphBuilder {
         GUtils.fillWithColor(g2, new Rectangle(0,0,width, height), Color.WHITE);
 
         gTwoSidedContainerWithTitles.draw(g2, BORDER,BORDER);
-        g2.drawLine(0, BORDER,
-                        BORDER + GSubFlowIndented.WIDTH/2,
-                        BORDER);
 
         String svgElement = g2.getSVGElement();
 

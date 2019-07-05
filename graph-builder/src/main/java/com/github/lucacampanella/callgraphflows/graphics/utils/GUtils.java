@@ -11,6 +11,9 @@ import java.awt.geom.Line2D;
 public class GUtils {
 
     private static final double DEFAULT_BRIGHTER_FACTOR = 1.2;
+    public static final Stroke DASHED_STROKE =
+            new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
+
 
     private GUtils() {
         //hides public constructor
@@ -82,10 +85,10 @@ public class GUtils {
         g.fillPolygon(xpoints, ypoints, 3);
         g.setColor(defaultColor);
     }
-
     public static int doubleToInt(double d) {
         return (int) Math.round(d+1.0);
     }
+
     public static void fillWithColor(SVGGraphics2D g2, Shape shape, Color color) {
         Color colorBackup = g2.getColor();
         g2.setColor(color);
@@ -126,10 +129,10 @@ public class GUtils {
         b = Math.min(255.0, color.getBlue()*brighterFactor);
         return new Color((int) r, (int) g, (int) b);
     }
-
     public static Color makeBrighter(Color color) {
         return makeBrighter(DEFAULT_BRIGHTER_FACTOR, color);
     }
+
     public static void drawLineWithOptions(Graphics2D g2, int startX, int startY, int endX, int endY,
                                            Color color, Stroke stroke) {
         Color defaultColor = g2.getColor();

@@ -4,7 +4,7 @@ import org.jfree.graphics2d.svg.SVGGraphics2D;
 
 public abstract class GTwoSidedContainer extends GBaseComponent {
 
-    private static final int SPACE_BETWEEN_FLOWS = 20;
+    protected static final int SPACE_BETWEEN_FLOWS = 20;
 
     GSubFlowIndented mainSubFlow = new GSubFlowIndented();
     GSubFlowIndented counterpartySubFlow = null;
@@ -159,5 +159,9 @@ public abstract class GTwoSidedContainer extends GBaseComponent {
         }
 
         return sb.toString();
+    }
+
+    public int getCounterpartyStartY() {
+        return counterpartyStartY;
     }
 }

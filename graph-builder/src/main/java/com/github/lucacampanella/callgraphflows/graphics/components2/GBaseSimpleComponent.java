@@ -92,10 +92,9 @@ public abstract class GBaseSimpleComponent extends GBaseComponent {
             firstX = first.lastDrawnStartX;
             secondX = second.lastDrawnStartX + second.getWidth(g2);
         }
-        Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
 
         GUtils.drawArrowWithOptions(g2, new Line2D.Double(firstX, firstMiddleY, secondX, secondMiddleY),
-                Color.GRAY, dashed);
+                Color.GRAY, GUtils.DASHED_STROKE);
     }
 
     public int getLastDrawnStartX() {
