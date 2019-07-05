@@ -64,9 +64,6 @@ public final class DrawerUtil {
     public static void drawFromAnalysis(AnalysisResult analysisResult, String outPath) throws IOException {
         final ClassDescriptionContainer classDescription = analysisResult.getClassDescription();
 
-        LOGGER.error("Flow logic analysis: class {} contains valid flow logic? {}", classDescription.getNameWithParent(),
-                analysisResult.checkIfContainsValidProtocolAndSetupLinks()); //todo: expensive operation
-
         GGraphBuilder graphBuilder = GGraphBuilder.fromAnalysisResult(analysisResult);
         graphBuilder.drawToFile(Paths.get(outPath, "images", classDescription.getFullyQualifiedName() + ".svg").toString());
 

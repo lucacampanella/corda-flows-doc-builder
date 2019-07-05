@@ -71,7 +71,6 @@ public class AnalyzerWithModel {
             AnalysisResult res = new AnalysisResult(ClassDescriptionContainer.fromClass(klass));
             res.getClassDescription().setReturnType(StaticAnalyzerUtils.nullifyIfVoidType(callMethod.getType()));
 
-
             final Branch interestingStatements = MatcherHelper.fromCtStatementsToStatements(
                     callMethod.getBody().getStatements(), this);
             res.setStatements(interestingStatements);
@@ -88,7 +87,11 @@ public class AnalyzerWithModel {
                     res.setCounterpartyClassResult(analyzeFlowLogicClass(initiatedFlowClass));
                 }
             }
-            res.checkIfContainsValidProtocolAndSetupLinks(); //check the protocol and draws possible links
+            final boolean validProtocol =
+                    res.checkIfContainsValidProtocolAndSetupLinks();//check the protocol and draws possible links
+
+            LOGGER.info("Class {} contains valid protocol? {}", klass.getQualifiedName(), validProtocol);
+
             classToAnalysisResultMap.put(klass, res);
             return res;
         }
