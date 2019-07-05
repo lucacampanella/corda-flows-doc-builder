@@ -1,15 +1,21 @@
 package com.github.lucacampanella.callgraphflows.graphics.components2;
 
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
+import com.github.lucacampanella.callgraphflows.graphics.utils.GUtils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.ClassDescriptionContainer;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.InitiateFlow;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
+import java.awt.*;
+
 public class GTwoSidedContainer extends GBaseComponent {
 
-    protected static final int SPACE_BETWEEN_FLOWS = 20;
+    static final int SPACE_BETWEEN_FLOWS = 20;
+
+    private static final int BOX_BORDER = 2; //be careful: this is drawn outside the starting point and exceeds the
+    //declared dimensions
 
     GSubFlowIndented mainSubFlow = new GSubFlowIndented();
     GSubFlowIndented counterpartySubFlow = null;
@@ -24,6 +30,10 @@ public class GTwoSidedContainer extends GBaseComponent {
 
     @Override
     public void draw(SVGGraphics2D g2, int x, int y) {
+        draw(g2, x, y, true);
+    }
+
+    public void draw(SVGGraphics2D g2, int x, int y, boolean drawBoxAround) {
         if(getHeight(g2) == -1) { //we didn't compute the internal distribution
             computeHeight(g2);
         }
@@ -31,7 +41,6 @@ public class GTwoSidedContainer extends GBaseComponent {
         if(hasCounterpartySubFlow()) {
             int counterpartyStartX = x + mainSubFlow.getWidth(g2) + SPACE_BETWEEN_FLOWS;
             counterpartySubFlow.draw(g2, counterpartyStartX,y + counterpartyStartY);
-//todo arrow between the two
 
             int arrowBetweenFlowY = initiateFlowInstruction.getLastDrawnStartY() +
                     (initiateFlowInstruction.getHeight(g2)/2);
@@ -40,11 +49,21 @@ public class GTwoSidedContainer extends GBaseComponent {
             int arrowBetweenFlowFinishX = counterpartyStartX + GSubFlowIndented.WIDTH
                     - GSubFlowIndented.INDENTATION-1;
             g2.drawLine(arrowBetweenFlowStartX, arrowBetweenFlowY, arrowBetweenFlowFinishX, arrowBetweenFlowY);
+            if(drawBoxAround) {
+                drawBoxAround(g2, x, y);
+            }
         }
         mainSubFlow.drawBrothersAndLinks(g2);
         if(hasCounterpartySubFlow()) {
             counterpartySubFlow.drawBrothersAndLinks(g2);
         }
+    }
+
+    private void drawBoxAround(SVGGraphics2D g2, int x, int y) {
+        final Rectangle rect = new Rectangle(x - BOX_BORDER, y - BOX_BORDER,
+                getWidth(g2) + 2*BOX_BORDER, getHeight(g2)+2*BOX_BORDER);
+
+        GUtils.drawColoredShapeWithStroke(g2, rect, Color.LIGHT_GRAY, GUtils.DASHED_STROKE);
     }
 
     public boolean isTwoSidedComponent() {
@@ -102,6 +121,15 @@ public class GTwoSidedContainer extends GBaseComponent {
                 blockingRightWithY = counterpartySubFlow.setUpDimensions(g2, blockingRightWithY);
             }
             return Math.max(mainSubFlow.getHeight(g2), counterpartySubFlow.getHeight(g2) + counterpartyStartY);
+        }
+    }
+
+    @Override
+    public void setParent(GBaseComponent parent) {
+        super.setParent(parent);
+        mainSubFlow.setParent(parent);
+        if(counterpartySubFlow != null) {
+            counterpartySubFlow.setParent(parent);
         }
     }
 

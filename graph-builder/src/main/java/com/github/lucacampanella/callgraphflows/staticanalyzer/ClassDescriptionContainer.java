@@ -3,6 +3,7 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer;
 import net.corda.core.flows.InitiatingFlow;
 import net.corda.core.flows.StartableByRPC;
 import spoon.reflect.declaration.CtClass;
+import spoon.reflect.reference.CtTypeReference;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -111,6 +112,15 @@ public class ClassDescriptionContainer {
 
     public void setReturnType(String returnType) {
         this.returnType = returnType;
+    }
+
+    public void setReturnType(CtTypeReference returnTypeRef) {
+        if(returnTypeRef != null) {
+            setReturnType(returnTypeRef.toString());
+        }
+        else {
+            setReturnType((String) null);
+        }
     }
 
     public String getReturnType() {

@@ -144,7 +144,12 @@ public class SubFlowBuilder {
                 final CtMethod callMethod = StaticAnalyzerUtils.findCallMethod(
                         (CtClass) subFlowInfo.subFlowType.getTypeDeclaration());
                 if (callMethod != null) {
-                    subFlowInfo.returnType = Optional.ofNullable(callMethod.getType().toString());
+                    final CtTypeReference returnTypeRef = StaticAnalyzerUtils.nullifyIfVoidType(callMethod.getType());
+                    if(returnTypeRef == null){
+                        subFlowInfo.returnType = Optional.empty();
+                    } else {
+                        subFlowInfo.returnType = Optional.ofNullable(returnTypeRef.toString());
+                    }
                 }
             }
 

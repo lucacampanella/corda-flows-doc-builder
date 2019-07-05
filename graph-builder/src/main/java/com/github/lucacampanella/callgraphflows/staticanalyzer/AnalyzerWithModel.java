@@ -14,6 +14,7 @@ import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.path.CtPath;
 import spoon.reflect.path.CtPathStringBuilder;
+import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.filter.AnnotationFilter;
 import spoon.reflect.visitor.filter.NamedElementFilter;
 import spoon.reflect.visitor.filter.TypeFilter;
@@ -68,7 +69,7 @@ public class AnalyzerWithModel {
             setCurrentAnalyzingClass(klass);
 
             AnalysisResult res = new AnalysisResult(ClassDescriptionContainer.fromClass(klass));
-            res.getClassDescription().setReturnType(callMethod.getType().toString());
+            res.getClassDescription().setReturnType(StaticAnalyzerUtils.nullifyIfVoidType(callMethod.getType()));
 
 
             final Branch interestingStatements = MatcherHelper.fromCtStatementsToStatements(

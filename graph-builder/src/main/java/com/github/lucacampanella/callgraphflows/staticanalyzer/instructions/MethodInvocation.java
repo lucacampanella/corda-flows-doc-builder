@@ -2,6 +2,7 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
 import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseComponent;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseText;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GConditionalBranchIndented;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GSubFlowIndented;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.graphics.components.GBaseGraphicComponent;
@@ -30,7 +31,7 @@ public class MethodInvocation extends InstructionStatement {
     Branch body = new Branch();
     Map<String, String> callerSessionNameToCalleeSessionName = new HashMap<>();
     Map<String, String> callerFlowNameToCalleeFlowName = new HashMap<>();
-    GSubFlowIndented indentedComponent = new GSubFlowIndented();
+    GConditionalBranchIndented indentedComponent = new GConditionalBranchIndented();
 
     protected MethodInvocation(CtStatement statement) {
         super(statement.getPosition() instanceof  NoSourcePosition ? 0 : statement.getPosition().getLine(),

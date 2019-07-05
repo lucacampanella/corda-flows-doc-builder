@@ -14,6 +14,8 @@ public class GUtils {
     public static final Stroke DASHED_STROKE =
             new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
 
+    public static final Color VERY_LIGHT_GRAY = new Color(235, 235, 235);
+
 
     private GUtils() {
         //hides public constructor

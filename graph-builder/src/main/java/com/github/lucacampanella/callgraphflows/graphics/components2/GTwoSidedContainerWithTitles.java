@@ -63,7 +63,7 @@ public class GTwoSidedContainerWithTitles extends GBaseComponent {
     private static GBaseText getTitleBox(String title) {
         GBaseText titleBox = new GBaseText(title);
         titleBox.setDrawBox(true);
-        titleBox.setBackgroundColor(Color.LIGHT_GRAY);
+        titleBox.setBackgroundColor(GUtils.VERY_LIGHT_GRAY);
         return titleBox;
     }
 
@@ -100,7 +100,8 @@ public class GTwoSidedContainerWithTitles extends GBaseComponent {
                             twoSidedContainer.getCounterpartySubFlow().getRectStartOffset(g2) + SPACE_BETWEEN_TITLE_AND_CONTENT,
                     Color.GRAY, GUtils.DASHED_STROKE);
         }
-        twoSidedContainer.draw(g2, x, y + getTitleSectionHeight(g2));
+        twoSidedContainer.draw(g2, x, y + getTitleSectionHeight(g2), false);
+
         g2.drawLine(x, y + getTitleSectionHeight(g2),
                 x + GSubFlowIndented.WIDTH/2,
                 y + getTitleSectionHeight(g2));
@@ -121,5 +122,13 @@ public class GTwoSidedContainerWithTitles extends GBaseComponent {
         }
 
         return twoSidedContainerWithTitles;
+    }
+
+    /**
+     * Sets the parent of the flow to null, so that the colors are stared from the first one
+     * instead of from the one that was lastly used because this was already part of a bigger flow
+     */
+    public void setParentsForFileDrawing() {
+        twoSidedContainer.setParent(null);
     }
 }

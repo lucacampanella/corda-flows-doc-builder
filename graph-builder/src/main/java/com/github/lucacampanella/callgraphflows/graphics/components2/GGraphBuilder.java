@@ -51,10 +51,8 @@ public class GGraphBuilder {
         SVGGraphics2D g2 = new SVGGraphics2D(10000, 10000);
         int width = gTwoSidedContainerWithTitles.getWidth(g2) + 2*BORDER;
         int height = gTwoSidedContainerWithTitles.getHeight(g2) + 2*BORDER;
-
-        LOGGER.info("{}", gTwoSidedContainerWithTitles);
-
-
+        gTwoSidedContainerWithTitles.setParentsForFileDrawing();
+        LOGGER.trace("{}", gTwoSidedContainerWithTitles);
 
         g2 = new SVGGraphics2D(width, height);
         GUtils.fillWithColor(g2, new Rectangle(0,0,width, height), Color.WHITE);

@@ -2,6 +2,7 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
+import kotlin.Unit;
 import net.corda.core.flows.FlowSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import spoon.reflect.code.CtVariableRead;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtMethod;
+import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.filter.NamedElementFilter;
 import spoon.reflect.visitor.filter.TypeFilter;
 
@@ -68,6 +70,14 @@ public class StaticAnalyzerUtils {
         }
 
         return wronglyDoubleAnnotated;
+    }
+
+    public static CtTypeReference nullifyIfVoidType(CtTypeReference typeRef) {
+        if(typeRef.isSubtypeOf(MatcherHelper.getTypeReference(Void.class)) ||
+        typeRef.isSubtypeOf(MatcherHelper.getTypeReference(Unit.class))) {
+            return null;
+        }
+        return typeRef;
     }
 
 //    public static boolean checkTwoClassesAndBuildGraphs(CtClass initiatingClass, CtClass initiatedClass,
