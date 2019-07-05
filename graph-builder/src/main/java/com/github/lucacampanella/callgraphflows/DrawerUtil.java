@@ -3,7 +3,9 @@ package com.github.lucacampanella.callgraphflows;
 import com.github.lucacampanella.callgraphflows.asciidoc.AsciiDocBuilder;
 import com.github.lucacampanella.callgraphflows.asciidoc.AsciiDocIndexBuilder;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GGraphBuilder;
-import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GInstruction;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GTwoSidedContainer;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisErrorException;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.ClassDescriptionContainer;
@@ -74,5 +76,9 @@ public final class DrawerUtil {
     public static void setDrawLineNumbers(boolean drawLineNumbers) {
         DrawerUtil.drawLineNumbers = drawLineNumbers;
         GInstruction.setDrawLineNumbers(drawLineNumbers);
+    }
+
+    public static void setDrawBoxAroundSubFlows(boolean drawBox) {
+        GTwoSidedContainer.setDrawBoxAround(drawBox);
     }
 }

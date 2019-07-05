@@ -1,6 +1,5 @@
 package com.github.lucacampanella.callgraphflows.graphics.components2;
 
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
 import com.github.lucacampanella.callgraphflows.graphics.utils.GUtils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.ClassDescriptionContainer;
@@ -13,6 +12,8 @@ import java.awt.*;
 public class GTwoSidedContainer extends GBaseComponent {
 
     static final int SPACE_BETWEEN_FLOWS = 20;
+
+    private static boolean drawBoxAround = true;
 
     private static final int BOX_BORDER = 2; //be careful: this is drawn outside the starting point and exceeds the
     //declared dimensions
@@ -30,7 +31,7 @@ public class GTwoSidedContainer extends GBaseComponent {
 
     @Override
     public void draw(SVGGraphics2D g2, int x, int y) {
-        draw(g2, x, y, true);
+        draw(g2, x, y, drawBoxAround);
     }
 
     public void draw(SVGGraphics2D g2, int x, int y, boolean drawBoxAround) {
@@ -64,6 +65,10 @@ public class GTwoSidedContainer extends GBaseComponent {
                 getWidth(g2) + 2*BOX_BORDER, getHeight(g2)+2*BOX_BORDER);
 
         GUtils.drawColoredShapeWithStroke(g2, rect, Color.LIGHT_GRAY, GUtils.DASHED_STROKE);
+    }
+
+    public static void setDrawBoxAround(boolean drawBoxAround) {
+        GTwoSidedContainer.drawBoxAround = drawBoxAround;
     }
 
     public boolean isTwoSidedComponent() {
@@ -214,7 +219,7 @@ public class GTwoSidedContainer extends GBaseComponent {
         final String returnType = classDescription.getReturnType();
         if(returnType != null && !returnType.equals("java.lang.Void")) {
             final GBaseText exitingTextComponent = new GBaseText(Utils.removePackageDescriptionIfWanted(returnType));
-            exitingTextComponent.setTextColor(GBaseTextComponent.LESS_IMPORTANT_TEXT_COLOR);
+            exitingTextComponent.setTextColor(GBaseText.LESS_IMPORTANT_TEXT_COLOR);
             mainFlow.setExitingArrowText(exitingTextComponent);
         }
 

@@ -1,12 +1,8 @@
 package com.github.lucacampanella.callgraphflows.graphics.components2;
 
-import com.github.lucacampanella.callgraphflows.graphics.components.*;
 import com.github.lucacampanella.callgraphflows.graphics.utils.GUtils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.ClassDescriptionContainer;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.InitiateFlow;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.StatementInterface;
+
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +11,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.*;
 
 public class GGraphBuilder {
 

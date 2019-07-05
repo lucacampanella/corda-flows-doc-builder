@@ -1,11 +1,8 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
-import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlow;
+
 import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseText;
-import com.github.lucacampanella.callgraphflows.graphics.components2.GInstruction;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GSubFlowIndented;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
 
 
@@ -54,7 +51,7 @@ public class CordaSubFlow extends SubFlowBase implements StatementWithCompanionI
         }
         if(returnArrowTextBuilder.length() > 0) {
             final GBaseText exitingTextComponent = new GBaseText(returnArrowTextBuilder.toString());
-            exitingTextComponent.setTextColor(GBaseTextComponent.LESS_IMPORTANT_TEXT_COLOR);
+            exitingTextComponent.setTextColor(GBaseText.LESS_IMPORTANT_TEXT_COLOR);
 
             graphElem.setExitingArrowText(exitingTextComponent);
         }

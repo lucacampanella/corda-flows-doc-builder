@@ -1,6 +1,5 @@
 package com.github.lucacampanella.callgraphflows.graphics.components2;
 
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
 import com.github.lucacampanella.callgraphflows.graphics.utils.GUtils;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 

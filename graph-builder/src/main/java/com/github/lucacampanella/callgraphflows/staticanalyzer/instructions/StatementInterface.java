@@ -1,6 +1,5 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseGraphicComponent;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseComponent;
 import com.github.lucacampanella.callgraphflows.graphics.preferences.DefaultPreferences;
 import com.github.lucacampanella.callgraphflows.graphics.preferences.PreferencesInterface;

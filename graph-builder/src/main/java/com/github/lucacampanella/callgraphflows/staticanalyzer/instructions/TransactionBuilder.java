@@ -1,6 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseText;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
 import spoon.reflect.code.CtStatement;
@@ -22,7 +22,7 @@ public class TransactionBuilder extends InstructionStatement {
     }
 
     @Override
-    protected Color getTextColor() { return GBaseTextComponent.LESS_IMPORTANT_TEXT_COLOR; }
+    protected Color getTextColor() { return GBaseText.LESS_IMPORTANT_TEXT_COLOR; }
 
     @Override
     public boolean toBePainted() {

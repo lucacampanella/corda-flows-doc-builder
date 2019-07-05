@@ -1,8 +1,6 @@
 package com.github.lucacampanella.callgraphflows.graphics.components2;
 
-import com.github.lucacampanella.callgraphflows.graphics.components.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
-import jdk.nashorn.internal.ir.Block;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
 import java.util.ArrayList;

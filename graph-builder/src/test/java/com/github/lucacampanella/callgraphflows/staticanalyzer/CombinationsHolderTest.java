@@ -1,7 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
 import com.github.lucacampanella.TestUtils;
-import com.github.lucacampanella.callgraphflows.AnalysisErrorException;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.DoWhileTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.IfFailingTestFlow;
 import org.junit.jupiter.api.Test;

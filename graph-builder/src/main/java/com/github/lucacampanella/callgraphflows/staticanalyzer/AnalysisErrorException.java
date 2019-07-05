@@ -1,4 +1,4 @@
-package com.github.lucacampanella.callgraphflows;
+package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
 import spoon.reflect.declaration.CtClass;
 

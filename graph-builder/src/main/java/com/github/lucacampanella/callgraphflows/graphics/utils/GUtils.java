@@ -1,7 +1,5 @@
 package com.github.lucacampanella.callgraphflows.graphics.utils;
 
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseGraphicComponent;
-import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlow;
 import com.github.lucacampanella.callgraphflows.graphics.preferences.PreferencesInterface;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
@@ -27,22 +25,6 @@ public class GUtils {
 
     public static void drawArrowWithOptions(SVGGraphics2D g2d, Line2D.Double line, Color color, Stroke stroke) {
         drawArrowLine(g2d, (int) line.x1, (int) line.y1, (int) line.x2, (int) line.y2, 7, 4, color, stroke);
-    }
-
-
-    public static void drawHorizontalArrowFromFirstToSecond(SVGGraphics2D g2d, GBaseGraphicComponent first, GBaseGraphicComponent second) {
-        int firstX;
-        int secondX;
-
-        if(first.getMiddleX(g2d) < second.getMiddleX(g2d)) {
-            firstX = first.getRightBorder(g2d);
-            secondX = second.getStartX();
-        } else {
-            firstX = first.getStartX();
-            secondX = second.getRightBorder(g2d);
-        }
-
-        drawArrow(g2d, new Line2D.Double(firstX, first.getMiddleY(g2d), secondX, second.getMiddleY(g2d)));
     }
 
     /**
