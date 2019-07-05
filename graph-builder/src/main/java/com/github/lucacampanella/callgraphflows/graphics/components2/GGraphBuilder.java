@@ -23,10 +23,8 @@ public class GGraphBuilder {
     private static final Logger LOGGER = LoggerFactory.getLogger(GGraphBuilder.class);
 
     private static final int BORDER = 10;
-    private static final int MIN_DISTANCE_TITLE_SESSION = 15;
 
     GTwoSidedContainerWithTitles gTwoSidedContainerWithTitles = new GTwoSidedContainerWithTitles();
-
 
     public GGraphBuilder() {
         //empty constructor
@@ -41,11 +39,11 @@ public class GGraphBuilder {
     }
 
     public void setLeftSession(String title, GSubFlowIndented flow) {
-        gTwoSidedContainerWithTitles.setMainSubFlow(flow);
+        gTwoSidedContainerWithTitles.setMainSubFlow(title, flow);
     }
 
     public void setRightSession(String title, GSubFlowIndented flow, GInstruction initiatingInstructionOfMainFlow) {
-        gTwoSidedContainerWithTitles.setCounterpartySubFlow(flow, initiatingInstructionOfMainFlow);
+        gTwoSidedContainerWithTitles.setCounterpartySubFlow(title, flow, initiatingInstructionOfMainFlow);
     }
 
     public void drawToFile(String path) throws IOException {

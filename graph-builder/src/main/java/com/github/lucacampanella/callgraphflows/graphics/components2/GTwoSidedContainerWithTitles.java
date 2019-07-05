@@ -8,39 +8,59 @@ import org.jfree.graphics2d.svg.SVGGraphics2D;
 
 import java.awt.*;
 
-public class GTwoSidedContainerWithTitles extends GTwoSidedContainer {
+/**
+ * A wrapper for {@link GTwoSidedContainer}, which also has titles
+ */
+public class GTwoSidedContainerWithTitles extends GBaseComponent {
 
     private static int SPACE_BETWEEN_TITLE_AND_CONTENT = 15;
+
+    private GTwoSidedContainer twoSidedContainer = new GTwoSidedContainer();
 
     private GBaseText mainSubFlowTitle = null;
     private GBaseText counterpartySubFlowTitle = null;
 
     public void setMainSubFlow(GBaseText titleComp, GSubFlowIndented mainSubFlow) {
-        super.setMainSubFlow(mainSubFlow);
+        twoSidedContainer.setMainSubFlow(mainSubFlow);
         this.mainSubFlowTitle = titleComp;
     }
 
     public void setMainSubFlow(String title, GSubFlowIndented mainSubFlow) {
-        super.setMainSubFlow(mainSubFlow);
+        twoSidedContainer.setMainSubFlow(mainSubFlow);
         setMainSubFlow(getTitleBox(title), mainSubFlow);
     }
 
     public void setCounterpartySubFlow(GBaseText titleComp, GSubFlowIndented counterpartySubFlow, GInstruction initiateFlowInstruction) {
-        super.setCounterpartySubFlow(counterpartySubFlow, initiateFlowInstruction);
+        twoSidedContainer.setCounterpartySubFlow(counterpartySubFlow, initiateFlowInstruction);
         this.counterpartySubFlowTitle = titleComp;
     }
 
     public void setCounterpartySubFlow(String title, GSubFlowIndented counterpartySubFlow, GInstruction initiateFlowInstruction) {
-        super.setCounterpartySubFlow(counterpartySubFlow, initiateFlowInstruction);
+        twoSidedContainer.setCounterpartySubFlow(counterpartySubFlow, initiateFlowInstruction);
         setCounterpartySubFlow(getTitleBox(title), counterpartySubFlow, initiateFlowInstruction);
     }
 
     @Override
     public int computeHeight(SVGGraphics2D g2) {
-        return super.computeHeight(g2) + getTitleSectionHeight(g2);
+        return twoSidedContainer.computeHeight(g2) + getTitleSectionHeight(g2);
     }
 
-    private GBaseText getTitleBox(String title) {
+    @Override
+    protected int computeWidth(SVGGraphics2D g2) {
+        return twoSidedContainer.computeWidth(g2);
+    }
+
+    @Override
+    public void drawBrothersAndLinks(SVGGraphics2D g2) {
+        twoSidedContainer.drawBrothersAndLinks(g2);
+    }
+
+    @Override
+    public String toString() {
+        return twoSidedContainer.toString();
+    }
+
+    private static GBaseText getTitleBox(String title) {
         GBaseText titleBox = new GBaseText(title);
         titleBox.setDrawBox(true);
         titleBox.setBackgroundColor(Color.LIGHT_GRAY);
@@ -48,14 +68,14 @@ public class GTwoSidedContainerWithTitles extends GTwoSidedContainer {
     }
 
     private int getTitleSectionHeight(SVGGraphics2D g2) {
-        if(!hasCounterpartySubFlow()) {
+        if(!twoSidedContainer.hasCounterpartySubFlow()) {
             return mainSubFlowTitle.getHeight(g2) + SPACE_BETWEEN_TITLE_AND_CONTENT;
         }
         else {
             int mainFlowSpaceNeeded = mainSubFlowTitle.getHeight(g2) + SPACE_BETWEEN_TITLE_AND_CONTENT
-                    - mainSubFlow.getRealStart(g2);
+                    - twoSidedContainer.getMainSubFlow().getRealStart(g2);
             int counterpartyFlowSpaceNeeded = counterpartySubFlowTitle.getHeight(g2) + SPACE_BETWEEN_TITLE_AND_CONTENT
-                    - counterpartySubFlow.getRealStart(g2);
+                    - twoSidedContainer.getCounterpartySubFlow().getRealStart(g2);
 
             return Math.max(mainFlowSpaceNeeded, counterpartyFlowSpaceNeeded);
         }
@@ -66,58 +86,40 @@ public class GTwoSidedContainerWithTitles extends GTwoSidedContainer {
         mainSubFlowTitle.draw(g2, x, y);
         GUtils.drawLineWithOptions(g2, x + GSubFlowIndented.WIDTH/2, y + mainSubFlowTitle.getHeight(g2),
                 x + GSubFlowIndented.WIDTH/2,
-                y + mainSubFlowTitle.getHeight(g2) + mainSubFlow.getRectStartOffset(g2) + SPACE_BETWEEN_TITLE_AND_CONTENT,
+                y + mainSubFlowTitle.getHeight(g2) + twoSidedContainer.getMainSubFlow().getRectStartOffset(g2)
+                        + SPACE_BETWEEN_TITLE_AND_CONTENT,
                 Color.GRAY, GUtils.DASHED_STROKE);
-        if(hasCounterpartySubFlow()) {
-            int counterpartyStartX = x + mainSubFlow.getWidth(g2) + SPACE_BETWEEN_FLOWS;
+        if(twoSidedContainer.hasCounterpartySubFlow()) {
+            int counterpartyStartX = x + twoSidedContainer.getMainSubFlow().getWidth(g2)
+                    + GTwoSidedContainer.SPACE_BETWEEN_FLOWS;
             counterpartySubFlowTitle.draw(g2, counterpartyStartX, y);
             GUtils.drawLineWithOptions(g2, counterpartyStartX + GSubFlowIndented.WIDTH/2,
                     y + counterpartySubFlowTitle.getHeight(g2),
                     counterpartyStartX + GSubFlowIndented.WIDTH/2,
-                    y  + counterpartySubFlowTitle.getHeight(g2) + getCounterpartyStartY() +
-                            counterpartySubFlow.getRectStartOffset(g2) + SPACE_BETWEEN_TITLE_AND_CONTENT,
+                    y  + counterpartySubFlowTitle.getHeight(g2) + twoSidedContainer.getCounterpartyStartY() +
+                            twoSidedContainer.getCounterpartySubFlow().getRectStartOffset(g2) + SPACE_BETWEEN_TITLE_AND_CONTENT,
                     Color.GRAY, GUtils.DASHED_STROKE);
         }
-        super.draw(g2, x, y + getTitleSectionHeight(g2));
+        twoSidedContainer.draw(g2, x, y + getTitleSectionHeight(g2));
         g2.drawLine(x, y + getTitleSectionHeight(g2),
                 x + GSubFlowIndented.WIDTH/2,
                 y + getTitleSectionHeight(g2));
     }
 
     public static GTwoSidedContainerWithTitles fromAnalysisResult(AnalysisResult analysisResult) {
-        GTwoSidedContainerWithTitles twoSidedContainer = new GTwoSidedContainerWithTitles();
-
+        GTwoSidedContainerWithTitles twoSidedContainerWithTitles = new GTwoSidedContainerWithTitles();
         final ClassDescriptionContainer classDescription = analysisResult.getClassDescription();
 
-        final GSubFlowIndented mainFlow = GSubFlowIndented.fromBranch(analysisResult.getStatements());
-        StringBuilder enteringArrowTextSB = new StringBuilder(classDescription.getNameWithParent());
-        for(String annotation : classDescription.getAnnotations()) {
-            enteringArrowTextSB.append("\n@");
-            enteringArrowTextSB.append(annotation);
-        }
-        mainFlow.setEnteringArrowText(new GBaseText(enteringArrowTextSB.toString()));
+        twoSidedContainerWithTitles.twoSidedContainer = GTwoSidedContainer.fromAnalysisResult(analysisResult);
 
-        twoSidedContainer.setMainSubFlow(classDescription.getSimpleName(), mainFlow);
+        twoSidedContainerWithTitles.mainSubFlowTitle = getTitleBox(classDescription.getSimpleName());
 
         final AnalysisResult initiatedClassResult = analysisResult.getCounterpartyClassResult();
         if(initiatedClassResult != null) {
-            final InitiateFlow initiateFlow = analysisResult.getStatements().getInitiateFlowStatementAtThisLevel()
-                    .orElseThrow(() -> new IllegalStateException("Analysis with initiated counterparty, " +
-                            "but no initiate Flow instruction at this level"));
-
-            final GSubFlowIndented counterpartyFlow = GSubFlowIndented.fromBranch(initiatedClassResult.getStatements());
-
-            enteringArrowTextSB = new StringBuilder(initiatedClassResult.getClassDescription().getNameWithParent());
-            enteringArrowTextSB.append("\n@InitiatedBy(");
-            enteringArrowTextSB.append(classDescription.getNameWithParent());
-            enteringArrowTextSB.append(")");
-
-            counterpartyFlow.setEnteringArrowText(new GBaseText(enteringArrowTextSB.toString()));
-            twoSidedContainer.setCounterpartySubFlow(initiatedClassResult.getClassDescription().getSimpleName(),
-                    counterpartyFlow,
-                    (GInstruction) initiateFlow.getGraphElem());
+            twoSidedContainerWithTitles.counterpartySubFlowTitle =
+                    getTitleBox(initiatedClassResult.getClassDescription().getSimpleName());
         }
 
-        return twoSidedContainer;
+        return twoSidedContainerWithTitles;
     }
 }

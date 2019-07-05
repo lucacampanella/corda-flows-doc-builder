@@ -1,16 +1,12 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseText;
-import com.github.lucacampanella.callgraphflows.graphics.components2.GInstruction;
-import com.github.lucacampanella.callgraphflows.graphics.components2.GSubFlowIndented;
-import com.github.lucacampanella.callgraphflows.graphics.components2.GTwoSidedContainerInitiatingFlow;
+import com.github.lucacampanella.callgraphflows.graphics.components2.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 
 
 public class InitiatingSubFlow extends SubFlowBaseWithAnalysis {
 
-    GTwoSidedContainerInitiatingFlow graphElem = new GTwoSidedContainerInitiatingFlow();
+    GTwoSidedContainer graphElem = new GTwoSidedContainer();
 
     protected InitiatingSubFlow() {
 
@@ -22,7 +18,7 @@ public class InitiatingSubFlow extends SubFlowBaseWithAnalysis {
     }
 
     @Override
-    public GTwoSidedContainerInitiatingFlow getGraphElem() {
+    public GTwoSidedContainer getGraphElem() {
         return toBePainted() ? graphElem : null;
     }
 
