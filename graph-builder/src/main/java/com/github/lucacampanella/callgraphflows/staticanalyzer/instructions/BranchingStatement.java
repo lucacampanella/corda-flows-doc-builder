@@ -3,6 +3,7 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseContainer;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseText;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GConditionalBranchIndented;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.CombinationsHolder;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GInstruction;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
@@ -97,11 +98,6 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
 
     public String getStringRepresentation() {
         return conditionDescription;
-    }
-
-    @Override
-    public boolean isBranchingStatement() {
-        return true;
     }
 
     protected GInstruction getConditionInstruction() {
@@ -203,11 +199,16 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
     }
 
     @Override
-    public Branch flattenInternalMethodInvocations() {
-        Branch res = new Branch();
-        getInternalMethodInvocations().forEach(stmt -> res.add(stmt.flattenInternalMethodInvocations()));
-        res.add(this);
+    public CombinationsHolder getResultingCombinations() {
+        CombinationsHolder mergedCombination = new CombinationsHolder(false);
+        if(getBranchTrue() != null) {
+            mergedCombination.mergeWith(CombinationsHolder.fromBranch(getBranchTrue()));
+        }
+        if(getBranchFalse() != null) {
+            mergedCombination.mergeWith(CombinationsHolder.fromBranch(getBranchFalse()));
+        }
+        final CombinationsHolder res = StatementWithCompanionInterface.super.getResultingCombinations();
+        res.combineWith(mergedCombination);
         return res;
     }
-
 }

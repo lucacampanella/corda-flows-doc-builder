@@ -5,6 +5,7 @@ import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseText;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GConditionalBranchIndented;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.CombinationsHolder;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
@@ -183,5 +184,12 @@ public class MethodInvocation extends InstructionStatement {
     @Override
     public boolean toBePainted() {
         return body.toBePainted();
+    }
+
+    @Override
+    public CombinationsHolder getResultingCombinations() {
+        final CombinationsHolder res = super.getResultingCombinations();
+        res.appendToAllCombinations(getBody());
+        return res;
     }
 }

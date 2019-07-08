@@ -4,6 +4,7 @@ import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseCompon
 import com.github.lucacampanella.callgraphflows.graphics.preferences.DefaultPreferences;
 import com.github.lucacampanella.callgraphflows.graphics.preferences.PreferencesInterface;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.CombinationsHolder;
 
 import java.util.Optional;
 
@@ -16,10 +17,6 @@ public interface StatementInterface {
     }
 
     default boolean needsCompanion() {
-        return false;
-    }
-
-    default boolean isBranchingStatement() {
         return false;
     }
 
@@ -45,15 +42,6 @@ public interface StatementInterface {
 
     default boolean isSendOrReceive() {
         return false;
-    }
-
-    default Branch flattenInternalMethodInvocations() {
-        Branch res = new Branch();
-        for (StatementInterface stmt : getInternalMethodInvocations()) {
-            res.add(stmt.flattenInternalMethodInvocations());
-            res.add(stmt);
-        }
-        return res;
     }
 
     /**
@@ -96,5 +84,14 @@ public interface StatementInterface {
      */
     default boolean checkIfContainsValidProtocolAndDraw() {
         return true;
+    }
+
+    /**
+     * Returns all the possible combinations that can originate by this statement. By default returns the
+     * statement itself, unless overridden for examble by {@link BranchingStatement}
+     * @return all the possible combinations that can originate by this statement
+     */
+    default CombinationsHolder getResultingCombinations() {
+        return CombinationsHolder.fromSingleStatement(this);
     }
 }

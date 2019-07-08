@@ -92,7 +92,7 @@ sourceSets {
     test.java.srcDirs += 'src/test/kotlin'
 }
 
-task createIndexFileForViewingTests() {
+task generateIndexFileForTests() {
     doLast {
         File graphsFolder = file(Paths.get(buildDir.absolutePath, "graphs"))
         File indexFile = file(Paths.get(graphsFolder.absolutePath, "indexForTests.adoc"))

@@ -21,6 +21,12 @@ public class CombinationsHolder {
         }
     }
 
+    public static CombinationsHolder fromSingleStatement(StatementInterface singleStatement) {
+        CombinationsHolder res = new CombinationsHolder(false);
+        res.addCombination(new Branch(singleStatement));
+        return res;
+    }
+
     public void addCombination(Branch comb) {
         allCombinations.add(comb);
     }
@@ -64,28 +70,7 @@ public class CombinationsHolder {
         CombinationsHolder holder = new CombinationsHolder(true);
 
         for(StatementInterface instr : instructions) {
-            if(instr instanceof InlinableSubFlow) {
-                holder.combineWith(fromBranch(((InlinableSubFlow) instr).getBodyInstructionsForCombinations()));
-            } else {
-                holder.appendToAllCombinations(instr);
-            }
-            if(instr instanceof MethodInvocation) {
-                holder.combineWithBranch(((MethodInvocation) instr).getBody());
-            }
-            else if(instr instanceof BranchingStatement) {
-                //also add empty branches because they mean the empty road can be taken
-                //but null means that branching statement only has one way (not really a branch there, only used for
-                //do-while here)
-                CombinationsHolder mergedCombination = new CombinationsHolder(false);
-                if(((BranchingStatement) instr).getBranchTrue() != null) {
-                    mergedCombination.mergeWith(fromBranch(((BranchingStatement) instr).getBranchTrue()));
-                }
-                if(((BranchingStatement) instr).getBranchFalse() != null) {
-                    mergedCombination.mergeWith(fromBranch(((BranchingStatement) instr).getBranchFalse()));
-                }
-                holder.combineWith(mergedCombination);
-
-            }
+            holder.combineWith(instr.getResultingCombinations());
         }
 
         return holder;
