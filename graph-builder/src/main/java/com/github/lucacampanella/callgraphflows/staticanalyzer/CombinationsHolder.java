@@ -149,62 +149,39 @@ public class CombinationsHolder {
 
         while(!initiatingQueue.isEmpty() || !initiatedQueue.isEmpty()) {
 
-            StatementInterface instrLeft = null;
-            StatementInterface instrRight = null;
+            StatementWithCompanionInterface instrLeft = null;
+            StatementWithCompanionInterface instrRight = null;
             try {
-                instrLeft = StaticAnalyzerUtils.consumeUntilBlockingOrBranch(initiatingQueue);
-                instrRight = StaticAnalyzerUtils.consumeUntilBlockingOrBranch(initiatedQueue);
+                instrLeft = StaticAnalyzerUtils.consumeUntilBlocking(initiatingQueue);
+                instrRight = StaticAnalyzerUtils.consumeUntilBlocking(initiatedQueue);
             } catch (StaticAnalyzerUtils.WrongFlowLogicInSubflowException e) {
                 LOGGER.error(e.getMessage());
             }
             if (instrLeft == null && instrRight == null) {
                 return matchingStatements;
             }
-            if((instrLeft == null && instrRight != null) || (instrLeft != null && instrRight == null)) {
+            if(instrLeft == null || instrRight == null) {
                 return null; //one fot the two queues still has elements, while the other doesn't
             }
-            if (instrLeft instanceof BranchingStatement) {
-                //if it has a blocking statement in the condition than we need to keep it in the stack and
-                //see if accepts the companion on the other side
-
-                BranchingStatement branchingStatement = ((BranchingStatement) instrLeft);
-                initiatingQueue.remove();
-                if(branchingStatement.hasBlockingStatementInCondition()) {
-                    initiatingQueue.addFirst(branchingStatement.getBlockingStatementInCondition());
-                }
-                continue;
-            }
-            if(instrRight instanceof BranchingStatement) {
-                initiatedQueue.remove();
-                BranchingStatement branchingStatement = ((BranchingStatement) instrRight);
-                if(branchingStatement.hasBlockingStatementInCondition()) {
-                    initiatedQueue.addFirst(branchingStatement.getBlockingStatementInCondition());
-                }
-                continue;
-            }
-
-            StatementWithCompanionInterface statementLeft = (StatementWithCompanionInterface) instrLeft;
-            StatementWithCompanionInterface statementRight = (StatementWithCompanionInterface) instrRight;
 
             LOGGER.trace("\n Round {}", i++);
-            LOGGER.trace("{}", statementLeft);
-            LOGGER.trace("{}", statementRight);
+            LOGGER.trace("{}", instrLeft);
+            LOGGER.trace("{}", instrRight);
 
-            if(!(statementLeft instanceof SendAndReceive) || ((SendAndReceive) statementLeft).isSentConsumed()) {
-                initiatingQueue.remove(); //we remove the statement of the queue
-            }
-
-            if(!(statementRight instanceof SendAndReceive) || ((SendAndReceive) statementRight).isSentConsumed()) {
-                initiatedQueue.remove(); //we remove the statement of the queue
-            }
-
-            if(!statementLeft.acceptCompanion(statementRight)) {
-                LOGGER.warn("**** ERROR in flow logic!");
-
+            if(!instrLeft.acceptCompanion(instrRight)) {
+                LOGGER.info("error in this flow logic!");
                 return null;
             }
             else {
-                matchingStatements.add(new MatchingStatements(statementLeft, statementRight));
+                matchingStatements.add(new MatchingStatements(instrLeft, instrRight));
+            }
+
+            if(instrLeft.isConsumedForCompanionAnalysis()) {
+                initiatingQueue.remove(); //we remove the statement of the queue
+            }
+
+            if(instrRight.isConsumedForCompanionAnalysis()) {
+                initiatedQueue.remove(); //we remove the statement of the queue
             }
         }
 

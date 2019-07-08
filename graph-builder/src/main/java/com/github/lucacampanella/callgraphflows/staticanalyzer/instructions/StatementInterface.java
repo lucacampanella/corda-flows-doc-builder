@@ -84,11 +84,17 @@ public interface StatementInterface {
         return displayText;
     }
 
-    default PreferencesInterface getPref() {
-        return DefaultPreferences.getInstance();
-    }
-
     default String getStringDescription() {
            return this.toString();
+    }
+
+    /**
+     * This method is overridden in {@link InitiatingSubFlow}, is called when checking the protocol makes
+     * sense. Not to be confused with {@link StatementWithCompanionInterface#acceptCompanion(StatementWithCompanionInterface)}
+     * which is called in a later stage.
+     * @return true if the protocol makes sense, false otherwise
+     */
+    default boolean checkIfContainsValidProtocolAndDraw() {
+        return true;
     }
 }

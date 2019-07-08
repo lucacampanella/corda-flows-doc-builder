@@ -72,11 +72,11 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
         boolean accepted = false;
 
         if(!isSentConsumed) { // we treat it as a send
-            accepted = Send.isAccepted(companion, accepted, sentType);
+            accepted = Send.isAccepted(companion.getRealCompanionStatement(), accepted, sentType);
             isSentConsumed = true;
         }
         else {
-            accepted = Receive.isAccepted(companion, accepted, receivedType);
+            accepted = Receive.isAccepted(companion.getRealCompanionStatement(), accepted, receivedType);
             isSentConsumed = false;
         }
 
@@ -85,21 +85,22 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
 
     @Override
     public void createGraphLink(StatementWithCompanionInterface companion) {
+        final StatementWithCompanionInterface realCompanion = companion.getRealCompanionStatement();
         if(!isSentConsumed) { // we treat it as a send
-            if(companion instanceof Receive) {
-                graphElem.setBrother((GBaseSimpleComponent) companion.getGraphElem());
+            if(realCompanion instanceof Receive) {
+                graphElem.setBrother((GBaseSimpleComponent) realCompanion.getGraphElem());
             }
-            else if(companion instanceof SendAndReceive) {
-                ((SendAndReceive) companion).setSentConsumed(false); //we consumed the send state of SendAndReceive
-                graphElem.addLink((GBaseSimpleComponent) companion.getGraphElem());
+            else if(realCompanion instanceof SendAndReceive) {
+                ((SendAndReceive) realCompanion).setSentConsumed(false); //we consumed the send state of SendAndReceive
+                graphElem.addLink((GBaseSimpleComponent) realCompanion.getGraphElem());
             }
             isSentConsumed = true;
         }
         else { //we treat it as a receive
-            if (companion instanceof SendAndReceive) {
-                ((SendAndReceive) companion).setSentConsumed(true); //we consumed the send state of SendAndReceive
+            if (realCompanion instanceof SendAndReceive) {
+                ((SendAndReceive) realCompanion).setSentConsumed(true); //we consumed the send state of SendAndReceive
             }
-            ((GBaseSimpleComponent) companion.getGraphElem()).addLink(graphElem);
+            ((GBaseSimpleComponent) realCompanion.getGraphElem()).addLink(graphElem);
             isSentConsumed = false;
         }
     }
@@ -155,5 +156,10 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
     protected void buildGraphElem() {
         super.buildGraphElem();
         graphElem.setDrawBox(true);
+    }
+
+    @Override
+    public boolean isConsumedForCompanionAnalysis() {
+        return isSentConsumed();
     }
 }

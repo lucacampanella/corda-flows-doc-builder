@@ -187,8 +187,8 @@ public class StaticAnalyzerUtils {
 //        Deque<StatementInterface> initiatedQueue = new LinkedList<>(combRight);
 //
 //        while(!initiatingQueue.isEmpty() || !initiatedQueue.isEmpty()) {
-//            StatementInterface instrLeft = consumeUntilBlockingOrBranch(initiatingQueue);
-//            StatementInterface instrRight = consumeUntilBlockingOrBranch(initiatedQueue);
+//            StatementInterface instrLeft = consumeUntilBlocking(initiatingQueue);
+//            StatementInterface instrRight = consumeUntilBlocking(initiatedQueue);
 //            if (instrLeft == null || instrRight == null) {
 //                return;
 //            }
@@ -238,8 +238,8 @@ public class StaticAnalyzerUtils {
 //        int i = 0;
 //
 //        while(!initiatingQueue.isEmpty() || !initiatedQueue.isEmpty()) {
-//            StatementInterface instrLeft = consumeUntilBlockingOrBranch(initiatingQueue);
-//            StatementInterface instrRight = consumeUntilBlockingOrBranch(initiatedQueue);
+//            StatementInterface instrLeft = consumeUntilBlocking(initiatingQueue);
+//            StatementInterface instrRight = consumeUntilBlocking(initiatedQueue);
 //            if (instrLeft == null && instrRight == null) {
 //                return true;
 //            }
@@ -351,19 +351,16 @@ public class StaticAnalyzerUtils {
         }
     }
 
-    static StatementInterface consumeUntilBlockingOrBranch(Queue<StatementInterface> queue) throws WrongFlowLogicInSubflowException {
+    static StatementWithCompanionInterface consumeUntilBlocking(Queue<StatementInterface> queue) throws WrongFlowLogicInSubflowException {
         while(!queue.isEmpty()) {
             StatementInterface statement = queue.peek();
-            if(statement instanceof InitiatingSubFlow) {
-                if(((InitiatingSubFlow) statement).checkIfContainsValidProtocolAndDraw()) {
-                    queue.remove();
-                    continue;
-                }
+            final boolean validProtocol = statement.checkIfContainsValidProtocolAndDraw();
+            if(!validProtocol) {
                 throw new WrongFlowLogicInSubflowException(
                         "The sub flow " + statement.getStringDescription() + " contains a wrong flow protocol");
             }
-            if (statement.needsCompanion() || statement.isBranchingStatement()) {
-                return statement;
+            if (statement.needsCompanion()) {
+                return (StatementWithCompanionInterface) statement;
             }
             queue.remove();
         }

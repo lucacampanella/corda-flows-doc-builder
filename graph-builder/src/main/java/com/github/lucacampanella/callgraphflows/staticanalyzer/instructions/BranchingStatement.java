@@ -24,7 +24,7 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
     protected Branch branchFalse = new Branch();
     protected String conditionDescription;
     protected int conditionLineNumber = -1;
-    StatementInterface blockingStatementInCondition;
+    StatementWithCompanionInterface blockingStatementInCondition;
     GConditionalBranchIndented graphElem = new GConditionalBranchIndented();
     GInstruction conditionInstruction = null;
     Branch internalMethodInvocations = new Branch();
@@ -37,7 +37,7 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
         return blockingStatementInCondition != null;
     }
 
-    public StatementInterface getBlockingStatementInCondition() {
+    public StatementWithCompanionInterface getBlockingStatementInCondition() {
         return blockingStatementInCondition;
     }
 
@@ -60,18 +60,39 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
     }
 
     public boolean acceptCompanion(StatementWithCompanionInterface companion) {
-        //not really used, delagated to the blocking condition
-        return true;
+        if(!hasBlockingStatementInCondition()) {
+            throw new IllegalStateException("acceptCompanion called on a branch instruction that" +
+                    " doesn't have a blocking statement in the condition");
+        }
+        return getBlockingStatementInCondition().acceptCompanion(companion);
     }
 
     @Override
     public void createGraphLink(StatementWithCompanionInterface companion) {
-        //not really used, delagated to the blocking condition
+        if(!hasBlockingStatementInCondition()) {
+            throw new IllegalStateException("createGraphLink called on a branch instruction that" +
+                    " doesn't have a blocking statement in the condition");
+        }
+        getBlockingStatementInCondition().createGraphLink(companion);
+    }
+
+    @Override
+    public StatementWithCompanionInterface getRealCompanionStatement() {
+        if(!hasBlockingStatementInCondition()) {
+            throw new IllegalStateException("getRealCompanionStatement called on a branch instruction that" +
+                    " doesn't have a blocking statement in the condition");
+        }
+        return getBlockingStatementInCondition();
     }
 
     @Override
     public boolean needsCompanion() {
         return hasBlockingStatementInCondition();
+    }
+
+    @Override
+    public boolean isConsumedForCompanionAnalysis() {
+        return !hasBlockingStatementInCondition() || blockingStatementInCondition.isConsumedForCompanionAnalysis();
     }
 
     public String getStringRepresentation() {
@@ -106,11 +127,21 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
     protected void initiateBlockingStatementAndConditionInstruction(CtExpression condition,
                                                                            CtStatement statement,
                                                                            AnalyzerWithModel analyzer) {
+        this.blockingStatementInCondition = null;
         //automatically initiated to null if the condition doesn't contain a matching blocking statement that
         //communicates with the other flow
-        this.blockingStatementInCondition =
+        final StatementInterface blockingStatementInConditionWithSubflow =
                 MatcherHelper.instantiateStatementIfQueryableMatches(condition, statement, analyzer);
         //todo: what if there are two blocking statements in the loop condition?
+
+        if(blockingStatementInConditionWithSubflow instanceof InlinableSubFlow
+        || blockingStatementInConditionWithSubflow instanceof InitiatingSubFlow) {
+            internalMethodInvocations.add(blockingStatementInConditionWithSubflow);
+        }
+        else {
+            blockingStatementInCondition = (StatementWithCompanionInterface)
+                    blockingStatementInConditionWithSubflow;
+        }
 
         formatDescription(statement);
         conditionDescription = Utils.removePackageDescriptionIfWanted(conditionDescription);
@@ -178,4 +209,5 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
         res.add(this);
         return res;
     }
+
 }

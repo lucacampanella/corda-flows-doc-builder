@@ -26,8 +26,9 @@ public class CordaSubFlow extends SubFlowBase implements StatementWithCompanionI
 
     @Override
     public boolean acceptCompanion(StatementWithCompanionInterface companion) {
-        if(companion instanceof CordaSubFlow) {
-            CordaSubFlow otherFlow = (CordaSubFlow) companion;
+        final StatementWithCompanionInterface realCompanion = companion.getRealCompanionStatement();
+        if(realCompanion instanceof CordaSubFlow) {
+            CordaSubFlow otherFlow = (CordaSubFlow) realCompanion;
             if (isInitiatingFlow().equals(otherFlow.isInitiatingFlow())) {
                 return false; //they are both either initiating or initiated
             }
@@ -59,11 +60,12 @@ public class CordaSubFlow extends SubFlowBase implements StatementWithCompanionI
 
     @Override
     public void createGraphLink(StatementWithCompanionInterface companion) {
-        if(companion instanceof CordaSubFlow) {
+        final StatementWithCompanionInterface realCompanion = companion.getRealCompanionStatement();
+        if(realCompanion instanceof CordaSubFlow) {
             if (isInitiatingFlow() != null && isInitiatingFlow()) {
-                this.getInitiatingInstruction().setBrother(((CordaSubFlow) companion).getInitiatingInstruction());
+                this.getInitiatingInstruction().setBrother(((CordaSubFlow) realCompanion).getInitiatingInstruction());
             } else {
-                ((CordaSubFlow) companion).getInitiatingInstruction().setBrother(this.getInitiatingInstruction());
+                ((CordaSubFlow) realCompanion).getInitiatingInstruction().setBrother(this.getInitiatingInstruction());
             }
         }
     }

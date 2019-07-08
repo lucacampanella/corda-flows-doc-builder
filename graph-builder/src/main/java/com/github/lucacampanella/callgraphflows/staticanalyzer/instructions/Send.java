@@ -49,7 +49,7 @@ public class Send extends InstructionStatement implements StatementWithCompanion
     @Override
     public boolean acceptCompanion(StatementWithCompanionInterface companion) {
         boolean accepted = false;
-        accepted = isAccepted(companion, accepted, sentType);
+        accepted = isAccepted(companion.getRealCompanionStatement(), accepted, sentType);
 
         return accepted;
     }
@@ -70,10 +70,11 @@ public class Send extends InstructionStatement implements StatementWithCompanion
 
     @Override
     public void createGraphLink(StatementWithCompanionInterface companion) {
-        graphElem.setBrother((GBaseSimpleComponent) companion.getGraphElem());
-        if(companion instanceof SendAndReceive) {
+        final StatementWithCompanionInterface realCompanion = companion.getRealCompanionStatement();
+        graphElem.setBrother((GBaseSimpleComponent) realCompanion.getGraphElem());
+        if(realCompanion instanceof SendAndReceive) {
             // it must be equal to a Receive statement
-            ((SendAndReceive) companion).setSentConsumed(false); //reset counter
+            ((SendAndReceive) realCompanion).setSentConsumed(false); //reset counter
         }
     }
 

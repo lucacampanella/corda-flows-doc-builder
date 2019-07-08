@@ -31,6 +31,13 @@ public class InitiatingSubFlow extends SubFlowBaseWithAnalysis {
         return "InitiatingSubFlow<<" + resultOfClassAnalysis.getClassDescription().getNameWithParent() + ">> :" + graphElem.toString();
     }
 
+    /**
+     * This method is called when checking the protocol makes
+     * sense. Not to be confused with {@link StatementWithCompanionInterface#acceptCompanion(StatementWithCompanionInterface)}
+     * which is called in a later stage.
+     * @return true if the protocol makes sense, false otherwise
+     */
+    @Override
     public boolean checkIfContainsValidProtocolAndDraw() {
         return resultOfClassAnalysis.checkIfContainsValidProtocolAndSetupLinks();
     }
