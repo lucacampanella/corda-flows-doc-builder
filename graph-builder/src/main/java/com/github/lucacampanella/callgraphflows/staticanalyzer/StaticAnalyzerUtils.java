@@ -291,14 +291,14 @@ public class StaticAnalyzerUtils {
 //        return true;
 //    }
 
-    private static Branch statementsToBranch(List<StatementInterface> statements) {
-        Branch result = new Branch();
-        for(StatementInterface stmt : statements) {
-            result.add(stmt.desugar());
-        }
-
-        return result;
-    }
+//    private static Branch statementsToBranch(List<StatementInterface> statements) {
+//        Branch result = new Branch();
+//        for(StatementInterface stmt : statements) {
+//            result.add(stmt.desugar());
+//        }
+//
+//        return result;
+//    }
 
 
 //    private static List<List<StatementInterface>> createAllCombinations(List<StatementInterface> instructions) {

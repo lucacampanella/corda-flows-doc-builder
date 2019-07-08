@@ -23,12 +23,4 @@ public class StatementWithRelevantMethods extends InstructionStatement {
     public boolean isRelevantForAnalysis() {
         return internalMethodInvocations.isRelevant();
     }
-
-    @Override
-    public Branch desugar() {
-        Branch res = new Branch();
-        getInternalMethodInvocations().forEach(stmt -> res.addIfRelevantForAnalysis(stmt.desugar()));
-        //res.add(this); don't add this as it would result in a duplicate
-        return res;
-    }
 }

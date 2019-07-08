@@ -64,12 +64,6 @@ public class CombinationsHolder {
         CombinationsHolder holder = new CombinationsHolder(true);
 
         for(StatementInterface instr : instructions) {
-            if(!instr.getInternalMethodInvocations().isEmpty()) {
-                //in case of internal method invocations not being desugared yet
-                final Branch flatInternalInvocations = instr.flattenInternalMethodInvocations();
-                holder.combineWithBranch(flatInternalInvocations);
-                holder.appendToAllCombinations(instr);
-            }
             if(instr instanceof InlinableSubFlow) {
                 holder.combineWith(fromBranch(((InlinableSubFlow) instr).getBodyInstructionsForCombinations()));
             } else {

@@ -123,6 +123,24 @@ public class GeneralTests {
     }
 
     @Test
+    public void InitiatingFlowInIfTestFlowTest() throws IOException, AnalysisErrorException {
+        final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(fromClassSrcToPath(InitiatingFlowInIfTestFlow.class));
+        final AnalysisResult analysisResult =
+                analyzer.analyzeFlowLogicClass(analyzer.getClass(InitiatingFlowInIfTestFlow.Initiator.class));
+        DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
+        LOGGER.trace("{}", analysisResult.getStatements());
+    }
+
+    @Test
+    public void InlinableFlowInIfTestFlowTest() throws IOException, AnalysisErrorException {
+        final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(fromClassSrcToPath(InlinableFlowInIfTestFlow.class));
+        final AnalysisResult analysisResult =
+                analyzer.analyzeFlowLogicClass(analyzer.getClass(InlinableFlowInIfTestFlow.Initiator.class));
+        DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
+        LOGGER.trace("{}", analysisResult.getStatements());
+    }
+
+    @Test
     public void InitiatedByInnerClassAcceptorTest() throws IOException, AnalysisErrorException {
         final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(fromClassSrcToPath(InitiatorBaseFlow.class),
                 fromClassSrcToPath(ExtendingSuperclassTestFlow.class),
