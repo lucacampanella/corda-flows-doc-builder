@@ -1,13 +1,13 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.utils.Utils;
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseGraphicComponent;
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
-import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlow;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseComponent;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseText;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GConditionalBranchIndented;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
 import net.corda.core.flows.FlowLogic;
 import net.corda.core.flows.FlowSession;
 import org.slf4j.Logger;
@@ -18,7 +18,10 @@ import spoon.reflect.declaration.CtExecutable;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.declaration.CtParameter;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class MethodInvocation extends InstructionStatement {
 
@@ -27,7 +30,7 @@ public class MethodInvocation extends InstructionStatement {
     Branch body = new Branch();
     Map<String, String> callerSessionNameToCalleeSessionName = new HashMap<>();
     Map<String, String> callerFlowNameToCalleeFlowName = new HashMap<>();
-    GSubFlow indentedComponent = new GSubFlow();
+    GConditionalBranchIndented indentedComponent = new GConditionalBranchIndented();
 
     protected MethodInvocation(CtStatement statement) {
         super(statement.getPosition() instanceof  NoSourcePosition ? 0 : statement.getPosition().getLine(),
@@ -135,7 +138,7 @@ public class MethodInvocation extends InstructionStatement {
     }
 
     @Override
-    public GBaseGraphicComponent getGraphElem() {
+    public GBaseComponent getGraphElem() {
         if (toBePainted()) {
             return body.isEmpty() ? super.getGraphElem() : indentedComponent;
         }
@@ -146,7 +149,7 @@ public class MethodInvocation extends InstructionStatement {
 
     @Override
     protected void buildGraphElem() {
-        indentedComponent.setEnteringArrowText((GBaseTextComponent) super.getGraphElem());
+        indentedComponent.setEnteringArrowText((GBaseText) super.getGraphElem());
         body.forEach(stmt -> indentedComponent.addComponent(stmt.getGraphElem()));
     }
 

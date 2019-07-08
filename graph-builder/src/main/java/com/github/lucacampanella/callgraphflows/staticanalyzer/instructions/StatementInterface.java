@@ -1,6 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseGraphicComponent;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseComponent;
 import com.github.lucacampanella.callgraphflows.graphics.preferences.DefaultPreferences;
 import com.github.lucacampanella.callgraphflows.graphics.preferences.PreferencesInterface;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface StatementInterface {
 
-    GBaseGraphicComponent getGraphElem();
+    GBaseComponent getGraphElem();
 
     default boolean toBePainted() {
         return true;

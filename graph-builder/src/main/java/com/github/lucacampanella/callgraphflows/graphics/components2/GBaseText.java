@@ -1,4 +1,4 @@
-package com.github.lucacampanella.callgraphflows.graphics.components;
+package com.github.lucacampanella.callgraphflows.graphics.components2;
 
 import com.github.lucacampanella.callgraphflows.graphics.utils.GUtils;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
@@ -6,8 +6,7 @@ import org.jfree.graphics2d.svg.SVGGraphics2D;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
-public class GBaseTextComponent extends GBaseGraphicComponent {
-
+public class GBaseText extends GBaseSimpleComponent {
     public static final Color LESS_IMPORTANT_TEXT_COLOR = Color.GRAY;
 
     static final int BORDER_DIM = 4; //dimension of border between text and external line
@@ -16,14 +15,14 @@ public class GBaseTextComponent extends GBaseGraphicComponent {
     boolean drawBox = false;
     protected Color backgroundColor = Color.WHITE;
 
-    public GBaseTextComponent(String text) {
+    public GBaseText(String text) {
         this.text = text;
     }
 
     @Override
-    public void draw(SVGGraphics2D g2) {
-        Dimension dim = getDimensions(g2);
-        Rectangle rect = new Rectangle(getStartX(), getStartY(), dim.width, dim.height);
+    public void draw(SVGGraphics2D g2, int x, int y) {
+        super.draw(g2, x, y);
+        Rectangle rect = new Rectangle(x, y, getWidth(g2), getHeight(g2));
         GUtils.fillWithColor(g2, rect, getBackgroundColor());
         if(drawBox) {
             g2.draw(rect);
@@ -31,19 +30,18 @@ public class GBaseTextComponent extends GBaseGraphicComponent {
 
         Color backupColor = g2.getColor();
         g2.setColor(getTextColor());
-        int currY = getStartY() + getBorderDim();
+        int currY = y + getBorderDim();
         for (String line : getDisplayText().split("\n")) {
-            g2.drawString(line, getStartX() + getBorderDim(), currY + g2.getFontMetrics().getAscent());
+            g2.drawString(line, x + getBorderDim(), currY + g2.getFontMetrics().getAscent());
             currY += g2.getFontMetrics().getHeight();
         }
         g2.setColor(backupColor);
     }
 
     @Override
-    public Dimension computeDimensions(SVGGraphics2D g2) {
+    protected int computeWidth(SVGGraphics2D g2) {
         //todo: find better way to compute this, just the length of the string is wrong
         int width = 0;
-        int height = 0;
         Rectangle2D stringBounds;
         for (String line : getDisplayText().split("\n")) {
             stringBounds = g2.getFont().getStringBounds(line, g2.getFontRenderContext());
@@ -51,13 +49,26 @@ public class GBaseTextComponent extends GBaseGraphicComponent {
             if(newWidth > width) {
                 width = newWidth;
             }
+        }
+
+        return width + 2*getBorderDim();
+    }
+
+    @Override
+    public String toString() {
+        return getDisplayText();
+    }
+
+    @Override
+    protected int computeHeight(SVGGraphics2D g2) {
+        int height = 0;
+        Rectangle2D stringBounds;
+        for (String line : getDisplayText().split("\n")) {
+            stringBounds = g2.getFont().getStringBounds(line, g2.getFontRenderContext());
             height += GUtils.doubleToInt(stringBounds.getHeight());
         }
 
-        Dimension res = new Dimension(
-                width + 2*getBorderDim(),
-                height + 2*getBorderDim());
-        return res;
+        return height + 2*getBorderDim();
     }
 
     public int getBorderDim() {
@@ -74,7 +85,7 @@ public class GBaseTextComponent extends GBaseGraphicComponent {
 
     public void setText(String text) {
         this.text = text;
-        recomputeDimensions = true;
+        recomputeDims();
     }
 
     public void setTextColor(Color textColor) {

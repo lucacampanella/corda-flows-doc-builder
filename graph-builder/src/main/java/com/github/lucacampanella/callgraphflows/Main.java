@@ -3,6 +3,7 @@ package com.github.lucacampanella.callgraphflows;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.DecompilerEnum;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.JarAnalyzer;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.SourceAndJarAnalyzer;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
@@ -11,6 +12,8 @@ import java.util.concurrent.Callable;
 
 
 public class Main implements Callable<Integer> {
+
+    private static Logger LOGGER;
 
     @CommandLine.Parameters(arity = "1..*", index="0..*", paramLabel = "filesToAnalyze",
             description = "The paths to the files that need to be analyzed, they can be " +
@@ -25,6 +28,9 @@ public class Main implements Callable<Integer> {
 
     @CommandLine.Option(names = {"-l", "--draw-line-numbers"}, description = "draw the line numbers")
     boolean drawLineNumbers = false;
+
+    @CommandLine.Option(names = {"--no-box-subflows"}, description = "don't draw a box around the subflows")
+    boolean noDrawBoxAroundSubflow = false;
 
     @CommandLine.Option(names = {"-s", "--only-source-files"}, description = "analyze only the source files and not " +
             "the decompiled code")
@@ -44,12 +50,15 @@ public class Main implements Callable<Integer> {
         if(loggerLevel == null) {
             System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "error");
         }
-        LoggerFactory.getLogger(Main.class).trace("Logger level = {}", loggerLevel);
+        LOGGER = LoggerFactory.getLogger(Main.class);
+
+        LOGGER.trace("Logger level = {}", loggerLevel);
         SourceAndJarAnalyzer analyzer = new SourceAndJarAnalyzer(filesPaths,
                 DecompilerEnum.fromStringOrDefault(decompilerName), analyzeOnlySources);
 
-        LoggerFactory.getLogger(Main.class).trace("drawLineNumbers = {}", drawLineNumbers);
+        LOGGER.trace("drawLineNumbers = {}", drawLineNumbers);
         DrawerUtil.setDrawLineNumbers(drawLineNumbers);
+        DrawerUtil.setDrawBoxAroundSubFlows(!noDrawBoxAroundSubflow);
         DrawerUtil.drawAllStartableClasses(analyzer, outputPath);
         return 0;
     }

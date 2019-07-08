@@ -54,6 +54,12 @@ public class GeneralTests {
     }
 
     @Test
+    public void testSimplifiedNestedIfs() throws IOException {
+        testAnalyzeByRPCWithClass(SimplifiedNestedIfsTestFlow.class);
+    }
+
+
+    @Test
     public void testFor() throws IOException {
         testAnalyzeByRPCWithClass(ForTestFlow.class);
     }
@@ -153,6 +159,7 @@ public class GeneralTests {
 
     private void testRPCFromAnalyzer(AnalyzerWithModel analyzer) throws IOException {
         final List<CtClass> Classes = analyzer.getClassesByAnnotation(StartableByRPC.class);
+        Paths.get(DrawerUtil.DEFAULT_OUT_DIR, "images").toFile().mkdirs();
         for (CtClass clazz : Classes) {
             DrawerUtil.drawFromClass(analyzer, clazz, DrawerUtil.DEFAULT_OUT_DIR);
         }

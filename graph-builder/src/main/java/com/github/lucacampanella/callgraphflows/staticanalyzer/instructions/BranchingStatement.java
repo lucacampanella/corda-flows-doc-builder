@@ -1,10 +1,10 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
+import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseContainer;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseText;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GConditionalBranchIndented;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseGraphicComponent;
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
-import com.github.lucacampanella.callgraphflows.graphics.components.GConditionalBranch;
-import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GInstruction;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
@@ -25,7 +25,7 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
     protected String conditionDescription;
     protected int conditionLineNumber = -1;
     StatementInterface blockingStatementInCondition;
-    GConditionalBranch graphElem = new GConditionalBranch();
+    GConditionalBranchIndented graphElem = new GConditionalBranchIndented();
     GInstruction conditionInstruction = null;
     Branch internalMethodInvocations = new Branch();
 
@@ -50,7 +50,7 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
     }
 
     @Override
-    public GBaseGraphicComponent getGraphElem() {
+    public GBaseContainer getGraphElem() {
         return toBePainted() ? graphElem : null;
     }
 
@@ -99,7 +99,7 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
     }
 
     protected void buildGraphElem() {
-        GConditionalBranch elem = graphElem;
+        GConditionalBranchIndented elem = graphElem;
 
         elem.setEnteringArrowText(getConditionInstruction());
         getBranchTrue().getStatements().forEach(stmt -> elem.addComponent(stmt.getGraphElem()));
@@ -125,7 +125,7 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
         else {
             this.conditionInstruction =
                     new GInstruction(this.conditionLineNumber, this.conditionDescription);
-            this.conditionInstruction.setTextColor(GBaseTextComponent.LESS_IMPORTANT_TEXT_COLOR);
+            this.conditionInstruction.setTextColor(GBaseText.LESS_IMPORTANT_TEXT_COLOR);
         }
 
         this.internalMethodInvocations.add(

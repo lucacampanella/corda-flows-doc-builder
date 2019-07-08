@@ -1,6 +1,5 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
-import com.github.lucacampanella.callgraphflows.AnalysisErrorException;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.DoubleExtendingSuperclassTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.ExtendingSuperclassTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.InitiatorBaseFlow;

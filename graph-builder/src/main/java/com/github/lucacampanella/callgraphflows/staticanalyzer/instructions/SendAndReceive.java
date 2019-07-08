@@ -1,5 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
+import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseSimpleComponent;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
@@ -45,19 +46,19 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
                 CtTypeAccess fieldRead = (CtTypeAccess) ((CtFieldRead) (firstArgument)).getTarget();
                 sendAndReceive.receivedType = analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(
                         fieldRead.getAccessedType())
-                        .box().getSimpleName();
+                        .box().toString();
             }
             else if(firstArgument instanceof CtLambda) {
                 invocation = (CtInvocation) invocation.getTarget();
                 //receivedType = invocation.getArguments().get(0).getTarget().getAccessedType()
                 sendAndReceive.receivedType = analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(
                         (((CtTypeAccess) ((CtFieldRead) (invocation.getArguments().get(0))).getTarget()).getAccessedType()))
-                        .box().getSimpleName();
+                        .box().toString();
             }
 
         final CtTypeReference secondArgument = ((CtTypedElement) invocation.getArguments().get(1)).getType();
         sendAndReceive.sentType = analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(secondArgument)
-                .box().getSimpleName();
+                .box().toString();
 
         sendAndReceive.targetSessionName = Optional.ofNullable(invocation.getTarget().toString());
 
@@ -70,7 +71,7 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
     public boolean acceptCompanion(StatementWithCompanionInterface companion) {
         boolean accepted = false;
 
-        if(isSentConsumed) { // we treat it as a send
+        if(!isSentConsumed) { // we treat it as a send
             accepted = Send.isAccepted(companion, accepted, sentType);
             isSentConsumed = true;
         }
@@ -84,21 +85,21 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
 
     @Override
     public void createGraphLink(StatementWithCompanionInterface companion) {
-        if(isSentConsumed) { // we treat it as a send
+        if(!isSentConsumed) { // we treat it as a send
             if(companion instanceof Receive) {
-                this.getGraphElem().addBrother(companion.getGraphElem());
+                graphElem.setBrother((GBaseSimpleComponent) companion.getGraphElem());
             }
             else if(companion instanceof SendAndReceive) {
                 ((SendAndReceive) companion).setSentConsumed(false); //we consumed the send state of SendAndReceive
-                this.getGraphElem().addLink(companion.getGraphElem());
+                graphElem.addLink((GBaseSimpleComponent) companion.getGraphElem());
             }
             isSentConsumed = true;
         }
-        else {
+        else { //we treat it as a receive
             if (companion instanceof SendAndReceive) {
                 ((SendAndReceive) companion).setSentConsumed(true); //we consumed the send state of SendAndReceive
             }
-            companion.getGraphElem().addLink(this.getGraphElem());
+            ((GBaseSimpleComponent) companion.getGraphElem()).addLink(graphElem);
             isSentConsumed = false;
         }
     }

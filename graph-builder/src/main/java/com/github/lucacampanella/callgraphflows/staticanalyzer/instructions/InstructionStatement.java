@@ -1,8 +1,9 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
+import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseComponent;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseSimpleComponent;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseGraphicComponent;
-import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GInstruction;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import spoon.reflect.code.CtStatement;
 
@@ -35,7 +36,7 @@ public class InstructionStatement implements StatementInterface {
     }
 
     @Override
-    public GBaseGraphicComponent getGraphElem() {
+    public GBaseComponent getGraphElem() {
         return toBePainted() ? graphElem : null;
     }
 

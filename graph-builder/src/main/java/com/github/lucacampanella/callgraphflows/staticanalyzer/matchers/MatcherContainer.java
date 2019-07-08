@@ -1,5 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.matchers;
 
+import kotlin.Unit;
 import net.corda.confidential.IdentitySyncFlow;
 import net.corda.confidential.SwapIdentitiesFlow;
 import net.corda.core.flows.*;
@@ -135,6 +136,14 @@ public class MatcherContainer extends FlowLogic {
 
     private void typeTemplateForClass() {
         Class var;
+    }
+
+    private void typeTemplateForVoid() {
+        Void var;
+    }
+
+    private void typeTemplateForUnit() {
+        Unit var;
     }
 
     /*private void typeTemplateForSwapIdentitiesFlow() {

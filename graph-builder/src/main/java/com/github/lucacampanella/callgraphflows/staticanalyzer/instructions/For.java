@@ -1,11 +1,13 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
+import com.github.lucacampanella.callgraphflows.graphics.components2.GConditionalBranchIndented;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import spoon.reflect.code.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,9 +79,27 @@ public class For extends BranchingStatement {
 
         forInstr.initiateBlockingStatementAndConditionInstruction(condition, statement, analyzer);
 
+        if(forInstr.hasBlockingStatementInCondition()){
+            forInstr.branchTrue.add(forInstr.blockingStatementInCondition); //the for condition is checked once more when it's
+            //false, so we append the condition again at the end to be able to reply to the other side if we entered
+            //at least once in the while
+        }
+
         forInstr.buildGraphElem();
 
         return forInstr;
+    }
+
+    @Override
+    protected void buildGraphElem() {
+        graphElem.setEnteringArrowText(getConditionInstruction());
+
+        final List<StatementInterface> bodyStatements = new ArrayList<>(getBranchTrue().getStatements());
+        if(hasBlockingStatementInCondition()) {
+            bodyStatements.remove(bodyStatements.size()-1);
+        }
+
+        bodyStatements.forEach(stmt -> graphElem.addComponent(stmt.getGraphElem()));
     }
 
     @Override

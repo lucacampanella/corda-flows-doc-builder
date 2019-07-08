@@ -1,12 +1,14 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.graphics.components.GSubFlow;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
+
+import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseText;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GSubFlowIndented;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
 
 
 public class CordaSubFlow extends SubFlowBase implements StatementWithCompanionInterface {
 
-    GSubFlow graphElem = new GSubFlow();
+    GSubFlowIndented graphElem = new GSubFlowIndented();
 
     protected CordaSubFlow() {
 
@@ -18,7 +20,7 @@ public class CordaSubFlow extends SubFlowBase implements StatementWithCompanionI
     }
 
     @Override
-    public GSubFlow getGraphElem() {
+    public GSubFlowIndented getGraphElem() {
         return toBePainted() ? graphElem : null;
     }
 
@@ -41,23 +43,34 @@ public class CordaSubFlow extends SubFlowBase implements StatementWithCompanionI
     }
 
     protected void buildGraphElem() {
-        graphElem = getMainSubFlowElement();
+        graphElem.setEnteringArrowText(initiatingInstruction);
+
+        StringBuilder returnArrowTextBuilder = new StringBuilder();
+        if(returnType.isPresent() && !returnType.get().equals("java.lang.Void")) {
+            returnArrowTextBuilder.append(Utils.removePackageDescriptionIfWanted(returnType.get()));
+        }
+        if(returnArrowTextBuilder.length() > 0) {
+            final GBaseText exitingTextComponent = new GBaseText(returnArrowTextBuilder.toString());
+            exitingTextComponent.setTextColor(GBaseText.LESS_IMPORTANT_TEXT_COLOR);
+
+            graphElem.setExitingArrowText(exitingTextComponent);
+        }
     }
 
     @Override
     public void createGraphLink(StatementWithCompanionInterface companion) {
         if(companion instanceof CordaSubFlow) {
             if (isInitiatingFlow() != null && isInitiatingFlow()) {
-                this.getInitiatingInstruction().addBrother(((CordaSubFlow) companion).getInitiatingInstruction());
+                this.getInitiatingInstruction().setBrother(((CordaSubFlow) companion).getInitiatingInstruction());
             } else {
-                ((CordaSubFlow) companion).getInitiatingInstruction().addBrother(this.getInitiatingInstruction());
+                ((CordaSubFlow) companion).getInitiatingInstruction().setBrother(this.getInitiatingInstruction());
             }
         }
     }
 
-    public Branch getInstructionsForCombinations() {
-        //we return just the flow if is a corda flow
-        return new Branch(this);
+    @Override
+    public String toString() {
+        return "CordaSubFlow<<" + subFlowType.toString() + ">>";
     }
 }
 

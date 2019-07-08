@@ -1,5 +1,7 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
+import com.github.lucacampanella.callgraphflows.graphics.components2.GTwoSidedContainer;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.InitiatingSubFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.StatementInterface;
 
 public class AnalysisResult {
@@ -7,6 +9,8 @@ public class AnalysisResult {
     ClassDescriptionContainer classDescription;
     Branch statements = new Branch();
     AnalysisResult counterpartyClassResult = null;
+    Boolean containsValidProtocolAndDrawn = null;
+    private GTwoSidedContainer graphicRepresentation = null;
 
     public AnalysisResult(ClassDescriptionContainer classDescription) {
         this.classDescription = classDescription;
@@ -36,26 +40,43 @@ public class AnalysisResult {
         this.statements = statements;
     }
 
-    public boolean containsValidProtocol() {
+    public boolean checkIfContainsValidProtocolAndSetupLinks() {
+        if(containsValidProtocolAndDrawn == null) {
+            containsValidProtocolAndDrawn = checkIfContainsValidProtocolAndDrawNotLazy();
+        }
+        return containsValidProtocolAndDrawn;
+    }
+
+    private boolean checkIfContainsValidProtocolAndDrawNotLazy() {
         CombinationsHolder allCombinations = CombinationsHolder.fromBranch(statements);
-        if(hasCounterpartyResult()) {
+        if (hasCounterpartyResult()) {
             CombinationsHolder counterpartyAllCombinations =
                     CombinationsHolder.fromBranch(counterpartyClassResult.getStatements());
 
-            return allCombinations.hasOneMatchWith(allCombinations);
-        }
-        else {
-            for(StatementInterface stmt : statements) {
-                if(stmt.isSendOrReceive()) {
+            return allCombinations.checkIfMatchesAndDraw(counterpartyAllCombinations);
+        } else {
+            for (StatementInterface stmt : statements) {
+                if (stmt.isSendOrReceive()) {
                     return false;
                 }
-                //todo
+                if (stmt instanceof InitiatingSubFlow) {
+                    if (!((InitiatingSubFlow) stmt).checkIfContainsValidProtocolAndDraw()) {
+                        return false;
+                    }
+                }
             }
+            return true;
         }
-        return false;
     }
 
     public ClassDescriptionContainer getClassDescription() {
         return classDescription;
+    }
+
+    public GTwoSidedContainer getGraphicRepresentationNoTitles() {
+        if(graphicRepresentation == null) {
+            graphicRepresentation = GTwoSidedContainer.fromAnalysisResult(this);
+        }
+        return graphicRepresentation;
     }
 }

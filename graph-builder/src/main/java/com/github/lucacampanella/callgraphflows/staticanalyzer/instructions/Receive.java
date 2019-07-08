@@ -1,5 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
+import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseSimpleComponent;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
@@ -39,13 +40,16 @@ public class Receive extends InstructionStatement implements StatementWithCompan
         //maybe there is a more rubust way to do this, for example with a while
         if(firstArgument instanceof CtFieldRead) {
             CtTypeAccess fieldRead = (CtTypeAccess) ((CtFieldRead) (firstArgument)).getTarget();
-            receive.receivedType = fieldRead.getAccessedType().box().getSimpleName();
+            receive.receivedType = analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(
+                    fieldRead.getAccessedType())
+                    .box().toString();
         }
         else if(firstArgument instanceof CtLambda) {
             invocation = (CtInvocation) invocation.getTarget();
             //receivedType = invocation.getArguments().get(0).getTarget().getAccessedType()
-            receive.receivedType = ((CtTypeAccess) ((CtFieldRead) (invocation.getArguments().get(0))).getTarget())
-                    .getAccessedType().box().getSimpleName();
+            receive.receivedType = analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(
+                    ((CtTypeAccess) ((CtFieldRead) (invocation.getArguments().get(0))).getTarget()).getAccessedType())
+                    .box().toString();
         }
         else if(firstArgument instanceof CtAbstractInvocation) {
             receive.receivedType = analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(
@@ -90,7 +94,7 @@ public class Receive extends InstructionStatement implements StatementWithCompan
 
     @Override
     public void createGraphLink(StatementWithCompanionInterface companion) {
-        companion.getGraphElem().addBrother(this.getGraphElem());
+        ((GBaseSimpleComponent) companion.getGraphElem()).setBrother(graphElem);
         if(companion instanceof SendAndReceive) {
             ((SendAndReceive) companion).setSentConsumed(true); //we consumed the send state of SendAndReceive
         }

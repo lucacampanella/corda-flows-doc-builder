@@ -1,7 +1,7 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.AnalysisErrorException;
-import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisErrorException;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GInstruction;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
@@ -59,7 +59,8 @@ public class SubFlowBuilder {
             flow.subFlowVariableName = subFlowVariableName;
             flow.targetSessionName = targetSessionName;
             flow.isInitiatingFlow = isInitiatingFlow;
-            flow.initiatingInstruction = initiatingInstruction;
+            flow.initiatingInstruction = new GInstruction(line, flow.getStringDescription());
+
 
             flow.buildGraphElem();
         }
@@ -143,7 +144,12 @@ public class SubFlowBuilder {
                 final CtMethod callMethod = StaticAnalyzerUtils.findCallMethod(
                         (CtClass) subFlowInfo.subFlowType.getTypeDeclaration());
                 if (callMethod != null) {
-                    subFlowInfo.returnType = Optional.ofNullable(callMethod.getType().toString());
+                    final CtTypeReference returnTypeRef = StaticAnalyzerUtils.nullifyIfVoidType(callMethod.getType());
+                    if(returnTypeRef == null){
+                        subFlowInfo.returnType = Optional.empty();
+                    } else {
+                        subFlowInfo.returnType = Optional.ofNullable(returnTypeRef.toString());
+                    }
                 }
             }
 

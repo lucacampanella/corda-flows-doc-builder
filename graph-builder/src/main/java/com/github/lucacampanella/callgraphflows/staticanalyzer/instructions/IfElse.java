@@ -1,17 +1,20 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.utils.Utils;
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
-import com.github.lucacampanella.callgraphflows.graphics.components.GIfElse;
-import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseText;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GIfElseIndented;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GInstruction;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
-import spoon.reflect.code.*;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
+import spoon.reflect.code.CtExpression;
+import spoon.reflect.code.CtIf;
+import spoon.reflect.code.CtStatement;
+import spoon.reflect.code.CtStatementList;
 
 public class IfElse extends BranchingStatement {
 
-    GIfElse graphIfElse = new GIfElse();
+    GIfElseIndented graphIfElse = new GIfElseIndented();
 
     private IfElse() {
         super();
@@ -46,19 +49,17 @@ public class IfElse extends BranchingStatement {
     }
 
     @Override
-    public GIfElse getGraphElem() {
+    public GIfElseIndented getGraphElem() {
         return toBePainted() ? graphIfElse : null;
     }
 
     @Override
     protected void buildGraphElem() {
-        GIfElse elem = graphIfElse;
-
-        elem.addBlock(getConditionInstruction(), getBranchTrue());
+        graphIfElse.addBlock(getConditionInstruction(), getBranchTrue());
         treatIfElseCase(getBranchFalse(), graphIfElse);
     }
 
-    private void treatIfElseCase(Branch falseBranch, GIfElse graphElem) {
+    private void treatIfElseCase(Branch falseBranch, GIfElseIndented graphElem) {
         if(!falseBranch.isEmpty()) {
             final StatementInterface firstStatement = falseBranch.getStatements().get(0);
                 if (falseBranch.getStatements().size() == 1 && firstStatement instanceof IfElse) {
@@ -68,7 +69,7 @@ public class IfElse extends BranchingStatement {
                     graphElem.addBlock(conditionInstr, ifElse.getBranchTrue());
                     treatIfElseCase(ifElse.getBranchFalse(), graphElem);
                 } else {
-                    graphElem.addBlock(new GBaseTextComponent("else"), falseBranch);
+                    graphElem.addBlock(new GBaseText("else"), falseBranch);
                 }
             }
         }

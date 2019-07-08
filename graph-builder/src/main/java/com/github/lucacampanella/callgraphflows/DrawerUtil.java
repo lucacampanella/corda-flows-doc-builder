@@ -2,18 +2,17 @@ package com.github.lucacampanella.callgraphflows;
 
 import com.github.lucacampanella.callgraphflows.asciidoc.AsciiDocBuilder;
 import com.github.lucacampanella.callgraphflows.asciidoc.AsciiDocIndexBuilder;
-import com.github.lucacampanella.callgraphflows.graphics.components.GBaseTextComponent;
-import com.github.lucacampanella.callgraphflows.graphics.components.GGraphBuilder;
-import com.github.lucacampanella.callgraphflows.graphics.components.GInstruction;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GGraphBuilder;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GInstruction;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GTwoSidedContainer;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisErrorException;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.ClassDescriptionContainer;
-import net.corda.core.flows.StartableByRPC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spoon.reflect.declaration.CtClass;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
@@ -67,15 +66,7 @@ public final class DrawerUtil {
     public static void drawFromAnalysis(AnalysisResult analysisResult, String outPath) throws IOException {
         final ClassDescriptionContainer classDescription = analysisResult.getClassDescription();
 
-        GGraphBuilder graphBuilder = new GGraphBuilder();
-
-        graphBuilder.addSessionWithLeftArrow(classDescription.getSimpleName(),
-                analysisResult.getStatements(),
-                new GBaseTextComponent(classDescription.getNameWithParent() + "\n@InitiatingFlow\n@StartableByRPC"));
-        final AnalysisResult initiatedClassResult = analysisResult.getCounterpartyClassResult();
-        if(initiatedClassResult != null) {
-            graphBuilder.addSession(initiatedClassResult.getClassDescription().getSimpleName(), initiatedClassResult.getStatements());
-        }
+        GGraphBuilder graphBuilder = GGraphBuilder.fromAnalysisResult(analysisResult);
         graphBuilder.drawToFile(Paths.get(outPath, "images", classDescription.getFullyQualifiedName() + ".svg").toString());
 
         AsciiDocBuilder asciiDocBuilder = AsciiDocBuilder.fromAnalysisResult(analysisResult);
@@ -85,5 +76,9 @@ public final class DrawerUtil {
     public static void setDrawLineNumbers(boolean drawLineNumbers) {
         DrawerUtil.drawLineNumbers = drawLineNumbers;
         GInstruction.setDrawLineNumbers(drawLineNumbers);
+    }
+
+    public static void setDrawBoxAroundSubFlows(boolean drawBox) {
+        GTwoSidedContainer.setDrawBoxAround(drawBox);
     }
 }
