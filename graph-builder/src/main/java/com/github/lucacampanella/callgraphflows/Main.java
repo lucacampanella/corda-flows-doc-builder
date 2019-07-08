@@ -1,7 +1,6 @@
 package com.github.lucacampanella.callgraphflows;
 
 import com.github.lucacampanella.callgraphflows.staticanalyzer.DecompilerEnum;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.JarAnalyzer;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.SourceAndJarAnalyzer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +35,9 @@ public class Main implements Callable<Integer> {
             "the decompiled code")
     boolean analyzeOnlySources = false;
 
+    @CommandLine.Option(names = {"--no-arrows"}, description = "Don't draw arrows between send and receive")
+    boolean noArrows = false;
+
     public static void main(String []args) throws IOException {
 
         final Main app = CommandLine.populateCommand(new Main(), args);
@@ -57,8 +59,11 @@ public class Main implements Callable<Integer> {
                 DecompilerEnum.fromStringOrDefault(decompilerName), analyzeOnlySources);
 
         LOGGER.trace("drawLineNumbers = {}", drawLineNumbers);
+
         DrawerUtil.setDrawLineNumbers(drawLineNumbers);
         DrawerUtil.setDrawBoxAroundSubFlows(!noDrawBoxAroundSubflow);
+        DrawerUtil.setDrawArrows(!noArrows);
+
         DrawerUtil.drawAllStartableClasses(analyzer, outputPath);
         return 0;
     }

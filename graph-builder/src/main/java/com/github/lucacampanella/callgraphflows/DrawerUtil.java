@@ -19,8 +19,6 @@ import java.util.List;
 
 public final class DrawerUtil {
 
-    private static boolean drawLineNumbers = false;
-
     private DrawerUtil() {
         //private constuctor to hide public one
     }
@@ -74,11 +72,14 @@ public final class DrawerUtil {
     }
 
     public static void setDrawLineNumbers(boolean drawLineNumbers) {
-        DrawerUtil.drawLineNumbers = drawLineNumbers;
         GInstruction.setDrawLineNumbers(drawLineNumbers);
     }
 
     public static void setDrawBoxAroundSubFlows(boolean drawBox) {
         GTwoSidedContainer.setDrawBoxAround(drawBox);
+    }
+
+    public static void setDrawArrows(boolean drawArrows) {
+        AnalyzerWithModel.setDrawArrows(drawArrows);
     }
 }

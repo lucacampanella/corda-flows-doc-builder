@@ -32,10 +32,13 @@ public class JarAnalyzerJavaExec extends JavaExec {
     String decompilerName = "CFR";
     String pathToExecJar = null;
     boolean drawLineNumbers = false;
+    boolean analyzeOnlySourceFiles = false;
+    boolean drawArrows = true;
+    boolean drawBoxes = true;
     boolean removeJavaAgents = true; //remove agents like quasar that might be pluggen in to any javaexec task by the quasar plugin
     String logLevel = null;
     List<String> sourceFilesPath = null;
-    boolean analyzeOnlySourceFiles = false;
+
 
     @TaskAction
     @Override
@@ -58,6 +61,14 @@ public class JarAnalyzerJavaExec extends JavaExec {
         if(analyzeOnlySourceFiles) {
             getLogger().info("analyzeOnlySourceFiles = true");
             args.add("-s");
+        }
+        if(!drawArrows) {
+            getLogger().info("drawArrows = false");
+            args.add("--no-arrows");
+        }
+        if(!drawBoxes) {
+            getLogger().info("drawBoxes = false");
+            args.add("--no-box-subflows");
         }
         getLogger().info("args = {}", args);
 
@@ -162,6 +173,16 @@ public class JarAnalyzerJavaExec extends JavaExec {
     @Input
     public boolean isAnalyzeOnlySourceFiles() {
         return analyzeOnlySourceFiles;
+    }
+
+    @Input
+    public boolean isDrawArrows() {
+        return drawArrows;
+    }
+
+    @Input
+    public boolean isDrawBoxes() {
+        return drawBoxes;
     }
 
     private LogLevel getCurrentLogLevel() {

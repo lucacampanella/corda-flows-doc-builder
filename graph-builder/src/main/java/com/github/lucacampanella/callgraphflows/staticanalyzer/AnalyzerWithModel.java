@@ -24,6 +24,8 @@ public class AnalyzerWithModel {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AnalyzerWithModel.class);
 
+    private static boolean drawArrows = true;
+
     protected CtModel model;
     protected String analysisName;
     protected ClassCallStackHolder currClassCallStackHolder = null;
@@ -32,6 +34,10 @@ public class AnalyzerWithModel {
 
     public CtModel getModel() {
         return model;
+    }
+
+    public static void setDrawArrows(boolean drawArrows) {
+        AnalyzerWithModel.drawArrows = drawArrows;
     }
 
     public <T> CtClass<T> getClass(Class<T> klass) {
@@ -83,10 +89,14 @@ public class AnalyzerWithModel {
                     res.setCounterpartyClassResult(analyzeFlowLogicClass(initiatedFlowClass));
                 }
             }
-            final boolean validProtocol =
-                    res.checkIfContainsValidProtocolAndSetupLinks();//check the protocol and draws possible links
-
-            LOGGER.info("Class {} contains valid protocol? {}", klass.getQualifiedName(), validProtocol);
+            if(drawArrows) {
+                final boolean validProtocol =
+                        res.checkIfContainsValidProtocolAndSetupLinks();//check the protocol and draws possible links
+                LOGGER.info("Class {} contains valid protocol? {}", klass.getQualifiedName(), validProtocol);
+            }
+            else {
+                LOGGER.info("Set on not drawing arrows, the protocol is not figured out");
+            }
 
             classToAnalysisResultMap.put(klass, res);
             return res;
