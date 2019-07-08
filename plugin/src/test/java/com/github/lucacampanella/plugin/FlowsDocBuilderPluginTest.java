@@ -88,19 +88,19 @@ class FlowsDocBuilderPluginTest {
 
         //we check directly the XML file
         final List<String> nodeContents = TestUtils.parseXMLFile(Paths.get(tmpOutputdir.getPath(), "images",
-                "com.github.lucacampanella.testclasses.SimpleFlowTest$Initiator.svg").toString());
+                "com.github.lucacampanella.testclasses.SimpleTestFlow$Initiator.svg").toString());
 
         assertThat(nodeContents).hasSize(11);
         assertThat(nodeContents).contains(
                 "Initiator",
                 "Acceptor",
-                "SimpleFlowTest$Initiator",
+                "SimpleTestFlow$Initiator",
                 "@StartableByRPC",
                 "@InitiatingFlow",
                 "session = initiateFlow(otherParty)",
                 "sendAndReceive(String, Boolean)",
-                "SimpleFlowTest$Acceptor",
-                "@InitiatedBy(SimpleFlowTest$Initiator)",
+                "SimpleTestFlow$Acceptor",
+                "@InitiatedBy(SimpleTestFlow$Initiator)",
                 "receive(Boolean)",
                 "send(String)");
 
@@ -110,7 +110,7 @@ class FlowsDocBuilderPluginTest {
 
         //we check directly the XML file
         final File outFile = new File(tmpOutputdir.toString()
-                + "/com.github.lucacampanella.testclasses.SimpleFlowTest$Initiator.adoc");
+                + "/com.github.lucacampanella.testclasses.SimpleTestFlow$Initiator.adoc");
 
         assertThat(outFile).exists();
     }
@@ -128,7 +128,7 @@ class FlowsDocBuilderPluginTest {
                 .withPluginClasspath().withArguments("JarAnalyzerTask").withGradleVersion(version).build();
         hasOutput();
         outputSVGIsCorrect();
-        outputSVGIsCorrect();
+        outputAsciiDocIsCorrect();
     }
 
     @ParameterizedTest

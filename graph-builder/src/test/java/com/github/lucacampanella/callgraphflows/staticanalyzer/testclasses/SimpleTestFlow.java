@@ -8,7 +8,7 @@ import net.corda.core.transactions.SignedTransaction;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SimpleFlowTestFlow {
+public class SimpleTestFlow {
 
     /**
      * These are javadoc comments that will appear in the asciidoc file and should describe the

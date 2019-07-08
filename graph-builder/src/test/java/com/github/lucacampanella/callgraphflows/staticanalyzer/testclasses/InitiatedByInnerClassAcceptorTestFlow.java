@@ -1,13 +1,12 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses;
 
 import co.paralleluniverse.fibers.Suspendable;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.SimpleFlowTestFlow;
 import net.corda.core.flows.FlowException;
 import net.corda.core.flows.FlowLogic;
 import net.corda.core.flows.FlowSession;
 import net.corda.core.flows.InitiatedBy;
 
-@InitiatedBy(value=SimpleFlowTestFlow.Initiator.class)
+@InitiatedBy(value= SimpleTestFlow.Initiator.class)
 public class InitiatedByInnerClassAcceptorTestFlow extends FlowLogic<Void> {
 
     private final FlowSession otherSession;

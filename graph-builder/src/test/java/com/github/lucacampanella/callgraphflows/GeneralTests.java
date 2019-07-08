@@ -86,7 +86,7 @@ public class GeneralTests {
 
     @Test
     public void simpleFlowTest() throws IOException {
-        testAnalyzeByRPCWithClass(SimpleFlowTestFlow.class);
+        testAnalyzeByRPCWithClass(SimpleTestFlow.class);
     }
 
     @Test
