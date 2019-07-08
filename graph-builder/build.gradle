@@ -108,6 +108,8 @@ task generateIndexFileForTests() {
     }
 }
 
+test.finalizedBy generateIndexFileForTests
+
 //task copyKotlinTestJarToResources(type: Copy) {
 //    from buildDir.toURI().toURL().toString() + "/libs/KotlinTestJar.jar";
 //    into sourceSets.test.output.resourcesDir
