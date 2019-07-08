@@ -92,6 +92,9 @@ public interface StatementInterface {
      * @return all the possible combinations that can originate by this statement
      */
     default CombinationsHolder getResultingCombinations() {
-        return CombinationsHolder.fromSingleStatement(this);
+        if(needsCompanion()) {
+            return CombinationsHolder.fromSingleStatement(this);
+        }
+        return new CombinationsHolder(false);
     }
 }

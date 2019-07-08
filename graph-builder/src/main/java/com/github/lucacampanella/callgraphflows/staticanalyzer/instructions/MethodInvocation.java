@@ -188,8 +188,6 @@ public class MethodInvocation extends InstructionStatement {
 
     @Override
     public CombinationsHolder getResultingCombinations() {
-        final CombinationsHolder res = super.getResultingCombinations();
-        res.appendToAllCombinations(getBody());
-        return res;
+        return CombinationsHolder.fromBranch(body);
     }
 }

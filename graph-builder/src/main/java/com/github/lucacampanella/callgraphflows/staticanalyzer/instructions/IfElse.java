@@ -5,6 +5,7 @@ import com.github.lucacampanella.callgraphflows.graphics.components2.GIfElseInde
 import com.github.lucacampanella.callgraphflows.graphics.components2.GInstruction;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.CombinationsHolder;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
 import spoon.reflect.code.CtExpression;
@@ -12,7 +13,12 @@ import spoon.reflect.code.CtIf;
 import spoon.reflect.code.CtStatement;
 import spoon.reflect.code.CtStatementList;
 
+import java.util.Optional;
+
 public class IfElse extends BranchingStatement {
+
+    protected Branch branchTrue = new Branch();
+    protected Branch branchFalse = new Branch();
 
     GIfElseIndented graphIfElse = new GIfElseIndented();
 
@@ -53,7 +59,6 @@ public class IfElse extends BranchingStatement {
         return toBePainted() ? graphIfElse : null;
     }
 
-    @Override
     protected void buildGraphElem() {
         graphIfElse.addBlock(getConditionInstruction(), getBranchTrue());
         treatIfElseCase(getBranchFalse(), graphIfElse);
@@ -95,5 +100,60 @@ public class IfElse extends BranchingStatement {
         conditionDescription = sb.toString();
         conditionDescription = Utils.removeUnwrapIfWanted(condition, conditionDescription);
         return conditionDescription;
+    }
+
+    @Override
+    public boolean isRelevantForAnalysis() {
+        if(hasBlockingStatementInCondition() && blockingStatementInCondition.isRelevantForAnalysis()) {
+            return true;
+        }
+        return internalMethodInvocations.isRelevant() || getBranchTrue().isRelevant() || getBranchFalse().isRelevant();
+    }
+
+    @Override
+    public boolean toBePainted() {
+        if(hasBlockingStatementInCondition() && blockingStatementInCondition.toBePainted()) {
+            return true;
+        }
+        return getBranchTrue().toBePainted() || getBranchFalse().toBePainted();
+    }
+
+    /**
+     * @return true if there is an initiateFlow call, but doesn't look into subFlows
+     */
+    @Override
+    public Optional<InitiateFlow> getInitiateFlowStatementAtThisLevel() {
+        Optional<InitiateFlow>
+                res = getInternalMethodInvocations().getInitiateFlowStatementAtThisLevel();
+        if(res.isPresent()) {
+            return res;
+        }
+        res = getBranchTrue().getInitiateFlowStatementAtThisLevel();
+        if(res.isPresent()) {
+            return res;
+        }
+        res = getBranchFalse().getInitiateFlowStatementAtThisLevel();
+        return res;
+    }
+
+    @Override
+    public CombinationsHolder getResultingCombinations() {
+        CombinationsHolder mergedCombination = new CombinationsHolder(false);
+        if(getBranchTrue() != null) {
+            mergedCombination.mergeWith(CombinationsHolder.fromBranch(getBranchTrue()));
+        }
+        if(getBranchFalse() != null) {
+            mergedCombination.mergeWith(CombinationsHolder.fromBranch(getBranchFalse()));
+        }
+        final CombinationsHolder res = getBlockingStatementInCondition().getResultingCombinations();
+        res.combineWith(mergedCombination);
+        return res;
+    }
+
+    public Branch getBranchTrue() {
+        return branchTrue;
+    }
+    public Branch getBranchFalse() {
+        return branchTrue;
     }
 }

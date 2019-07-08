@@ -109,8 +109,8 @@ public class GeneralTests {
         final AnalysisResult analysisResult = drawAndReturnAnalysis(ContinueBreakTestFlow.class);
         assertThat(analysisResult.getStatements()).hasSize(4);
         While whileStatement = (While) analysisResult.getStatements().getStatements().get(1);
-        assertThat(whileStatement.getBranchTrue().getStatements()).hasSize(3);
-        IfElse ifElseInWhile = (IfElse)  whileStatement.getBranchTrue().getStatements().get(0);
+        assertThat(whileStatement.getBody().getStatements()).hasSize(3);
+        IfElse ifElseInWhile = (IfElse)  whileStatement.getBody().getStatements().get(0);
         assertThat(ifElseInWhile.getBranchTrue()).hasSize(2);
         assertThat(analysisResult.getCounterpartyClassResult().getStatements()).hasSize(4);
     }

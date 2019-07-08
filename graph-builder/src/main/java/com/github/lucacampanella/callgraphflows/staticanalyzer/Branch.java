@@ -2,12 +2,14 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.InitiateFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.StatementInterface;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.StatementWithCompanionInterface;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Branch implements Iterable<StatementInterface> {
     List<StatementInterface> statements;
@@ -65,6 +67,11 @@ public class Branch implements Iterable<StatementInterface> {
 
     public List<StatementInterface> getStatements() {
         return statements;
+    }
+
+    public List<StatementWithCompanionInterface> getOnlyStatementWithCompanionStatements() {
+        return statements.stream().filter(StatementInterface::needsCompanion)
+                .map(stmt -> (StatementWithCompanionInterface) stmt).collect(Collectors.toList());
     }
 
     public void add(Branch branch) {

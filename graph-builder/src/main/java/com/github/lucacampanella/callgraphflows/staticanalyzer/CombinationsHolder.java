@@ -21,6 +21,12 @@ public class CombinationsHolder {
         }
     }
 
+    public static CombinationsHolder fromOtherCombination(CombinationsHolder toBeCopied) {
+        CombinationsHolder res = new CombinationsHolder(false);
+        res.allCombinations.addAll(toBeCopied.allCombinations);
+        return res;
+    }
+
     public static CombinationsHolder fromSingleStatement(StatementInterface singleStatement) {
         CombinationsHolder res = new CombinationsHolder(false);
         res.addCombination(new Branch(singleStatement));
@@ -48,10 +54,13 @@ public class CombinationsHolder {
     }
 
     public void combineWith(CombinationsHolder otherHolder) {
+        if(allCombinations.isEmpty()) {
+            allCombinations.addAll(otherHolder.allCombinations);
+        }
         if(otherHolder.allCombinations.size() == 1) { //more efficient way if only one branch on other side
             otherHolder.allCombinations.get(0).forEach(this::appendToAllCombinations);
         }
-        else {
+        else if(!otherHolder.allCombinations.isEmpty()){
             List<Branch> newAllCombinations = new LinkedList<>();
             for (Branch currBranch : allCombinations) {
                 for (Branch newBranch : otherHolder.allCombinations) {
@@ -120,22 +129,18 @@ public class CombinationsHolder {
      */
     private static List<MatchingStatements> twoCombinationsMatch(Branch combLeft,
                                                 Branch combRight) {
-        Deque<StatementInterface> initiatingQueue = new LinkedList<>(combLeft.getStatements());
-        Deque<StatementInterface> initiatedQueue = new LinkedList<>(combRight.getStatements());
+        Deque<StatementWithCompanionInterface> initiatingQueue =
+                new LinkedList<>(combLeft.getOnlyStatementWithCompanionStatements()); //they should all be already fo this type
+        Deque<StatementWithCompanionInterface> initiatedQueue =
+                new LinkedList<>(combRight.getOnlyStatementWithCompanionStatements());
 
         List<MatchingStatements> matchingStatements = new ArrayList<>();
         int i = 0;
 
         while(!initiatingQueue.isEmpty() || !initiatedQueue.isEmpty()) {
 
-            StatementWithCompanionInterface instrLeft = null;
-            StatementWithCompanionInterface instrRight = null;
-            try {
-                instrLeft = StaticAnalyzerUtils.consumeUntilBlocking(initiatingQueue);
-                instrRight = StaticAnalyzerUtils.consumeUntilBlocking(initiatedQueue);
-            } catch (StaticAnalyzerUtils.WrongFlowLogicInSubflowException e) {
-                LOGGER.error(e.getMessage());
-            }
+            StatementWithCompanionInterface instrLeft = initiatingQueue.peek();
+            StatementWithCompanionInterface instrRight = initiatedQueue.peek();
             if (instrLeft == null && instrRight == null) {
                 return matchingStatements;
             }

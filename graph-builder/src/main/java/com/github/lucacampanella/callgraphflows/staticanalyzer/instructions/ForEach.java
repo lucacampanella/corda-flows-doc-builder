@@ -9,7 +9,7 @@ import spoon.reflect.code.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ForEach extends BranchingStatement {
+public class ForEach extends LoopBranchingStatement {
 
     String stringRepresentation;
 
@@ -24,8 +24,7 @@ public class ForEach extends BranchingStatement {
         CtForEach forStatement = (CtForEach) statement;
 
         //we unfold the loop only once for now
-        forInstr.branchTrue.add(
-                MatcherHelper.fromCtStatementsToStatementsForLoopBody(
+        forInstr.body.add(MatcherHelper.fromCtStatementsToStatementsForLoopBody(
                         ((CtStatementList) forStatement.getBody()).getStatements(), analyzer));
 
         CtExpression<?> condition = forStatement.getExpression();
@@ -39,30 +38,9 @@ public class ForEach extends BranchingStatement {
 
         forInstr.initiateBlockingStatementAndConditionInstruction(condition, statement, analyzer);
 
-        if(forInstr.hasBlockingStatementInCondition()){
-            forInstr.branchTrue.add(forInstr.blockingStatementInCondition); //the for condition is checked once more when it's
-            //false, so we append the condition again at the end to be able to reply to the other side if we entered
-            //at least once in the while
-        }
-
-        forInstr.branchFalse = new Branch(); //if the condition doesn't apply we directly go to the the next, so no
-        //statements added in this branch
-
         forInstr.buildGraphElem();
 
         return forInstr;
-    }
-
-    @Override
-    protected void buildGraphElem() {
-        graphElem.setEnteringArrowText(getConditionInstruction());
-
-        final List<StatementInterface> bodyStatements = new ArrayList<>(getBranchTrue().getStatements());
-        if(hasBlockingStatementInCondition()) {
-            bodyStatements.remove(bodyStatements.size()-1);
-        }
-
-        bodyStatements.forEach(stmt -> graphElem.addComponent(stmt.getGraphElem()));
     }
 
     @Override

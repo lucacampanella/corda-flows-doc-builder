@@ -9,11 +9,10 @@ import spoon.reflect.code.CtFor;
 import spoon.reflect.code.CtStatement;
 import spoon.reflect.code.CtStatementList;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class For extends BranchingStatement {
+public class For extends LoopBranchingStatement {
     private static final String TO_BE_REPLACED_PATTERN = "1@#45^";
 
     Branch initBranch = new Branch();
@@ -44,9 +43,7 @@ public class For extends BranchingStatement {
             forInstr.initBranch.add(initBlockingStatements);
         }
 
-        //we unfold the loop only once for now
-        forInstr.branchTrue.add(
-                MatcherHelper.fromCtStatementsToStatementsForLoopBody(
+        forInstr.body.add(MatcherHelper.fromCtStatementsToStatementsForLoopBody(
                 ((CtStatementList) forStatement.getBody()).getStatements(), analyzer));
 
         List<CtStatement> update = forStatement.getForUpdate();
@@ -61,7 +58,7 @@ public class For extends BranchingStatement {
             forStatement = (CtFor) statement;
             forStatement.setForUpdate(update);
 
-            forInstr.branchTrue.add(updateBlockingStatements);
+            forInstr.body.add(updateBlockingStatements);
         }
 
         StringBuilder sb = new StringBuilder();
@@ -81,27 +78,9 @@ public class For extends BranchingStatement {
 
         forInstr.initiateBlockingStatementAndConditionInstruction(condition, statement, analyzer);
 
-        if(forInstr.hasBlockingStatementInCondition()){
-            forInstr.branchTrue.add(forInstr.blockingStatementInCondition); //the for condition is checked once more when it's
-            //false, so we append the condition again at the end to be able to reply to the other side if we entered
-            //at least once in the while
-        }
-
         forInstr.buildGraphElem();
 
         return forInstr;
-    }
-
-    @Override
-    protected void buildGraphElem() {
-        graphElem.setEnteringArrowText(getConditionInstruction());
-
-        final List<StatementInterface> bodyStatements = new ArrayList<>(getBranchTrue().getStatements());
-        if(hasBlockingStatementInCondition()) {
-            bodyStatements.remove(bodyStatements.size()-1);
-        }
-
-        bodyStatements.forEach(stmt -> graphElem.addComponent(stmt.getGraphElem()));
     }
 
     @Override
