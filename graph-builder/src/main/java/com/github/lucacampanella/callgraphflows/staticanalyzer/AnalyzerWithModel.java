@@ -86,6 +86,7 @@ public class AnalyzerWithModel {
                 CtClass initiatedFlowClass = getDeeperClassInitiatedBy(klass);
 
                 if (initiatedFlowClass != null) {
+                    LOGGER.error("Class {} contains initiateFlow call, but can't find corresponding class", klass.getQualifiedName());
                     res.setCounterpartyClassResult(analyzeFlowLogicClass(initiatedFlowClass));
                 }
             }
@@ -185,7 +186,7 @@ public class AnalyzerWithModel {
                         initiatedByAnnotationOptional.get().getAllValues().get("value");
 
                 if(((CtFieldReadImpl) referenceToClass).getVariable().getDeclaringType() == null){
-                    LOGGER.warn("Couldn't retrieve declaration of class declared in the @initiatedBy " +
+                    LOGGER.warn("Couldn't retrieve declaration of class declared in the @InitiatedBy " +
                             "annotation. Skipping this class in finding the responder flow " +
                             "\nThis could result in a problem in the produced graph." +
                             " \nDeclared reference: {} \nDeclaring class: {} " +

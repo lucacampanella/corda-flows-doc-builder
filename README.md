@@ -80,39 +80,63 @@ To analyze a jar just call his corresponding analyzer task. Example, to analyze 
 
 To see all the available analyzer tasks run: `./gradlew listFlowAnalysisTasks`
 
+Since the plugin works by decompiling the class files inside the jar, it loses information such as
+line numbers or comments. For this reason is possible to point the plugin also to the source files that
+compiled constitute the jar. For this option see `filesPaths` in the Configurable options section.
+
 By default the documentation graphs are put inside `build/reports/flowsdocbuilder` in .svg and .adoc format.
-If the initiating classes have a top level comment, this is inserted in the ascii doc.
 
 #### Configurable options
 For each analyzer task you can configure various options:
 - `outPath`: the path where the documentation files are placed. 
-Example: `outPath = "myFavouriteFolder/docs"`
-Default: `build/reports/flowsdocbuilder`  
+  * Example: `outPath = "myFavouriteFolder/docs"`
+  * Default: `build/reports/flowsdocbuilder`  
 - `logLevel`: the log level to use for logging inside the task. It should be one of the 
 [slf4j log levels](https://www.slf4j.org/apidocs/org/slf4j/event/Level.html). The input is taken as string and
 later in the task converted to the enum. Case insensitive.
-Example: `logLevel = "TRACE"` or `logLevel = "debug"`
-Default: defaults to gradle specified log level. For example run task with `--info`
+  * Example: `logLevel = "TRACE"` or `logLevel = "debug"`
+  * Default: defaults to gradle specified log level. For example run task with `--info`
 option to obtain slf4j `DEBUG`. If the `logLevel` is specified by the user in the task
 this always takes precedence over gradle specified log level.
--  `removeJavaAgents`: decide whether you want the plugin to remove java agents from
+- `removeJavaAgents`: decide whether you want the plugin to remove java agents from
 the execution of the task. It's very common in Corda development environments to have
 the Quasar plugin modify every `JavaExec` task to have as `jvmArg` of the task something like
 `-javaagent:path/to/quasar.jar`. This just slows the analysis down and sometimes 
 creates unrelated exceptions, thus is disabled by default, but user can decide
-to leave the java agent by selecting `removeJavaAgents = false`.  
-Example: `removeJavaAgents = false`  
-Default: `true`
+to leave the java agent by selecting `removeJavaAgents = false`.
+  * Example: `removeJavaAgents = false`  
+  * Default: `true`  
 - `pathToExecJar`: change the jar executable used for the analysis. By default the
 plugin relies on the analysis engine that can be found in this repo under the `graph-builder`
  submodule. The dependency is automatically fetched and exceuted by gradle when the plugin
  is applied. If the user wants to change this for any reason can use this option.  
- Example: `pathToExecJar = "path/to/my/analyzerExtended.jar"`
- Default: the latest version of the Jar is downloaded from the artifactory automatically 
- Gradle dependency handler.
-- `decompilerName`: change the decompiler used. Available options: `CFR`, `Fernflower`
-  Example: `decompilerName = "fernflower"`
-  Default: `CFR` 
+  * Example: `pathToExecJar = "path/to/my/analyzerExtended.jar"`
+  * Default: the latest version of the Jar is downloaded from the artifactory automatically Gradle dependency handler.
+- `decompilerName`: change the decompiler used. Available options: `CFR`, `Fernflower`  
+  * Example: `decompilerName = "fernflower"`  
+  * Default: `CFR`
+- `sourceFilesPath`: add more files to the analysis other than the jar file to which the 
+task is hooked to. The option is a String array / list of string paths. Accepted inputs are `.jar`, `.java` or 
+folders containing either of them. The
+folders are analyzed recursively. The typical usage of this option is to add to the analysis the source 
+files that produced the `jar`, so that information such as line numbers or comments are preserved. In fact
+if the initiating classes have a top level comment, this is inserted in the ascii doc. The `sourceFilesPath` option
+is particularly useful in combination with `analyzeOnlySourceFiles` and `drawLineNumbers`.  
+  * Example: `sourceFilesPath = ['src/main/java']`  
+  * Default: `[]`, empty list / array  
+- `drawLineNumbers`: boolean option to draw line numbers left to the expression. If the files are decompiled
+and not added with the option `sourceFilesPath`, the line numbers will correspond to the ones generated 
+during decompilation.
+  * Example: `drawLineNumbers = true`  
+  * Default: `false`
+- `analyzeOnlySourceFiles`: if some `.java` files are passed with the option `filePaths`, this option allows
+to only analyze and output the documentation regarding these source files and omit all the other
+classes tagged as `@StartableByRPC` that are found in the Jar.
+  * Example: `analyzeOnlySourceFiles = true`  
+  * Default: `false`
+- `drawBoxes`: draw dashed boxes around each subflow, to better see division of labour between flows.
+  * Example: `drawBoxes = false`  
+  * Default: `true`
 
 For example using the Groovy DSL:
 ```
@@ -122,6 +146,19 @@ jarAnalyzerTask {
     removeJavaAgents = false
     pathToExecJar = "path/to/my/analyzerExtended.jar"
     decompilerName = "fernflower"
+    sourceFilesPath = ['src/main/java']
+    drawLineNumbers = true
+    analyzeOnlySourceFiles = true
+    drawBoxes = false
+}
+```
+
+A typical and useful setting is:
+```
+jarAnalyzerTask {
+    sourceFilesPath = ['src/main/java']
+    drawLineNumbers = true
+    analyzeOnlySourceFiles = true
 }
 ```
 
@@ -138,22 +175,37 @@ Run with:
 ```
 java -jar [-Dorg.slf4j.simpleLogger.defaultLogLevel=<logLevel>] graph-builder-<version>-all.jar 
 <path/to/input_jar.jar> \
-[path/to/additionalClasspathJars.jar ...] \
+[paths/to/sourceFilesFolder, paths/to/additionalSource/File.java, 
+path/to/additionalClasspathJars.jar ...] \
 [-o <path/to/output_folder>] \
 [-d <decompilerName>]
+[-l] [--no-box-subflows] [-s] [--no-arrows]
 ```
 Meaning:
 - `-Dorg.slf4j.simpleLogger.defaultLogLevel=<logLevel>`: optional parameter to decide the 
 log level. Complete `<logLevel>` with one of the 
 [slf4j log levels](https://www.slf4j.org/apidocs/org/slf4j/event/Level.html).
 - `graph-builder-<version>-all.jar`: the analyzer executable 
-- `<path/to/input_jar.jar>`: path to the jar to be analyzed
-- `path/to/additionalClasspathJars.jar ...`: optional, add more jars to the analysis. Especially
-useful when the jar to be analyzed is not a fat Jar and the analysis still needs some dependencies.
+- `<path/to/input_jar.jar>`: path to the jar to be analyzed. Other files can be added. 
+Accepted inputs are `.jar`, `.java` or folders containing either of them. The
+folders are analyzed recursively. The typical usage of this option is to add to the analysis the source 
+files that produced the `jar`, so that information such as line numbers or comments are preserved. In fact
+if the initiating classes have a top level comment, this is inserted in the ascii doc. The `sourceFilesPath` option
+is particularly useful in combination with `--only-source-files` and `--draw-line-numbers`.  
+Also useful when the Jar to be analyzed is not a fat Jar and the analysis still needs some dependencies.
 - `-o <path/to/output_folder>`: the output folder where the resulting documentation should be placed.  
 Default: `graphs`
 - `-d <decompilerName>`: change the decompiler used. Available options: `CFR`, `Fernflower`  
 Default: `CFR` 
+- `-l`/`--draw-line-numbers`: boolean option to draw line numbers left to the expression. If the files are decompiled
+and not added as `.java`, the line numbers will correspond to the ones generated 
+during decompilation.  
+Default: `false`
+- `-s`/`--only-source-files`: if some `.java` files are passed, this option allows
+to only analyze and output the documentation regarding these source files and omit all the other
+classes tagged as `@StartableByRPC` that are found in Jar files.
+- `--no-box-subflows`: don't draw dashed boxes around each subflow.
+
 
 ## Running the tests
 
