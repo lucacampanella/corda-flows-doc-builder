@@ -7,6 +7,7 @@ public abstract class GBaseContainer extends GBaseComponent {
 
     public abstract ComponentWithRelativeY setUpDimensionsUntilInitiateFlow(SVGGraphics2D g2, GBaseText initiateFlowComp);
 
+    @Override
     public boolean isContainerComponent() {
         return true;
     }

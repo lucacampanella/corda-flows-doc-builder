@@ -60,15 +60,13 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
     }
 
     public boolean acceptCompanion(StatementWithCompanionInterface companion) {
-//        return needsCompanion() && blockingStatementInCondition.acceptCompanion(companion);
-        //todo
+        //not really used, delagated to the blocking condition
         return true;
     }
 
     @Override
     public void createGraphLink(StatementWithCompanionInterface companion) {
-        //todo
-//        blockingStatementInCondition.createGraphLink(companion);
+        //not really used, delagated to the blocking condition
     }
 
     @Override

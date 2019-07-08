@@ -106,7 +106,7 @@ public class GeneralTests {
 
     @Test
     public void ContinueBreakTest() throws IOException, AnalysisErrorException {
-        final AnalysisResult analysisResult = drawAndReturnAnalysis(ContinueBreakTest.class);
+        final AnalysisResult analysisResult = drawAndReturnAnalysis(ContinueBreakTestFlow.class);
         assertThat(analysisResult.getStatements()).hasSize(4);
         While whileStatement = (While) analysisResult.getStatements().getStatements().get(1);
         assertThat(whileStatement.getBranchTrue().getStatements()).hasSize(3);

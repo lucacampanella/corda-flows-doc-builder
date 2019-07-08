@@ -3,7 +3,6 @@ package com.github.lucacampanella.callgraphflows.graphics.components2;
 import com.github.lucacampanella.callgraphflows.graphics.utils.GUtils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.ClassDescriptionContainer;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.InitiateFlow;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
 import java.awt.*;
@@ -13,7 +12,7 @@ import java.awt.*;
  */
 public class GTwoSidedContainerWithTitles extends GBaseComponent {
 
-    private static int SPACE_BETWEEN_TITLE_AND_CONTENT = 15;
+    private static final int SPACE_BETWEEN_TITLE_AND_CONTENT = 15;
 
     private GTwoSidedContainer twoSidedContainer = new GTwoSidedContainer();
 
@@ -73,9 +72,9 @@ public class GTwoSidedContainerWithTitles extends GBaseComponent {
         }
         else {
             int mainFlowSpaceNeeded = mainSubFlowTitle.getHeight(g2) + SPACE_BETWEEN_TITLE_AND_CONTENT
-                    - twoSidedContainer.getMainSubFlow().getRealStart(g2);
+                    - twoSidedContainer.getMainSubFlow().getRealStart();
             int counterpartyFlowSpaceNeeded = counterpartySubFlowTitle.getHeight(g2) + SPACE_BETWEEN_TITLE_AND_CONTENT
-                    - twoSidedContainer.getCounterpartySubFlow().getRealStart(g2);
+                    - twoSidedContainer.getCounterpartySubFlow().getRealStart();
 
             return Math.max(mainFlowSpaceNeeded, counterpartyFlowSpaceNeeded);
         }

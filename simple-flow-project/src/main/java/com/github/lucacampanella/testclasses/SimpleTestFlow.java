@@ -3,12 +3,11 @@ package com.github.lucacampanella.testclasses;
 import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
-import net.corda.core.transactions.SignedTransaction;
 
-import java.util.LinkedList;
-import java.util.List;
+public class SimpleTestFlow {
 
-public class SimpleFlowTest {
+    private SimpleTestFlow() {
+    }
 
     @InitiatingFlow
     @StartableByRPC

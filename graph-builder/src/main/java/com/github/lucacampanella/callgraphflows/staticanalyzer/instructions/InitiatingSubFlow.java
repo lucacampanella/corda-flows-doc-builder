@@ -1,7 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.graphics.components2.*;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
+import com.github.lucacampanella.callgraphflows.graphics.components2.GTwoSidedContainer;
 
 
 public class InitiatingSubFlow extends SubFlowBaseWithAnalysis {

@@ -2,6 +2,8 @@ package com.github.lucacampanella.callgraphflows.graphics.components2;
 
 import com.github.lucacampanella.callgraphflows.graphics.utils.GUtils;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -9,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class GBaseIndentedContainer extends GBaseContainer {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GBaseIndentedContainer.class);
 
     protected static class GBaseTextWithRelativeY extends ComponentWithRelativeY {
         private GBaseText comp = null;
@@ -70,7 +74,6 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
 
         int rectStart = y;
         int rectEnd = y + height;
-        //int rectHeight = height;
 
         if(enteringArrowText != null) {
             int startArrowY = y + enteringArrowText.getY();
@@ -85,8 +88,6 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
             enteringArrowText.drawRelative(g2, arrowRightBorderX + INDENTATION/2, y);
 
             rectStart = startArrowY  + verticalHeight - SPACE_BETWEEN_COMPONENTS;
-//            rectHeight -= enteringArrowText.getY();
-//            rectHeight += SPACE_BETWEEN_COMPONENTS;
         }
 
         if(exitingArrowText != null) {
@@ -97,14 +98,8 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
 
         GUtils.fillWithColor(g2, rect, getAwtColor());
         g2.draw(rect);
-        //todo: draw it properly
-//        if(enteringArrowText != null) {
-//            enteringArrowText.drawRelative(g2, x, y);
-//        }
+
         components.forEach(comp -> comp.drawRelative(g2, x + INDENTATION, y));
-//        if(exitingArrowText != null) {
-//            exitingArrowText.drawRelative(g2, x, y);
-//        }
 
         if(exitingArrowText != null) {
             int startArrowY = y + exitingArrowText.getY();
@@ -187,6 +182,7 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
                 throw new IllegalArgumentException("You passed a null object but we had just given back" +
                         "the entering arrow");
             }
+            LOGGER.error("THIS SHOULD NEVER HAPPEN");
             enteringArrowText.setY(lastCompWithNewY.getY());
             currY = lastCompWithNewY.getY() + enteringArrowText.getComp().getHeight(g2);
             currCompIndex = 0;
@@ -220,9 +216,6 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
                 currY += currComp.getHeight(g2); //get height will trigger the internal process in this one
             }
         }
-//        if(!components.isEmpty()) {
-//            currY += components.get(components.size()-1).getComp().getHeight(g2);
-//        }
         currY += SPACE_BETWEEN_COMPONENTS;
         //if we arrive here it means we have finished all components
         if(exitingArrowText != null) {
@@ -273,7 +266,7 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
             }
             else if(currComp.isSimpleComponent()) {
                 if(currComp == initiateFlowComp) {
-                    return currCompWithY; //todo: adding to?
+                    return currCompWithY;
                 }
                 if(((GBaseSimpleComponent) currComp).hasAnyBrother()) {
                     throw new IllegalStateException("Blocking component " +
@@ -287,9 +280,6 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
                 currY += currComp.getHeight(g2); //get height will trigger the internal process in this one
             }
         }
-
-//        throw new IllegalArgumentException("Checked all the components, but no initiate flow found," +
-//                "probably this is not an initiating flow");
 
         currY += SPACE_BETWEEN_COMPONENTS;
         if(exitingArrowText != null) {
@@ -371,7 +361,7 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
                 0 : enteringArrowText.getY() + enteringArrowText.getComp().getHeight(g2) - SPACE_BETWEEN_COMPONENTS;
     }
 
-    public int getRealStart(SVGGraphics2D g2) {
+    public int getRealStart() {
         return enteringArrowText == null ?
                 0 : enteringArrowText.getY();
     }
@@ -380,7 +370,7 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
     protected int computeWidth(SVGGraphics2D g2) {
         int maxWidth = 0;
         if(enteringArrowText != null) {
-            maxWidth = Math.max(maxWidth, enteringArrowText.getComp().getWidth(g2) + WIDTH + WIDTH/2); //todo
+            maxWidth = Math.max(maxWidth, enteringArrowText.getComp().getWidth(g2) + WIDTH + WIDTH/2);
         }
         for (ComponentWithRelativeY comp : components) {
             maxWidth = Math.max(maxWidth, comp.getComp().getWidth(g2) + INDENTATION);

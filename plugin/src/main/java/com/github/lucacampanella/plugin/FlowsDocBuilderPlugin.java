@@ -1,11 +1,12 @@
 package com.github.lucacampanella.plugin;
 
 
-import org.gradle.api.*;
+import org.gradle.api.DefaultTask;
+import org.gradle.api.GradleException;
+import org.gradle.api.Plugin;
+import org.gradle.api.Project;
 import org.gradle.api.tasks.TaskCollection;
 import org.gradle.jvm.tasks.Jar;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;

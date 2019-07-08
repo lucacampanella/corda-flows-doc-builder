@@ -59,10 +59,9 @@ public class AnalysisResult {
                 if (stmt.isSendOrReceive()) {
                     return false;
                 }
-                if (stmt instanceof InitiatingSubFlow) {
-                    if (!((InitiatingSubFlow) stmt).checkIfContainsValidProtocolAndDraw()) {
-                        return false;
-                    }
+                if (stmt instanceof InitiatingSubFlow &&
+                        !((InitiatingSubFlow) stmt).checkIfContainsValidProtocolAndDraw()) {
+                    return false;
                 }
             }
             return true;

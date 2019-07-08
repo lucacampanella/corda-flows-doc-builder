@@ -193,7 +193,6 @@ public class SubFlowBuilder {
     }
 
     private static boolean isInitiatingSpecialCordaFlow(CtTypeReference subFlowType) {
-        //todo: add remaining class and a default way if not find any corda class
         for (Map.Entry<CtTypeReference, CtTypeReference> entry : cordaSpecialFlows.entrySet()) {
             CtTypeReference cordaInitiatingFlow = entry.getKey();
             if (subFlowType.isSubtypeOf(cordaInitiatingFlow)) {

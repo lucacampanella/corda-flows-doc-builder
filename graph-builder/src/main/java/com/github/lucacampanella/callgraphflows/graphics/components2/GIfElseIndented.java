@@ -22,7 +22,6 @@ public class GIfElseIndented extends GBaseContainer {
         }
     }
 
-    private static final int INDENTATION = GBaseIndentedContainer.INDENTATION/2;
     private static final int SPACE_BETWEEN_COMPONENTS = GBaseIndentedContainer.SPACE_BETWEEN_COMPONENTS;
 
     private final List<GConditionalBranchIndentedWithRelativeY> blocks = new ArrayList<>();

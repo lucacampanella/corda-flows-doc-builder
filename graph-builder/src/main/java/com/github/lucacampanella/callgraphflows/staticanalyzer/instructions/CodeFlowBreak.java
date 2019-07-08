@@ -21,6 +21,7 @@ public class CodeFlowBreak extends InstructionStatement {
         return flowBreak;
     }
 
+    @Override
     protected Color getTextColor() { return Color.GRAY; }
 
     @Override

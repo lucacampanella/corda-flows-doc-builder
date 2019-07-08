@@ -60,7 +60,6 @@ public class GUtils {
         int[] xpoints = {x2, (int) xm, (int) xn};
         int[] ypoints = {y2, (int) ym, (int) yn};
 
-        //g.drawLine(x1, y1, x2, y2);
         drawLineWithOptions(g, x1, y1, x2, y2, color, stroke);
         Color defaultColor = g.getColor();
         if(color != null) {

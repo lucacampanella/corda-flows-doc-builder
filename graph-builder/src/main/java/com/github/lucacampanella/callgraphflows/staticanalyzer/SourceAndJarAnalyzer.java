@@ -1,6 +1,5 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
-import net.corda.core.flows.StartableByRPC;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.slf4j.Logger;
@@ -60,19 +59,18 @@ public class SourceAndJarAnalyzer extends AnalyzerWithModel {
 
         Launcher spoon = new Launcher();
 
-        if(pathsToFoldersOrSrc != null) {
-            for (String path : pathsToFoldersOrSrc) {
-                final File folderOrSrc = new File(path);
-                if (!folderOrSrc.exists()) {
-                    throw new RuntimeException("File or folder " + folderOrSrc.getPath() + " does not exist");
-                }
-                if (folderOrSrc.isDirectory()) {
-                    addFolderToModel(addedClassesNamesSet, spoon, folderOrSrc);
-                } else {
-                    addSingleFileToModel(addedClassesNamesSet, spoon, folderOrSrc);
-                }
+        for (String path : pathsToFoldersOrSrc) {
+            final File folderOrSrc = new File(path);
+            if (!folderOrSrc.exists()) {
+                throw new BuildingModelException("File or folder " + folderOrSrc.getPath() + " does not exist");
+            }
+            if (folderOrSrc.isDirectory()) {
+                addFolderToModel(addedClassesNamesSet, spoon, folderOrSrc);
+            } else {
+                addSingleFileToModel(addedClassesNamesSet, spoon, folderOrSrc);
             }
         }
+
 
         if(analyzeOnlySources) {
             srcClassNamesSet = new HashSet<>(addedClassesNamesSet); //we save which classes derive from sources and

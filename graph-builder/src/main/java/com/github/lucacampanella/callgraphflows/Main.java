@@ -12,7 +12,7 @@ import java.util.concurrent.Callable;
 
 public class Main implements Callable<Integer> {
 
-    private static Logger LOGGER;
+    private Logger LOGGER;
 
     @CommandLine.Parameters(arity = "1..*", index="0..*", paramLabel = "filesToAnalyze",
             description = "The paths to the files that need to be analyzed, they can be " +

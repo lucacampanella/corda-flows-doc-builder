@@ -11,12 +11,6 @@ import java.util.stream.Collectors;
 
 public class JarAnalyzerJavaExec extends JavaExec {
 
-//        ERROR(40, "ERROR"),
-//        WARN(30, "WARN"),
-//        INFO(20, "INFO"),
-//        DEBUG(10, "DEBUG"),
-//        TRACE(0, "TRACE");
-
     private static Map<LogLevel, Level> gradleLogLevelToSLF4JLevel = new EnumMap<>(LogLevel.class);
     static {
         gradleLogLevelToSLF4JLevel.put(LogLevel.ERROR, Level.ERROR);

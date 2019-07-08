@@ -9,7 +9,7 @@ import net.corda.core.transactions.SignedTransaction;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ContinueBreakTest {
+public class ContinueBreakTestFlow {
 
         @InitiatingFlow
         @StartableByRPC

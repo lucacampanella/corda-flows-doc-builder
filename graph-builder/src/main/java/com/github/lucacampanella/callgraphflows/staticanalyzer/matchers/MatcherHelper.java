@@ -62,7 +62,7 @@ public final class MatcherHelper {
                 MatcherHelper.class.getClassLoader().getResourceAsStream("MatcherContainer.java");
 
         if(matcherContainerStream == null) {
-            throw new RuntimeException("MatcherContainer.java not found");
+            throw new MatcherException("MatcherContainer.java not found");
         }
 
         final String matcherContainerString = new BufferedReader(new InputStreamReader(matcherContainerStream)).lines()
@@ -232,13 +232,13 @@ public final class MatcherHelper {
         } else if (matchesAnyChildren(statement, "initiateFlowMatcher")) {
             return InitiateFlow.fromCtStatement(statement, analyzer);
         } else if (matchesAnyChildren(statement, SEND_MATCHER) ||
-                matchesAnyChildren(statement, SEND_WITH_BOOL_MATCHER)) { //TODO: test the second line
+                matchesAnyChildren(statement, SEND_WITH_BOOL_MATCHER)) {
             return Send.fromCtStatement(statement, analyzer);
         } else if (matchesAnyChildren(statement, RECEIVE_MATCHER) ||
-                matchesAnyChildren(statement, RECEIVE_WITH_BOOL_MATCHER)) { //TODO: test the second line
+                matchesAnyChildren(statement, RECEIVE_WITH_BOOL_MATCHER)) {
             return Receive.fromCtStatement(statement, analyzer);
         } else if (matchesAnyChildren(statement, SEND_AND_RECEIVE_MATCHER) ||
-                matchesAnyChildren(statement, SEND_AND_RECEIVE_WITH_BOOL_MATCHER)) { //TODO: test the second line
+                matchesAnyChildren(statement, SEND_AND_RECEIVE_WITH_BOOL_MATCHER)) {
             return SendAndReceive.fromCtStatement(statement, analyzer);
         }
         else if (matchesAnyChildren(statement, SUB_FLOW_MATCHER)) {

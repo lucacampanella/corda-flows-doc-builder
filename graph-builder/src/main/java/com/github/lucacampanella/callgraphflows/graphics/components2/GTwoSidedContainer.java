@@ -71,6 +71,7 @@ public class GTwoSidedContainer extends GBaseComponent {
         GTwoSidedContainer.drawBoxAround = drawBoxAround;
     }
 
+    @Override
     public boolean isTwoSidedComponent() {
         return true;
     }

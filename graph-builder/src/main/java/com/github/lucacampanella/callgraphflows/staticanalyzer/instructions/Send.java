@@ -37,7 +37,7 @@ public class Send extends InstructionStatement implements StatementWithCompanion
                     "sendWithBoolMatcher");
         }
         send.sentType = analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(
-                (((CtTypedElement) invocation.getArguments().get(0))).getType())
+                ((CtTypedElement) invocation.getArguments().get(0)).getType())
                 .box().toString();
 
         send.targetSessionName = Optional.ofNullable(invocation.getTarget().toString());

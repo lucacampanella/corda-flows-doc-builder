@@ -63,6 +63,7 @@ public abstract class GBaseSimpleComponent extends GBaseComponent {
         return hasAsBrother(brother) || brother.hasAsBrother(this);
     }
 
+    @Override
     public boolean isSimpleComponent() {
         return true;
     }

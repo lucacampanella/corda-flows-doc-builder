@@ -1,10 +1,9 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
 import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseComponent;
-import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseSimpleComponent;
-import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GInstruction;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
 import spoon.reflect.code.CtStatement;
 
 import java.awt.*;

@@ -40,7 +40,6 @@ public class GBaseText extends GBaseSimpleComponent {
 
     @Override
     protected int computeWidth(SVGGraphics2D g2) {
-        //todo: find better way to compute this, just the length of the string is wrong
         int width = 0;
         Rectangle2D stringBounds;
         for (String line : getDisplayText().split("\n")) {

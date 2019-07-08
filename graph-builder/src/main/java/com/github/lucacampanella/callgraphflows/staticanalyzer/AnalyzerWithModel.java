@@ -86,8 +86,10 @@ public class AnalyzerWithModel {
                 CtClass initiatedFlowClass = getDeeperClassInitiatedBy(klass);
 
                 if (initiatedFlowClass != null) {
-                    LOGGER.error("Class {} contains initiateFlow call, but can't find corresponding class", klass.getQualifiedName());
                     res.setCounterpartyClassResult(analyzeFlowLogicClass(initiatedFlowClass));
+                }
+                else {
+                    LOGGER.error("Class {} contains initiateFlow call, but can't find corresponding class", klass.getQualifiedName());
                 }
             }
             if(drawArrows) {
@@ -182,7 +184,7 @@ public class AnalyzerWithModel {
                         return result;
                     }).findFirst();
             if(initiatedByAnnotationOptional.isPresent()) {
-                final CtExpression referenceToClass = (CtExpression)
+                final CtExpression referenceToClass =
                         initiatedByAnnotationOptional.get().getAllValues().get("value");
 
                 if(((CtFieldReadImpl) referenceToClass).getVariable().getDeclaringType() == null){

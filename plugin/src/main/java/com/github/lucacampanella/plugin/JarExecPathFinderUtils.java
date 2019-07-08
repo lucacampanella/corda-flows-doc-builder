@@ -9,6 +9,9 @@ import java.util.Set;
 
 public final class JarExecPathFinderUtils {
 
+    private JarExecPathFinderUtils() {
+    }
+
     private static final String CONFIGURATION_NAME = "analyzerExecutable";
     private static String pathToExecJar = null;
     private static String buildVersion = null;

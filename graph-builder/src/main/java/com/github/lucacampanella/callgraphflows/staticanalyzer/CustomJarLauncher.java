@@ -5,14 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spoon.Launcher;
 import spoon.SpoonException;
-import spoon.decompiler.CFRDecompiler;
 import spoon.decompiler.Decompiler;
-import spoon.decompiler.FernflowerDecompiler;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 
 //
@@ -106,62 +103,6 @@ public class CustomJarLauncher extends Launcher {
     private CustomJarLauncher(){
         //use builder
     }
-
-//    public CustomJarLauncher(List<String> jarPaths) {
-//        this(jarPaths, (String)null, null);
-//    }
-//
-//    public CustomJarLauncher(List<String> jarPaths, String decompiledSrcPath, Decompiler decompiler) {
-//        this.decompile = false;
-//        this.decompiler = decompiler;
-//        if (decompiledSrcPath == null) {
-//            decompiledSrcPath = defaultDecompiledSourcePath;
-//            this.decompile = true;
-//        }
-//
-//        this.decompiledRoot = new File(decompiledSrcPath);
-//        if (this.decompiledRoot.exists() && !this.decompiledRoot.canWrite()) {
-//            throw new SpoonException("Dir " + this.decompiledRoot.getPath() + " already exists and is not deletable.");
-//        } else {
-//            if (this.decompiledRoot.exists() && this.decompile) {
-//                try {
-//                    FileUtils.deleteDirectory(decompiledRoot);
-//                } catch (IOException e) {
-//                    throw new SpoonException("Dir " + decompiledRoot.getPath() + " already exists and is not deletable.");
-//                }
-//            }
-//
-//            if (!this.decompiledRoot.exists()) {
-//                this.decompiledRoot.mkdirs();
-//                this.decompile = true;
-//            }
-//
-//            this.decompiledSrc = new File(this.decompiledRoot, "src/main/java");
-//            if (!this.decompiledSrc.exists()) {
-//                this.decompiledSrc.mkdirs();
-//                this.decompile = true;
-//            }
-//
-//            if (decompiler == null) {
-//                this.decompiler = this.getDefaultDecompiler();
-//            }
-//
-//            jarPaths.forEach(jarPath -> {
-//                File jar = new File(jarPath);
-//                if (jar.exists() && jar.isFile()) {
-//                    if (this.decompile || (jar.lastModified() > this.decompiledSrc.lastModified())) {
-//                        this.decompiler.decompile(jar.getAbsolutePath());
-//                    }
-//                } else {
-//                    throw new SpoonException("Jar " + jar.getPath() + " not found.");
-//                }
-//            });
-//            this.addInputResource(this.decompiledSrc.getAbsolutePath());
-//        }
-//    }
-
-
-
 }
 
 

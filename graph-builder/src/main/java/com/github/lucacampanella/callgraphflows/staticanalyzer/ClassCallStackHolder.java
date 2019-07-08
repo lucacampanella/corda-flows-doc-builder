@@ -3,16 +3,12 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import spoon.reflect.code.CtAbstractInvocation;
 import spoon.reflect.code.CtInvocation;
 import spoon.reflect.code.CtThisAccess;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtMethod;
-import spoon.reflect.declaration.CtType;
-import spoon.reflect.declaration.CtTypedElement;
 import spoon.reflect.reference.CtTypeParameterReference;
 import spoon.reflect.reference.CtTypeReference;
-import spoon.support.reflect.declaration.CtConstructorImpl;
 
 import java.util.*;
 
@@ -21,8 +17,6 @@ public class ClassCallStackHolder {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClassCallStackHolder.class);
 
     private List<CtTypeReference<?>> classStack = new ArrayList<>(1);
-    private Map<CtClass, Map<String, CtTypeReference>> classToGenericsMapMap = new HashMap<>();
-    //maps each class to a map containing the link between the generics name and the actual type declared by subclasses
 
     public static ClassCallStackHolder fromCtClass(CtClass klass) {
         ClassCallStackHolder classCallStackHolder = new ClassCallStackHolder();

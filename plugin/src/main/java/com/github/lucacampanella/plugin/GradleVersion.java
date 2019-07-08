@@ -1,5 +1,7 @@
 package com.github.lucacampanella.plugin;
 
+import java.util.Objects;
+
 public class GradleVersion implements Comparable<GradleVersion> {
 
     private String version;
@@ -43,6 +45,11 @@ public class GradleVersion implements Comparable<GradleVersion> {
         if(this.getClass() != that.getClass())
             return false;
         return this.compareTo((GradleVersion) that) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(version);
     }
 
     @Override

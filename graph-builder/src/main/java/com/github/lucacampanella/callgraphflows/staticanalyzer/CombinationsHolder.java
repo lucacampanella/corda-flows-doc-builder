@@ -65,9 +65,10 @@ public class CombinationsHolder {
 
         for(StatementInterface instr : instructions) {
             if(!instr.getInternalMethodInvocations().isEmpty()) {
-                //todo: here we should have already desugared, nothing should be present and this line never happen
+                //in case of internal method invocations not being desugared yet
                 final Branch flatInternalInvocations = instr.flattenInternalMethodInvocations();
                 holder.combineWithBranch(flatInternalInvocations);
+                holder.appendToAllCombinations(instr);
             }
             if(instr instanceof InlinableSubFlow) {
                 holder.combineWith(fromBranch(((InlinableSubFlow) instr).getBodyInstructionsForCombinations()));
@@ -160,7 +161,7 @@ public class CombinationsHolder {
                 return matchingStatements;
             }
             if((instrLeft == null && instrRight != null) || (instrLeft != null && instrRight == null)) {
-                return null;
+                return null; //one fot the two queues still has elements, while the other doesn't
             }
             if (instrLeft instanceof BranchingStatement) {
                 //if it has a blocking statement in the condition than we need to keep it in the stack and

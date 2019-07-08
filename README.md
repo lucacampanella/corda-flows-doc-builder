@@ -224,7 +224,6 @@ This is an example of how the produced .svg image looks like. The file is genera
 
 ## Contributing
 
-//todo
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code 
 of conduct, and the process for submitting pull requests to us.
 

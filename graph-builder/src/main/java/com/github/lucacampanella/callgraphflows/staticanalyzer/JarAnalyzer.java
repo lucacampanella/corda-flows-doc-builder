@@ -2,11 +2,7 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import spoon.decompiler.CFRDecompiler;
-import spoon.decompiler.Decompiler;
-import spoon.decompiler.FernflowerDecompiler;
 
-import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
