@@ -61,15 +61,6 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
     }
 
     @Override
-    public StatementWithCompanionInterface getRealCompanionStatement() {
-        if(!hasBlockingStatementInCondition()) {
-            throw new IllegalStateException("getRealCompanionStatement called on a branch instruction that" +
-                    " doesn't have a blocking statement in the condition");
-        }
-        return getBlockingStatementInCondition();
-    }
-
-    @Override
     public boolean needsCompanion() {
         return hasBlockingStatementInCondition();
     }

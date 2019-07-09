@@ -20,8 +20,4 @@ public interface StatementWithCompanionInterface extends StatementInterface {
     default boolean isConsumedForCompanionAnalysis() {
         return true;
     }
-
-    default StatementWithCompanionInterface getRealCompanionStatement() {
-        return this;
-    }
 }

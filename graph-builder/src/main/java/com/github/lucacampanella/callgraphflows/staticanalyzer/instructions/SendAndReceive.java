@@ -72,11 +72,11 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
         boolean accepted = false;
 
         if(!isSentConsumed) { // we treat it as a send
-            accepted = Send.isAccepted(companion.getRealCompanionStatement(), accepted, sentType);
+            accepted = Send.isAccepted(companion, accepted, sentType);
             isSentConsumed = true;
         }
         else {
-            accepted = Receive.isAccepted(companion.getRealCompanionStatement(), accepted, receivedType);
+            accepted = Receive.isAccepted(companion, accepted, receivedType);
             isSentConsumed = false;
         }
 
@@ -85,7 +85,7 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
 
     @Override
     public void createGraphLink(StatementWithCompanionInterface companion) {
-        final StatementWithCompanionInterface realCompanion = companion.getRealCompanionStatement();
+        final StatementWithCompanionInterface realCompanion = companion;
         if(!isSentConsumed) { // we treat it as a send
             if(realCompanion instanceof Receive) {
                 graphElem.setBrother((GBaseSimpleComponent) realCompanion.getGraphElem());
