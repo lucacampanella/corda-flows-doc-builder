@@ -120,9 +120,9 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
     public void setSentConsumed(boolean sentConsumed) {
         isSentConsumed = sentConsumed;
     }
-    
+
     @Override
-    public boolean isSendOrReceive() {
+    public boolean hasSendOrReceiveAtThisLevel() {
         return true;
     }
 

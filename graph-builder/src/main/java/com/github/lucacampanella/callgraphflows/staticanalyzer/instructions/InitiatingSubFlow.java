@@ -38,8 +38,9 @@ public class InitiatingSubFlow extends SubFlowBaseWithAnalysis {
      * @return true if the protocol makes sense, false otherwise
      */
     @Override
-    public boolean checkIfContainsValidProtocolAndDraw() {
-        return resultOfClassAnalysis.checkIfContainsValidProtocolAndSetupLinks();
+    public boolean checkIfContainsValidProtocolAndSetupLinks() {
+        return super.checkIfContainsValidProtocolAndSetupLinks() &&
+                resultOfClassAnalysis.checkIfContainsValidProtocolAndSetupLinks();
     }
 }
 

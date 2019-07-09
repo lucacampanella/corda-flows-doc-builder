@@ -23,7 +23,9 @@ public class CombinationsHolder {
 
     public static CombinationsHolder fromOtherCombination(CombinationsHolder toBeCopied) {
         CombinationsHolder res = new CombinationsHolder(false);
-        res.allCombinations.addAll(toBeCopied.allCombinations);
+        for(Branch comb : toBeCopied.allCombinations) {
+            res.allCombinations.add(new Branch(comb));
+        }
         return res;
     }
 
@@ -50,12 +52,16 @@ public class CombinationsHolder {
     }
 
     public void mergeWith(CombinationsHolder otherHolder) {
-        allCombinations.addAll(otherHolder.allCombinations);
+        for(Branch comb : otherHolder.allCombinations) {
+            allCombinations.add(new Branch(comb));
+        }
     }
 
     public void combineWith(CombinationsHolder otherHolder) {
         if(allCombinations.isEmpty()) {
-            allCombinations.addAll(otherHolder.allCombinations);
+            for(Branch comb : otherHolder.allCombinations) {
+                allCombinations.add(new Branch(comb));
+            }
         }
         if(otherHolder.allCombinations.size() == 1) { //more efficient way if only one branch on other side
             otherHolder.allCombinations.get(0).forEach(this::appendToAllCombinations);

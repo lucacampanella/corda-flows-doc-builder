@@ -5,10 +5,7 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.Stat
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.StatementWithCompanionInterface;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Branch implements Iterable<StatementInterface> {
@@ -16,6 +13,10 @@ public class Branch implements Iterable<StatementInterface> {
 
     public Branch(List<StatementInterface> statements) {
         this.statements = statements;
+    }
+
+    public Branch(Branch toCopy) {
+        this.statements = new ArrayList<>(toCopy.getStatements());
     }
 
     public Branch() {
@@ -101,12 +102,21 @@ public class Branch implements Iterable<StatementInterface> {
     }
 
     public Optional<InitiateFlow> getInitiateFlowStatementAtThisLevel() {
-        return statements.stream().map(stmt -> stmt.getInitiateFlowStatementAtThisLevel()).filter(Optional::isPresent)
-                .findFirst().orElse(Optional.empty());
+        return statements.stream().map(StatementInterface::getInitiateFlowStatementAtThisLevel)
+                .filter(Optional::isPresent).findFirst().orElse(Optional.empty());
+    }
+
+    public boolean hasSendOrReceiveAtThisLevel() {
+        return statements.stream().anyMatch(StatementInterface::hasSendOrReceiveAtThisLevel);
     }
 
     @Override
     public String toString() {
         return statements.toString();
+    }
+
+
+    public boolean allInitiatingFlowsHaveValidProtocolAndSetupLinks() {
+        return statements.stream().allMatch(StatementInterface::checkIfContainsValidProtocolAndSetupLinks);
     }
 }

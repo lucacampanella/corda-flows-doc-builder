@@ -48,23 +48,31 @@ public class AnalysisResult {
     }
 
     private boolean checkIfContainsValidProtocolAndDrawNotLazy() {
+        //first of all we check that all initiating subflows have a valid protocol
+        final boolean validProtocol = getStatements().allInitiatingFlowsHaveValidProtocolAndSetupLinks();
+        if(!validProtocol) {
+            return false;
+        }
+        if(hasCounterpartyResult()) {
+            final boolean validProtocolCounterparty = counterpartyClassResult.getStatements()
+                    .allInitiatingFlowsHaveValidProtocolAndSetupLinks();
+            if (!validProtocolCounterparty) {
+                return false;
+            }
+        }
+
         CombinationsHolder allCombinations = CombinationsHolder.fromBranch(statements);
         if (hasCounterpartyResult()) {
+            //then if it's an initiatingFlow we check that all possible send and receive combinations match
             CombinationsHolder counterpartyAllCombinations =
                     CombinationsHolder.fromBranch(counterpartyClassResult.getStatements());
 
             return allCombinations.checkIfMatchesAndDraw(counterpartyAllCombinations);
         } else {
-            for (StatementInterface stmt : statements) {
-                if (stmt.isSendOrReceive()) {
-                    return false;
-                }
-                if (stmt instanceof InitiatingSubFlow &&
-                        !((InitiatingSubFlow) stmt).checkIfContainsValidProtocolAndDraw()) {
-                    return false;
-                }
-            }
-            return true;
+            //then if it's NOT an initiatingFlow we check that it doesn't call any send or receive
+            //(remember that we inline the inlinable non initiating flow, so they won't be analyzed here
+            //this is only for "container flows" tagged ad @StartableByRPC"
+            return !statements.hasSendOrReceiveAtThisLevel();
         }
     }
 

@@ -141,6 +141,15 @@ public class GeneralTests {
     }
 
     @Test
+    public void SendMultipleTransactionsFlowTest() throws IOException, AnalysisErrorException {
+        final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(fromClassSrcToPath(GraphForDocsFlow.class));
+        final AnalysisResult analysisResult =
+                analyzer.analyzeFlowLogicClass(analyzer.getClass(GraphForDocsFlow.SendMultipleTransactionsFlow.class));
+        DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
+        LOGGER.trace("{}", analysisResult.getStatements());
+    }
+
+    @Test
     public void InitiatedByInnerClassAcceptorTest() throws IOException, AnalysisErrorException {
         final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(fromClassSrcToPath(InitiatorBaseFlow.class),
                 fromClassSrcToPath(ExtendingSuperclassTestFlow.class),

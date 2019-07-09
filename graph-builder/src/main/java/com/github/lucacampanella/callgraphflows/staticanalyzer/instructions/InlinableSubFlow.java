@@ -37,6 +37,12 @@ public class InlinableSubFlow extends SubFlowBaseWithAnalysis {
     public String toString() {
         return "InlinableSubFlow<<" + resultOfClassAnalysis.getClassDescription().getNameWithParent() + ">> :" + graphElem.toString();
     }
+
+    @Override
+    public boolean hasSendOrReceiveAtThisLevel() {
+        return super.hasSendOrReceiveAtThisLevel()
+                || getResultOfClassAnalysis().getStatements().hasSendOrReceiveAtThisLevel();
+    }
 }
 
 

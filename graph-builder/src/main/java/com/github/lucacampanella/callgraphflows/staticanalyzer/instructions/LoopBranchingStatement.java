@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class LoopBranchingStatement extends BranchingStatement {
     protected static final int UNFOLD_ITERATIONS = 2;
@@ -77,5 +78,37 @@ public abstract class LoopBranchingStatement extends BranchingStatement {
         unfoldedCombinations.forEach(comb -> res.mergeWith(comb));
 
         return res;
+    }
+
+    @Override
+    public boolean checkIfContainsValidProtocolAndSetupLinks() {
+        return super.checkIfContainsValidProtocolAndSetupLinks()
+                && (!hasBlockingStatementInCondition()
+                || getBlockingStatementInCondition().checkIfContainsValidProtocolAndSetupLinks()) &&
+                getBody().allInitiatingFlowsHaveValidProtocolAndSetupLinks();
+    }
+
+    @Override
+    public Optional<InitiateFlow> getInitiateFlowStatementAtThisLevel() {
+        Optional<InitiateFlow>
+                res = super.getInitiateFlowStatementAtThisLevel();
+        if(res.isPresent()) {
+            return res;
+        }
+        if(hasBlockingStatementInCondition()) {
+            res = getBlockingStatementInCondition().getInitiateFlowStatementAtThisLevel();
+            if(res.isPresent()) {
+                return res;
+            }
+        }
+        res = getBody().getInitiateFlowStatementAtThisLevel();
+        return res;
+    }
+
+    @Override
+    public boolean hasSendOrReceiveAtThisLevel() {
+        return super.hasSendOrReceiveAtThisLevel() ||
+                (hasBlockingStatementInCondition() && getBlockingStatementInCondition().hasSendOrReceiveAtThisLevel())
+                || getBody().hasSendOrReceiveAtThisLevel();
     }
 }

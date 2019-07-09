@@ -190,4 +190,10 @@ public class MethodInvocation extends InstructionStatement {
     public CombinationsHolder getResultingCombinations() {
         return CombinationsHolder.fromBranch(body);
     }
+
+    @Override
+    public boolean checkIfContainsValidProtocolAndSetupLinks() {
+        return super.checkIfContainsValidProtocolAndSetupLinks()
+                && getBody().allInitiatingFlowsHaveValidProtocolAndSetupLinks();
+    }
 }

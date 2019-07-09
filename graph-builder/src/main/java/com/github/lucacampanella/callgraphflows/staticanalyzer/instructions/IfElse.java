@@ -124,9 +124,15 @@ public class IfElse extends BranchingStatement {
     @Override
     public Optional<InitiateFlow> getInitiateFlowStatementAtThisLevel() {
         Optional<InitiateFlow>
-                res = getInternalMethodInvocations().getInitiateFlowStatementAtThisLevel();
+                res = super.getInitiateFlowStatementAtThisLevel();
         if(res.isPresent()) {
             return res;
+        }
+        if(hasBlockingStatementInCondition()) {
+            res = getBlockingStatementInCondition().getInitiateFlowStatementAtThisLevel();
+            if(res.isPresent()) {
+                return res;
+            }
         }
         res = getBranchTrue().getInitiateFlowStatementAtThisLevel();
         if(res.isPresent()) {
@@ -145,8 +151,14 @@ public class IfElse extends BranchingStatement {
         if(getBranchFalse() != null) {
             mergedCombination.mergeWith(CombinationsHolder.fromBranch(getBranchFalse()));
         }
-        final CombinationsHolder res = getBlockingStatementInCondition().getResultingCombinations();
-        res.combineWith(mergedCombination);
+        CombinationsHolder res;
+        if(hasBlockingStatementInCondition()) {
+            res = getBlockingStatementInCondition().getResultingCombinations();
+            res.combineWith(mergedCombination);
+        }
+        else {
+            res = mergedCombination;
+        }
         return res;
     }
 
@@ -154,6 +166,23 @@ public class IfElse extends BranchingStatement {
         return branchTrue;
     }
     public Branch getBranchFalse() {
-        return branchTrue;
+        return branchFalse;
+    }
+
+    @Override
+    public boolean checkIfContainsValidProtocolAndSetupLinks() {
+        return super.checkIfContainsValidProtocolAndSetupLinks()
+                && (!hasBlockingStatementInCondition()
+                || getBlockingStatementInCondition().checkIfContainsValidProtocolAndSetupLinks()) &&
+                getBranchTrue().allInitiatingFlowsHaveValidProtocolAndSetupLinks() &&
+                getBranchFalse().allInitiatingFlowsHaveValidProtocolAndSetupLinks();
+    }
+
+    @Override
+    public boolean hasSendOrReceiveAtThisLevel() {
+        return super.hasSendOrReceiveAtThisLevel() ||
+                (hasBlockingStatementInCondition() && getBlockingStatementInCondition().hasSendOrReceiveAtThisLevel())
+                || getBranchTrue().hasSendOrReceiveAtThisLevel() ||
+                getBranchFalse().hasSendOrReceiveAtThisLevel();
     }
 }

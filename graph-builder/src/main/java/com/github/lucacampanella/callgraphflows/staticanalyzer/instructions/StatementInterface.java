@@ -40,10 +40,6 @@ public interface StatementInterface {
         return res;
     }
 
-    default boolean isSendOrReceive() {
-        return false;
-    }
-
     /**
      * @return true if in the statement there is at least on interesting instruction in the analysis
      */
@@ -82,8 +78,8 @@ public interface StatementInterface {
      * which is called in a later stage.
      * @return true if the protocol makes sense, false otherwise
      */
-    default boolean checkIfContainsValidProtocolAndDraw() {
-        return true;
+    default boolean checkIfContainsValidProtocolAndSetupLinks() {
+        return getInternalMethodInvocations().allInitiatingFlowsHaveValidProtocolAndSetupLinks();
     }
 
     /**
@@ -96,5 +92,9 @@ public interface StatementInterface {
             return CombinationsHolder.fromSingleStatement(this);
         }
         return new CombinationsHolder(false);
+    }
+
+    default boolean hasSendOrReceiveAtThisLevel() {
+        return getInternalMethodInvocations().hasSendOrReceiveAtThisLevel();
     }
 }

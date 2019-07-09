@@ -100,7 +100,7 @@ public class Receive extends InstructionStatement implements StatementWithCompan
     }
 
     @Override
-    public boolean isSendOrReceive() {
+    public boolean hasSendOrReceiveAtThisLevel() {
         return true;
     }
 

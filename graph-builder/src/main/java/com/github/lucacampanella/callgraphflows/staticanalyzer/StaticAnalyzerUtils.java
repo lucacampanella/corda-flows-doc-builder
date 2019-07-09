@@ -354,7 +354,7 @@ public class StaticAnalyzerUtils {
     static StatementWithCompanionInterface consumeUntilBlocking(Queue<StatementInterface> queue) throws WrongFlowLogicInSubflowException {
         while(!queue.isEmpty()) {
             StatementInterface statement = queue.peek();
-            final boolean validProtocol = statement.checkIfContainsValidProtocolAndDraw();
+            final boolean validProtocol = statement.checkIfContainsValidProtocolAndSetupLinks();
             if(!validProtocol) {
                 throw new WrongFlowLogicInSubflowException(
                         "The sub flow " + statement.getStringDescription() + " contains a wrong flow protocol");
