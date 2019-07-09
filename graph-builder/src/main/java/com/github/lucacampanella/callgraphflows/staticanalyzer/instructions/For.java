@@ -43,7 +43,7 @@ public class For extends LoopBranchingStatement {
             forInstr.initBranch.add(initBlockingStatements);
         }
 
-        forInstr.body.add(MatcherHelper.fromCtStatementsToStatementsForLoopBody(
+        forInstr.body.add(MatcherHelper.fromCtStatementsToStatements(
                 ((CtStatementList) forStatement.getBody()).getStatements(), analyzer));
 
         List<CtStatement> update = forStatement.getForUpdate();
@@ -86,7 +86,7 @@ public class For extends LoopBranchingStatement {
     @Override
     public Branch desugar() { //we desugar the for in case it has a receive call in the init statements
         Branch result = new Branch();
-        result.addIfRelevantForAnalysis(getInternalMethodInvocations());
+        result.addIfRelevantForLoopFlowBreakAnalysis(getInternalMethodInvocations());
         result.add(initBranch);
         result.add(this);
 

@@ -9,7 +9,7 @@ import spoon.reflect.code.CtStatement;
 import java.awt.*;
 import java.util.Optional;
 
-public class InstructionStatement implements StatementInterface {
+public abstract class InstructionStatement implements StatementInterface {
     GInstruction graphElem;
     int line = 0;
     protected Optional<String> targetSessionName = Optional.empty();

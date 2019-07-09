@@ -1,8 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
 import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseComponent;
-import com.github.lucacampanella.callgraphflows.graphics.preferences.DefaultPreferences;
-import com.github.lucacampanella.callgraphflows.graphics.preferences.PreferencesInterface;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.CombinationsHolder;
 
@@ -35,24 +33,23 @@ public interface StatementInterface {
     //Implementation for statements that have just one instruction inside or don't need desugaring
     default Branch desugar() {
         Branch res = new Branch();
-        getInternalMethodInvocations().forEach(stmt -> res.addIfRelevantForAnalysis(stmt.desugar()));
+        getInternalMethodInvocations().forEach(stmt -> res.addIfRelevantForLoopFlowBreakAnalysis(stmt.desugar()));
         res.add(this);
         return res;
     }
 
-    /**
-     * @return true if in the statement there is at least on interesting instruction in the analysis
-     */
-    default boolean isRelevantForAnalysis() {
+    default boolean isRelevantForLoopFlowBreakAnalysis() {
         return true;
     }
 
-    /**
-     * @return true if it's an instruction relevant to be sisplayed and analyzed in a loop, such as break or continue
-     */
-    default boolean isRelevantForLoop() {
-        return isRelevantForAnalysis();
+    default boolean isRelevantForMethodFlowBreakAnalysis() {
+        return true;
     }
+
+    default boolean isRelevantForProtocolAnalysis() {
+        return true;
+    }
+
 
     /**
      * @return an optional containing initiateFlow call if present at this level, meaning that it doesn't
@@ -96,5 +93,21 @@ public interface StatementInterface {
 
     default boolean hasSendOrReceiveAtThisLevel() {
         return getInternalMethodInvocations().hasSendOrReceiveAtThisLevel();
+    }
+
+    default boolean isBreakLoopFlowBreak() { //break
+        return false;
+    }
+
+    default boolean isContinueLoopFlowBreak() { //continue
+        return false;
+    }
+
+    default boolean isMethodFlowBreak() { //throw, return
+        return false;
+    }
+
+    default boolean isFlowBreak() {
+        return isContinueLoopFlowBreak() || isBreakLoopFlowBreak() || isMethodFlowBreak();
     }
 }

@@ -24,7 +24,7 @@ public class ForEach extends LoopBranchingStatement {
         CtForEach forStatement = (CtForEach) statement;
 
         //we unfold the loop only once for now
-        forInstr.body.add(MatcherHelper.fromCtStatementsToStatementsForLoopBody(
+        forInstr.body.add(MatcherHelper.fromCtStatementsToStatements(
                         ((CtStatementList) forStatement.getBody()).getStatements(), analyzer));
 
         CtExpression<?> condition = forStatement.getExpression();

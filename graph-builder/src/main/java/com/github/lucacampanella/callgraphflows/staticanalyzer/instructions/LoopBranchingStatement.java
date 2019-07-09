@@ -28,11 +28,24 @@ public abstract class LoopBranchingStatement extends BranchingStatement {
     }
 
     @Override
-    public boolean isRelevantForAnalysis() {
-        if(hasBlockingStatementInCondition() && blockingStatementInCondition.isRelevantForAnalysis()) {
+    public boolean isRelevantForLoopFlowBreakAnalysis() {
+        return isRelevantForMethodFlowBreakAnalysis();
+    }
+
+    @Override
+    public boolean isRelevantForMethodFlowBreakAnalysis() {
+        if(hasBlockingStatementInCondition() && blockingStatementInCondition.isRelevantForMethodFlowBreakAnalysis()) {
             return true;
         }
-        return internalMethodInvocations.isRelevant() || getBody().isRelevant();
+        return getBody().isRelevantForMethodFlowBreakAnalysis();
+    }
+
+    @Override
+    public boolean isRelevantForProtocolAnalysis() {
+        if(hasBlockingStatementInCondition() && blockingStatementInCondition.isRelevantForProtocolAnalysis()) {
+            return true;
+        }
+        return getBody().isRelevantForProtocolAnalysis();
     }
 
     @Override
@@ -71,11 +84,14 @@ public abstract class LoopBranchingStatement extends BranchingStatement {
         for(int i = 1; i < UNFOLD_ITERATIONS + 1; ++i) {
             CombinationsHolder curr = CombinationsHolder.fromOtherCombination(unfoldedCombinations.get(i-1));
             curr.combineWith(bodyComb);
+            curr.removeAllContinueLoopLocks();
             unfoldedCombinations.add(curr);
         }
 
         CombinationsHolder res = new CombinationsHolder(false);
         unfoldedCombinations.forEach(comb -> res.mergeWith(comb));
+
+        res.removeAllLoopLocks();
 
         return res;
     }

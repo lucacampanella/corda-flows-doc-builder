@@ -61,8 +61,8 @@ public class AnalysisResult {
             }
         }
 
-        CombinationsHolder allCombinations = CombinationsHolder.fromBranch(statements);
         if (hasCounterpartyResult()) {
+            CombinationsHolder allCombinations = CombinationsHolder.fromBranch(statements);
             //then if it's an initiatingFlow we check that all possible send and receive combinations match
             CombinationsHolder counterpartyAllCombinations =
                     CombinationsHolder.fromBranch(counterpartyClassResult.getStatements());

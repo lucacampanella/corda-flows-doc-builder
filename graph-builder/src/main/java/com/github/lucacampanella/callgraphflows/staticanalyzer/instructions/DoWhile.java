@@ -26,7 +26,7 @@ public class DoWhile extends LoopBranchingStatement {
                 whileStatement.getLoopingExpression().toString());
         doWhile.conditionLineNumber = statement.getPosition().getLine();
 
-        doWhile.body.add(MatcherHelper.fromCtStatementsToStatementsForLoopBody(
+        doWhile.body.add(MatcherHelper.fromCtStatementsToStatements(
                         ((CtStatementList) whileStatement.getBody()).getStatements(), analyzer));
 
 

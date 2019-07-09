@@ -9,7 +9,7 @@ import net.corda.core.transactions.SignedTransaction;
 import java.util.LinkedList;
 import java.util.List;
 
-public class DoWhileTestFlow {
+public class ReturnThrowBreakContinueTestFlow {
 
         @InitiatingFlow
         @StartableByRPC
@@ -29,18 +29,59 @@ public class DoWhileTestFlow {
 
                 FlowSession session = initiateFlow(otherParty);
 
-                if(!list.isEmpty()) {
-                    int i = 0;
-                    do {
-                        session.send(true);
-                        subFlow(new SendTransactionFlow(session, list.get(i)));
-                        i++;
-                    } while (i < list.size());
-                }
-                session.send(false);
+                methodWithRelevantStuff(session, list);
                 session.send("END");
 
                 return null;
+            }
+
+            private void methodWithRelevantStuff(FlowSession session, List<SignedTransaction> list) throws FlowException {
+                boolean condition = false;
+                boolean condition2 = false;
+                boolean condition3 = false;
+                while(condition) {
+                    int i = 0;
+                    session.send(true);
+                    subFlow(new SendTransactionFlow(session, list.get(i)));
+                    if(condition && condition && condition3) {
+                        continue;
+                    }
+                    else if(condition && condition2) {
+                        return;
+                    }
+                    else if(condition) {
+                        break;
+                    }
+
+                    while(condition) {
+                        int j = 0;
+                        session.send(true);
+                        subFlow(new SendTransactionFlow(session, list.get(i)));
+                        if(condition && condition && condition3) {
+                            continue;
+                        }
+                        else if(condition && condition2) {
+                            return;
+                        }
+                        else if(condition) {
+                            break;
+                        }
+
+                        session.send(true);
+                        subFlow(new SendTransactionFlow(session, list.get(i)));
+
+                        j++;
+                    }
+
+                    i++;
+                }
+                session.send(false);
+
+                if(condition) {
+                    return;
+                }
+                session.send(3); //nowhere in the other session there is a receive(Integer.class)
+                return;
             }
         }
 

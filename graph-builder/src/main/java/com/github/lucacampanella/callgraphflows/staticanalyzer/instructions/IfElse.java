@@ -35,13 +35,13 @@ public class IfElse extends BranchingStatement {
         CtStatementList thenStatement = ifStatement.getThenStatement();
         ifElse.branchTrue = new Branch();
         if(thenStatement != null) { //there is a then statement
-            ifElse.branchTrue.add(MatcherHelper.fromCtStatementsToStatementsForLoopBody(thenStatement.getStatements(), analyzer));
+            ifElse.branchTrue.add(MatcherHelper.fromCtStatementsToStatements(thenStatement.getStatements(), analyzer));
         }
 
         CtStatementList elseStatement = ifStatement.getElseStatement();
         ifElse.branchFalse = new Branch();
         if(elseStatement != null) { //there is an else statement
-            ifElse.branchFalse.add(MatcherHelper.fromCtStatementsToStatementsForLoopBody(elseStatement.getStatements(), analyzer));
+            ifElse.branchFalse.add(MatcherHelper.fromCtStatementsToStatements(elseStatement.getStatements(), analyzer));
         }
         //here the statements can be also if statements if an "else if" condition is applied
 
@@ -103,11 +103,27 @@ public class IfElse extends BranchingStatement {
     }
 
     @Override
-    public boolean isRelevantForAnalysis() {
-        if(hasBlockingStatementInCondition() && blockingStatementInCondition.isRelevantForAnalysis()) {
+    public boolean isRelevantForLoopFlowBreakAnalysis() {
+        if(hasBlockingStatementInCondition() && blockingStatementInCondition.isRelevantForLoopFlowBreakAnalysis()) {
             return true;
         }
-        return internalMethodInvocations.isRelevant() || getBranchTrue().isRelevant() || getBranchFalse().isRelevant();
+        return getBranchTrue().isRelevantForLoopFlowBreakAnalysis() || getBranchFalse().isRelevantForLoopFlowBreakAnalysis();
+    }
+
+    @Override
+    public boolean isRelevantForMethodFlowBreakAnalysis() {
+        if(hasBlockingStatementInCondition() && blockingStatementInCondition.isRelevantForMethodFlowBreakAnalysis()) {
+            return true;
+        }
+        return getBranchTrue().isRelevantForMethodFlowBreakAnalysis() || getBranchFalse().isRelevantForMethodFlowBreakAnalysis();
+    }
+
+    @Override
+    public boolean isRelevantForProtocolAnalysis() {
+        if(hasBlockingStatementInCondition() && blockingStatementInCondition.isRelevantForProtocolAnalysis()) {
+            return true;
+        }
+        return getBranchTrue().isRelevantForProtocolAnalysis() || getBranchFalse().isRelevantForProtocolAnalysis();
     }
 
     @Override

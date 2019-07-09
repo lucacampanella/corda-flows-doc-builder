@@ -10,32 +10,129 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class CombinationsHolder {
+
+    private static class LockingBranch extends Branch {
+        private enum LockStatus {
+            NO_LOCK,
+            LOOP_BREAK_LOCKED, //break
+            LOOP_CONTINUE_LOCKED, //continue
+            METHOD_LOCKED //return or throw
+        }
+
+        private LockStatus lockStatus = LockStatus.NO_LOCK;
+
+        public LockingBranch() {
+            super();
+        }
+
+        public LockingBranch(LockingBranch toCopy) {
+            this.statements = new ArrayList<>(toCopy.getStatements());
+            this.lockStatus = toCopy.lockStatus;
+        }
+
+        public LockingBranch(StatementInterface singleInstr) {
+            super(singleInstr);
+            setLockStatusIfLockingInstr(singleInstr);
+        }
+
+        @Override
+        public void add(StatementInterface instr) {
+            if(instr != null && !isLocked()) { //add only if branch is not locked
+                statements.add(instr);
+                setLockStatusIfLockingInstr(instr);
+            }
+        }
+
+        public void add(LockingBranch branch) {
+            if(!isLocked()) {
+                for (StatementInterface stmt : branch) {
+                    add(stmt);
+                }
+                lockStatus = branch.lockStatus;
+            }
+        }
+
+        private void setLockStatusIfLockingInstr(StatementInterface instr) {
+            if(instr.isBreakLoopFlowBreak()) {
+                setBreakLoopLock();
+            }
+            else if(instr.isContinueLoopFlowBreak()) {
+                setContinueLoopLock();
+            }
+            else if(instr.isMethodFlowBreak()) {
+                setMethodLock();
+            }
+        }
+
+        public boolean isLocked() {
+            return lockStatus != LockStatus.NO_LOCK;
+        }
+
+        public void removeContinuekLoopLock() {
+            if(lockStatus == LockStatus.LOOP_CONTINUE_LOCKED) {
+                lockStatus = LockStatus.NO_LOCK;
+            }
+        }
+
+        public void setContinueLoopLock() {
+            if(!isLocked())
+                lockStatus = LockStatus.LOOP_CONTINUE_LOCKED;
+        }
+
+        public void removeBreakLoopLock() {
+            if(lockStatus == LockStatus.LOOP_BREAK_LOCKED) {
+                lockStatus = LockStatus.NO_LOCK;
+            }
+        }
+
+        public void setBreakLoopLock() {
+            if(!isLocked())
+                lockStatus = LockStatus.LOOP_BREAK_LOCKED;
+        }
+
+        public void removeAnyLoopLock() {
+            removeContinuekLoopLock();
+            removeBreakLoopLock();
+        }
+
+        public void removeAnyLock() {
+            lockStatus = LockStatus.NO_LOCK;
+        }
+
+        public void setMethodLock() {
+            lockStatus = LockStatus.METHOD_LOCKED;
+        }
+
+        public boolean containsSameStatementsAndLockStatusAs(LockingBranch otherBranch) {
+            return lockStatus == otherBranch.lockStatus && super.containsSameStatementsAs(otherBranch);
+        }
+    }
     
     private static final Logger LOGGER = LoggerFactory.getLogger(CombinationsHolder.class);
     
-    private List<Branch> allCombinations = new LinkedList<>();
+    private List<LockingBranch> allCombinations = new LinkedList<>();
 
     public CombinationsHolder(boolean addEmptyCombination) {
         if(addEmptyCombination) {
-            allCombinations.add(new Branch());
+            allCombinations.add(new LockingBranch());
         }
     }
 
     public static CombinationsHolder fromOtherCombination(CombinationsHolder toBeCopied) {
         CombinationsHolder res = new CombinationsHolder(false);
-        for(Branch comb : toBeCopied.allCombinations) {
-            res.allCombinations.add(new Branch(comb));
+        for(LockingBranch comb : toBeCopied.allCombinations) {
+            res.allCombinations.add(new LockingBranch(comb));
         }
         return res;
     }
 
     public static CombinationsHolder fromSingleStatement(StatementInterface singleStatement) {
         CombinationsHolder res = new CombinationsHolder(false);
-        res.addCombination(new Branch(singleStatement));
+        res.addCombination(new LockingBranch(singleStatement));
         return res;
     }
 
-    public void addCombination(Branch comb) {
+    private void addCombination(LockingBranch comb) {
         allCombinations.add(comb);
     }
 
@@ -52,28 +149,29 @@ public class CombinationsHolder {
     }
 
     public void mergeWith(CombinationsHolder otherHolder) {
-        for(Branch comb : otherHolder.allCombinations) {
-            allCombinations.add(new Branch(comb));
+        for(LockingBranch comb : otherHolder.allCombinations) {
+            allCombinations.add(new LockingBranch(comb));
         }
     }
 
     public void combineWith(CombinationsHolder otherHolder) {
         if(allCombinations.isEmpty()) {
-            for(Branch comb : otherHolder.allCombinations) {
-                allCombinations.add(new Branch(comb));
+            for(LockingBranch comb : otherHolder.allCombinations) {
+                allCombinations.add(new LockingBranch(comb));
             }
         }
         if(otherHolder.allCombinations.size() == 1) { //more efficient way if only one branch on other side
             otherHolder.allCombinations.get(0).forEach(this::appendToAllCombinations);
         }
         else if(!otherHolder.allCombinations.isEmpty()){
-            List<Branch> newAllCombinations = new LinkedList<>();
-            for (Branch currBranch : allCombinations) {
-                for (Branch newBranch : otherHolder.allCombinations) {
-                    Branch bothTogether = new Branch();
-                    bothTogether.add(currBranch);
-                    bothTogether.add(newBranch);
-                    newAllCombinations.add(bothTogether);
+            List<LockingBranch> newAllCombinations = new LinkedList<>();
+            for (LockingBranch currBranch : allCombinations) {
+                if(!currBranch.isLocked()) {
+                    for (LockingBranch newBranch : otherHolder.allCombinations) {
+                        LockingBranch bothTogether = new LockingBranch(currBranch);
+                        bothTogether.add(newBranch);
+                        newAllCombinations.add(bothTogether);
+                    }
                 }
             }
             allCombinations = newAllCombinations;
@@ -85,6 +183,18 @@ public class CombinationsHolder {
         CombinationsHolder holder = new CombinationsHolder(true);
 
         for(StatementInterface instr : instructions) {
+            if(instr.isContinueLoopFlowBreak()) {
+                holder.setAllContinueLoopLocks();
+                break;
+            }
+            if(instr.isBreakLoopFlowBreak()) {
+                holder.setAllBreakLoopLocks();
+                break;
+            }
+            if(instr.isMethodFlowBreak()) {
+                holder.setAllMethodLocks();
+                break;
+            }
             holder.combineWith(instr.getResultingCombinations());
         }
 
@@ -107,6 +217,32 @@ public class CombinationsHolder {
             }
         }
         return foundOneMatch;
+    }
+
+    public void removeAllContinueLoopLocks() {
+        allCombinations.forEach(LockingBranch::removeContinuekLoopLock);
+    }
+
+    public void removeAllLoopLocks() {
+        allCombinations.forEach(LockingBranch::removeAnyLoopLock);
+        filterOutDuplicates();
+    }
+
+    public void removeAllLocks() {
+        allCombinations.forEach(LockingBranch::removeAnyLock);
+        filterOutDuplicates();
+    }
+
+    public void setAllBreakLoopLocks() {
+        allCombinations.forEach(LockingBranch::setBreakLoopLock);
+    }
+
+    public void setAllContinueLoopLocks() {
+        allCombinations.forEach(LockingBranch::setContinueLoopLock);
+    }
+
+    public void setAllMethodLocks() {
+        allCombinations.forEach(LockingBranch::setMethodLock);
     }
 
     private static class MatchingStatements {
@@ -176,5 +312,29 @@ public class CombinationsHolder {
         }
 
         return matchingStatements;
+    }
+
+    public List<LockingBranch> getAllCombinations() {
+        return allCombinations;
+    }
+
+    /**
+     * Removes all the combinations that are a duplicate, expensive operation, use with care
+     */
+    public void filterOutDuplicates() {
+        List<LockingBranch> newCombinations = new LinkedList<>();
+        for(LockingBranch comb : allCombinations) {
+            boolean alreadyAdded = false;
+            for(LockingBranch newComb : newCombinations) {
+                if(newComb.containsSameStatementsAndLockStatusAs(comb)) {
+                    alreadyAdded = true;
+                    break;
+                }
+            }
+            if(!alreadyAdded) {
+                newCombinations.add(comb);
+            }
+        }
+        allCombinations = newCombinations;
     }
 }

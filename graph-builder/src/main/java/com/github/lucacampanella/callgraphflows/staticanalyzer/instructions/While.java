@@ -21,7 +21,7 @@ public class While extends LoopBranchingStatement {
         whileInstr.initiateBlockingStatementAndConditionInstruction(whileStatement.getLoopingExpression(),
                 statement, analyzer);
 
-        whileInstr.body.add(MatcherHelper.fromCtStatementsToStatementsForLoopBody(
+        whileInstr.body.add(MatcherHelper.fromCtStatementsToStatements(
                 ((CtStatementList) whileStatement.getBody()).getStatements(), analyzer));
 
         whileInstr.buildGraphElem();
