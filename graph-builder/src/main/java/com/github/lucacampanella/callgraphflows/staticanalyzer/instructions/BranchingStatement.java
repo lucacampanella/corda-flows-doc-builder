@@ -106,6 +106,7 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
                     blockingStatementInConditionWithSubflow;
         }
 
+        conditionLineNumber = statement.getPosition().getLine();
         formatDescription(statement);
         conditionDescription = Utils.removePackageDescriptionIfWanted(conditionDescription);
 
@@ -129,5 +130,23 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
     @Override
     public Branch getInternalMethodInvocations() {
         return internalMethodInvocations;
+    }
+
+    protected String formatDescriptionFromCondition(CtExpression condition) {
+        String loopingExpression = condition.toString();
+
+        if(hasBlockingStatementInCondition()) {
+            String blockingStatementCode =
+                    MatcherHelper.getFirstMatchedStatementWithCompanion(condition).toString();
+            loopingExpression = loopingExpression.replace(blockingStatementCode,
+                    getBlockingStatementInCondition().getStringDescription());
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("while(");
+        sb.append(loopingExpression);
+        sb.append(")");
+        conditionDescription = sb.toString();
+        conditionDescription = Utils.removeUnwrapIfWanted(condition, conditionDescription);
+        return conditionDescription;
     }
 }

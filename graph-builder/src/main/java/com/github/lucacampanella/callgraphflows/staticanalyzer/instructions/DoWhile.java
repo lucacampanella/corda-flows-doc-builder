@@ -22,26 +22,16 @@ public class DoWhile extends LoopBranchingStatement {
         DoWhile doWhile = new DoWhile();
         CtDo whileStatement = (CtDo) statement;
 
-        doWhile.conditionDescription = Utils.removePackageDescriptionIfWanted(
-                whileStatement.getLoopingExpression().toString());
-        doWhile.conditionLineNumber = statement.getPosition().getLine();
+        doWhile.initiateBlockingStatementAndConditionInstruction(whileStatement.getLoopingExpression(),
+                statement, analyzer);
 
         doWhile.body.add(MatcherHelper.fromCtStatementsToStatements(
                         ((CtStatementList) whileStatement.getBody()).getStatements(), analyzer));
 
-
-//        doWhile.branchTrue.add(doWhile.body);
-//        doWhile.correspondingWhile =
-//                new While(statement,  whileStatement.getLoopingExpression(), doWhile.body, analyzer);
-//        doWhile.branchTrue.add(doWhile.correspondingWhile);
-
-        //we create only one branch for the statements in the body, putting the branchFalse to null
-        //we than add to the true branch in the end a while, containing again the body statements,
-        //in this way we unfold the loop once and we basically desugar it to a while
-
-//        doWhile.branchFalse = null;
-
-        doWhile.conditionInstruction = new GInstruction(doWhile.conditionLineNumber, "do ");
+        Branch flattenedInternalMethodInvocations = new Branch();
+        doWhile.getInternalMethodInvocations().forEach(stmt ->
+                flattenedInternalMethodInvocations.addIfRelevantForLoopFlowBreakAnalysis(stmt.desugar()));
+        doWhile.body.add(flattenedInternalMethodInvocations);
 
         doWhile.buildGraphElem();
 
@@ -50,31 +40,20 @@ public class DoWhile extends LoopBranchingStatement {
 
     @Override
     protected void buildGraphElem() {
-        GConditionalBranchIndented elem = graphElem;
-        elem.setEnteringArrowText("do");
-        getBody().getStatements().forEach(stmt -> elem.addComponent(stmt.getGraphElem()));
-        elem.setExitingArrowText(getConditionInstruction());
+        graphElem.setEnteringArrowText("do");
+        getBody().getStatements().forEach(stmt -> graphElem.addComponent(stmt.getGraphElem()));
+        graphElem.setExitingArrowText(getConditionInstruction());
+    }
+
+    @Override
+    public Branch desugar() {
+        return new Branch(this); //here we return only this object because all the internal method invocations
+        //are already added to the while body
     }
 
     @Override
     protected String formatDescription(CtStatement statement) {
-        CtExpression condition = ((CtDo) statement).getLoopingExpression();
-        String loopingExpression = condition.toString();
-        conditionLineNumber = statement.getPosition().getLine();
-
-        if(hasBlockingStatementInCondition()) {
-            String blockingStatementCode =
-                    MatcherHelper.getFirstMatchedStatementWithCompanion(condition).toString();
-            loopingExpression = loopingExpression.replace(blockingStatementCode,
-                    getBlockingStatementInCondition().getStringDescription());
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append("while(");
-        sb.append(loopingExpression);
-        sb.append(");");
-        conditionDescription = sb.toString();
-        conditionDescription = Utils.removeUnwrapIfWanted(condition, conditionDescription);
-        return conditionDescription;
+        return formatDescriptionFromCondition(((CtDo) statement).getLoopingExpression());
     }
 
     @Override

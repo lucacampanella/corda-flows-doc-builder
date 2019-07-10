@@ -46,7 +46,6 @@ public class ForEach extends LoopBranchingStatement {
     @Override
     protected String formatDescription(CtStatement statement) {
         CtForEach forStatement = (CtForEach) statement;
-        conditionLineNumber = statement.getPosition().getLine();
 
         final CtExpression<?> condition = forStatement.getExpression();
         String loopingExpression = condition.toString();

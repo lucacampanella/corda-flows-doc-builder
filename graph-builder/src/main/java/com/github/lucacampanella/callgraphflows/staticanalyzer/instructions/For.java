@@ -96,7 +96,6 @@ public class For extends LoopBranchingStatement {
     @Override
     protected String formatDescription(CtStatement statement) {
         CtFor forStatement = (CtFor) statement;
-        conditionLineNumber = statement.getPosition().getLine();
 
         final CtExpression<Boolean> condition = forStatement.getExpression();
         String loopingExpression = condition.toString();

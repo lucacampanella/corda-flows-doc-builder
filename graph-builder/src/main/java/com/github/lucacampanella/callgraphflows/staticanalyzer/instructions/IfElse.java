@@ -81,25 +81,7 @@ public class IfElse extends BranchingStatement {
 
     @Override
     protected String formatDescription(CtStatement statement) {
-        CtIf ifStatement = (CtIf) statement;
-        conditionLineNumber = ifStatement.getPosition().getLine();
-
-        final CtExpression<Boolean> condition = ifStatement.getCondition();
-
-        String conditionExpression = condition.toString();
-
-        if(hasBlockingStatementInCondition()) {
-            String blockingStatementCode = MatcherHelper.getFirstMatchedStatementWithCompanion(condition).toString();
-            conditionExpression = conditionExpression.replace(blockingStatementCode,
-                    getBlockingStatementInCondition().getStringDescription());
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append("if(");
-        sb.append(conditionExpression);
-        sb.append(")");
-        conditionDescription = sb.toString();
-        conditionDescription = Utils.removeUnwrapIfWanted(condition, conditionDescription);
-        return conditionDescription;
+        return formatDescriptionFromCondition(((CtIf) statement).getCondition());
     }
 
     @Override
