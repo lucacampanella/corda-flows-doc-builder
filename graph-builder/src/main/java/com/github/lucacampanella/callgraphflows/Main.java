@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 
 
-public class Main implements Callable<Integer> {
+public class Main implements Callable<Void> {
 
     private Logger LOGGER;
 
@@ -55,13 +55,11 @@ public class Main implements Callable<Integer> {
     public static void main(String []args) throws IOException {
 
         final Main app = CommandLine.populateCommand(new Main(), args);
-        final int exitCode = app.call();
-
-        System.exit(exitCode);
+        app.call();
     }
 
     @Override
-    public Integer call() throws IOException {
+    public Void call() throws IOException {
         final String loggerLevel = System.getProperty("org.slf4j.simpleLogger.defaultLogLevel");
         if(loggerLevel == null) {
             System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "error");
@@ -83,6 +81,6 @@ public class Main implements Callable<Integer> {
         DrawerUtil.setDrawStatementsWithRelevantMethods(drawStatementsWithRelevantMethods);
 
         DrawerUtil.drawAllStartableClasses(analyzer, outputPath);
-        return 0;
+        return null;
     }
 }
