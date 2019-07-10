@@ -86,8 +86,11 @@ public class GeneralTests {
     }
 
     @Test
-    public void simpleFlowTest() throws IOException {
-        testAnalyzeByRPCWithClass(SimpleTestFlow.class);
+    public void simpleFlowTest() throws AnalysisErrorException, IOException {
+        final SourceClassAnalyzer analyzer = getSourceClassAnalyzerFromClasses(SimpleTestFlow.class);
+        final AnalysisResult analysisResult = analyzer.analyzeFlowLogicClass(SimpleTestFlow.Initiator.class);
+        DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
+        assertThat(analysisResult.checkIfContainsValidProtocolAndSetupLinks()).isEqualTo(true);
     }
 
     @Test
@@ -106,7 +109,7 @@ public class GeneralTests {
     }
 
     @Test
-    public void ContinueBreakTest() throws AnalysisErrorException {
+    public void ContinueBreakTest() throws AnalysisErrorException, IOException {
         final AnalysisResult analysisResult = getSourceClassAnalyzerFromClasses(ContinueBreakTestFlow.class)
                 .analyzeFlowLogicClass(ContinueBreakTestFlow.Initiator.class);
         assertThat(analysisResult.getStatements()).hasSize(5);
@@ -115,6 +118,7 @@ public class GeneralTests {
         IfElse ifElseInWhile = (IfElse)  whileStatement.getBody().getStatements().get(0);
         assertThat(ifElseInWhile.getBranchTrue()).hasSize(2);
         assertThat(analysisResult.getCounterpartyClassResult().getStatements()).hasSize(5);
+        DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
     }
 
     @Test
@@ -122,6 +126,7 @@ public class GeneralTests {
         final AnalysisResult analysisResult = getSourceClassAnalyzerFromClasses(ContainerFlow.class,
                 DoWhileTestFlow.class).analyzeFlowLogicClass(ContainerFlow.class);
         LOGGER.trace("{}", analysisResult.getStatements());
+        DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
     }
 
     @Test
@@ -237,20 +242,12 @@ public class GeneralTests {
         final AnalysisResult analysisResult =
                 sourceClassAnalyzerFromClasses.analyzeFlowLogicClass(DoubleExtendingSuperclassTestFlow.Initiator.class);
         LOGGER.info("{}", analysisResult.getStatements());
+        DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
    }
 
     private SourceClassAnalyzer getSourceClassAnalyzerFromClasses(Class... toBeAnalyzed) {
         return new SourceClassAnalyzer(Arrays.stream(toBeAnalyzed)
                 .map(TestUtils::fromClassSrcToPath).collect(Collectors.toList()));
-    }
-
-    public AnalysisResult drawAndReturnAnalysis(Class... toBeAnalyzed) throws AnalysisErrorException, IOException {
-        final List<String> pathToClasses = Arrays.stream(toBeAnalyzed).map(TestUtils::fromClassSrcToPath).collect(Collectors.toList());
-        final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(pathToClasses);
-        final CtClass klass = analyzer.getClassesByAnnotation(StartableByRPC.class).stream().findFirst().get();
-        final AnalysisResult analysisResult = analyzer.analyzeFlowLogicClass(klass);
-        DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
-        return analysisResult;
     }
 
     private void testAnalyzeByRPCWithClass(Class toBeAnalyzed) throws IOException {

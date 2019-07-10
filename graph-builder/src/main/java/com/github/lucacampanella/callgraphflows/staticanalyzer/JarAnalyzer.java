@@ -17,14 +17,6 @@ public class JarAnalyzer extends AnalyzerWithModel {
         this(null, pathToJar, null);
     }
 
-    public JarAnalyzer(String pathToJar, String[] additionalJars) {
-        this(null, pathToJar, additionalJars);
-    }
-
-    public JarAnalyzer(String decompilerName, String pathToJar) {
-        this(decompilerName, pathToJar, null);
-    }
-
     public JarAnalyzer(String decompilerName, String pathToJar, String[] additionalJars) {
 
         analysisName = pathToJar.substring(pathToJar.lastIndexOf(System.getProperty("file.separator"))+1);
@@ -53,15 +45,5 @@ public class JarAnalyzer extends AnalyzerWithModel {
 
         jr.buildModel();
         model = jr.getModel();
-    }
-
-    private static void printClasspath() {
-        ClassLoader cl = JarAnalyzer.class.getClassLoader();
-
-        URL[] urls = ((URLClassLoader)cl).getURLs();
-
-        for(URL url: urls){
-            LOGGER.trace(url.getFile());
-        }
     }
 }

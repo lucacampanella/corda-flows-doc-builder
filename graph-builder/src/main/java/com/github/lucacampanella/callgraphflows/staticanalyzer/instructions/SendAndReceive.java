@@ -160,6 +160,6 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
 
     @Override
     public boolean isConsumedForCompanionAnalysis() {
-        return isSentConsumed();
+        return !isSentConsumed();
     }
 }
