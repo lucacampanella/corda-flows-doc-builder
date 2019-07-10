@@ -9,7 +9,7 @@ import spoon.reflect.code.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class While extends BranchingStatement {
+public class While extends LoopBranchingStatement {
     private While() {
     }
 
@@ -21,55 +21,33 @@ public class While extends BranchingStatement {
         whileInstr.initiateBlockingStatementAndConditionInstruction(whileStatement.getLoopingExpression(),
                 statement, analyzer);
 
-        //we unfold the loop only once for now
-        whileInstr.branchTrue.add(MatcherHelper.fromCtStatementsToStatementsForLoopBody(
+        whileInstr.body.add(MatcherHelper.fromCtStatementsToStatements(
                 ((CtStatementList) whileStatement.getBody()).getStatements(), analyzer));
-
-        if(whileInstr.hasBlockingStatementInCondition()){
-            whileInstr.branchTrue.add(whileInstr.blockingStatementInCondition); //the while condition is checked once more when it's
-            //false, so we append the condition again at the end to be able to reply to the other side if we entered
-            //at least once in the while
-        }
-
-        whileInstr.branchFalse = new Branch(); //if the condition doesn't apply we directly go to the the next, so no
-        //statements added in this branch
 
         whileInstr.buildGraphElem();
 
         return whileInstr;
     }
 
-    protected While(CtStatement statement, CtExpression<Boolean> condition,
-                 Branch bodyStatements, AnalyzerWithModel analyzer) {
-
-        initiateBlockingStatementAndConditionInstruction(condition, statement, analyzer);
-
-        //we unfold the loop only once for now
-        branchTrue = new Branch();
-        branchTrue.add(bodyStatements);
-        branchFalse = new Branch(); //if the condition doesn't apply we directly go to the the next, so no
-        //statements added in this branch
-
-        if(hasBlockingStatementInCondition()){
-            branchTrue.add(blockingStatementInCondition); //the while condition is checked once more when it's
-            //false, so we append the condition again at the end to be able to reply to the other side if we entered
-            //at least once in the while
-        }
-
-        graphElem = null;
-    }
-
-    @Override
-    protected void buildGraphElem() {
-        graphElem.setEnteringArrowText(getConditionInstruction());
-
-        final List<StatementInterface> bodyStatements = new ArrayList<>(getBranchTrue().getStatements());
-        if(hasBlockingStatementInCondition()) {
-            bodyStatements.remove(bodyStatements.size()-1);
-        }
-
-        bodyStatements.forEach(stmt -> graphElem.addComponent(stmt.getGraphElem()));
-    }
+//    protected While(CtStatement statement, CtExpression<Boolean> condition,
+//                 Branch bodyStatements, AnalyzerWithModel analyzer) {
+//
+//        initiateBlockingStatementAndConditionInstruction(condition, statement, analyzer);
+//
+//        //we unfold the loop only once for now
+//        branchTrue = new Branch();
+//        branchTrue.add(bodyStatements);
+//        branchFalse = new Branch(); //if the condition doesn't apply we directly go to the the next, so no
+//        //statements added in this branch
+//
+//        if(hasBlockingStatementInCondition()){
+//            branchTrue.add(blockingStatementInCondition); //the while condition is checked once more when it's
+//            //false, so we append the condition again at the end to be able to reply to the other side if we entered
+//            //at least once in the while
+//        }
+//
+//        graphElem = null;
+//    }
 
     @Override
     protected String formatDescription(CtStatement statement) {

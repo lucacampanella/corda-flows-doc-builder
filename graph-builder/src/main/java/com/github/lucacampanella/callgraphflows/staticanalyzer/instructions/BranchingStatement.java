@@ -21,15 +21,11 @@ import java.util.Optional;
  */
 public abstract class BranchingStatement implements StatementWithCompanionInterface {
 
-    protected Branch branchTrue = new Branch();
-    protected Branch branchFalse = new Branch();
     protected String conditionDescription;
     protected int conditionLineNumber = -1;
     StatementWithCompanionInterface blockingStatementInCondition;
-    GConditionalBranchIndented graphElem = new GConditionalBranchIndented();
     GInstruction conditionInstruction = null;
     Branch internalMethodInvocations = new Branch();
-
 
 
     protected BranchingStatement(){}
@@ -40,19 +36,6 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
 
     public StatementWithCompanionInterface getBlockingStatementInCondition() {
         return blockingStatementInCondition;
-    }
-
-    public Branch getBranchTrue() {
-        return branchTrue;
-    }
-
-    public Branch getBranchFalse() {
-        return branchFalse;
-    }
-
-    @Override
-    public GBaseContainer getGraphElem() {
-        return toBePainted() ? graphElem : null;
     }
 
     @Override
@@ -75,15 +58,6 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
                     " doesn't have a blocking statement in the condition");
         }
         getBlockingStatementInCondition().createGraphLink(companion);
-    }
-
-    @Override
-    public StatementWithCompanionInterface getRealCompanionStatement() {
-        if(!hasBlockingStatementInCondition()) {
-            throw new IllegalStateException("getRealCompanionStatement called on a branch instruction that" +
-                    " doesn't have a blocking statement in the condition");
-        }
-        return getBlockingStatementInCondition();
     }
 
     @Override
@@ -111,13 +85,6 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
             return blockingStatementInCondition.getTargetSessionName();
         }
         return Optional.empty();
-    }
-
-    protected void buildGraphElem() {
-        GConditionalBranchIndented elem = graphElem;
-
-        elem.setEnteringArrowText(getConditionInstruction());
-        getBranchTrue().getStatements().forEach(stmt -> elem.addComponent(stmt.getGraphElem()));
     }
 
     protected void initiateBlockingStatementAndConditionInstruction(CtExpression condition,
@@ -160,55 +127,7 @@ public abstract class BranchingStatement implements StatementWithCompanionInterf
     protected abstract String formatDescription(CtStatement statement);
 
     @Override
-    public boolean isRelevantForAnalysis() {
-        if(hasBlockingStatementInCondition() && blockingStatementInCondition.isRelevantForAnalysis()) {
-            return true;
-        }
-        return internalMethodInvocations.isRelevant() || getBranchTrue().isRelevant() || getBranchFalse().isRelevant();
-    }
-
-    @Override
-    public boolean toBePainted() {
-        if(hasBlockingStatementInCondition() && blockingStatementInCondition.toBePainted()) {
-            return true;
-        }
-        return getBranchTrue().toBePainted() || getBranchFalse().toBePainted();
-    }
-
-    @Override
     public Branch getInternalMethodInvocations() {
         return internalMethodInvocations;
-    }
-
-    /**
-     * @return true if there is an initiateFlow call, but doesn't look into subFlows
-     */
-    @Override
-    public Optional<InitiateFlow> getInitiateFlowStatementAtThisLevel() {
-        Optional<InitiateFlow>
-                res = getInternalMethodInvocations().getInitiateFlowStatementAtThisLevel();
-        if(res.isPresent()) {
-            return res;
-        }
-        res = getBranchTrue().getInitiateFlowStatementAtThisLevel();
-        if(res.isPresent()) {
-            return res;
-        }
-        res = getBranchFalse().getInitiateFlowStatementAtThisLevel();
-        return res;
-    }
-
-    @Override
-    public CombinationsHolder getResultingCombinations() {
-        CombinationsHolder mergedCombination = new CombinationsHolder(false);
-        if(getBranchTrue() != null) {
-            mergedCombination.mergeWith(CombinationsHolder.fromBranch(getBranchTrue()));
-        }
-        if(getBranchFalse() != null) {
-            mergedCombination.mergeWith(CombinationsHolder.fromBranch(getBranchFalse()));
-        }
-        final CombinationsHolder res = StatementWithCompanionInterface.super.getResultingCombinations();
-        res.combineWith(mergedCombination);
-        return res;
     }
 }

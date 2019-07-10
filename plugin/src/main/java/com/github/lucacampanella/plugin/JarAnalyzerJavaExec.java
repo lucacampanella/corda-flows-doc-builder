@@ -1,5 +1,6 @@
 package com.github.lucacampanella.plugin;
 
+import groovyjarjarpicocli.CommandLine;
 import org.gradle.api.logging.LogLevel;
 import org.gradle.api.tasks.*;
 import org.gradle.api.tasks.Optional;
@@ -32,7 +33,9 @@ public class JarAnalyzerJavaExec extends JavaExec {
     boolean removeJavaAgents = true; //remove agents like quasar that might be pluggen in to any javaexec task by the quasar plugin
     String logLevel = null;
     List<String> sourceFilesPath = null;
-
+    boolean drawReturn = false;
+    boolean drawThrow = true;
+    boolean drawBreakContinue = true;
 
     @TaskAction
     @Override
@@ -63,6 +66,18 @@ public class JarAnalyzerJavaExec extends JavaExec {
         if(!drawBoxes) {
             getLogger().info("drawBoxes = false");
             args.add("--no-box-subflows");
+        }
+        if(drawReturn) {
+            getLogger().info("drawReturn = true");
+            args.add("--draw-return");
+        }
+        if(!drawThrow) {
+            getLogger().info("drawThrow = false");
+            args.add("--no-draw-throw");
+        }
+        if(!drawBreakContinue) {
+            getLogger().info("drawBreakContinue = false");
+            args.add("--no-draw-break-continue");
         }
         getLogger().info("args = {}", args);
 
@@ -177,6 +192,21 @@ public class JarAnalyzerJavaExec extends JavaExec {
     @Input
     public boolean isDrawBoxes() {
         return drawBoxes;
+    }
+
+    @Input
+    public boolean isDrawReturn() {
+        return drawReturn;
+    }
+
+    @Input
+    public boolean isDrawThrow() {
+        return drawThrow;
+    }
+
+    @Input
+    public boolean isDrawBreakContinue() {
+        return drawBreakContinue;
     }
 
     private LogLevel getCurrentLogLevel() {

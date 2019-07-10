@@ -280,7 +280,7 @@ public final class MatcherHelper {
         }
         final StatementWithRelevantMethods statementWithRelevantMethods =
                 StatementWithRelevantMethods.fromCtStatement(statement, analyzer);
-        if(statementWithRelevantMethods.isRelevantForAnalysis())
+        if(statementWithRelevantMethods.isRelevantForLoopFlowBreakAnalysis())
             return statementWithRelevantMethods;
         return null;
     }
@@ -327,13 +327,23 @@ public final class MatcherHelper {
 
     public static Branch fromCtStatementsToStatements(List<CtStatement> ctStatements,
                                                       AnalyzerWithModel analyzer) {
-        return fromCtStatementsToStatements(ctStatements, analyzer, Branch::addIfRelevantForAnalysis);
+        final Branch res = new Branch();
+
+        for(CtStatement ctStatement : ctStatements) {
+            //here we desugar already!
+            final StatementInterface statement = instantiateStatement(ctStatement, analyzer);
+            if(statement != null) {
+                Branch desugared = statement.desugar();
+                res.addIfRelevantForLoopFlowBreakAnalysis(desugared);
+            }
+        }
+        return res;
     }
 
-    public static Branch fromCtStatementsToStatementsForLoopBody(List<CtStatement> ctStatements,
-                                                      AnalyzerWithModel analyzer) {
-        return fromCtStatementsToStatements(ctStatements, analyzer, Branch::addIfRelevantForAnalysisOrIfRelevantForLoop);
-    }
+//    public static Branch fromCtStatementsToStatementsForLoopBody(List<CtStatement> ctStatements,
+//                                                      AnalyzerWithModel analyzer) {
+//        //return fromCtStatementsToStatements(ctStatements, analyzer, Branch::addIfRelevantForAnalysisOrIfRelevantForLoop);
+//    }
 
     public static StatementInterface instantiateStatementIfQueryableMatches(CtElement queryable,
                                                                                          CtStatement statement,

@@ -38,6 +38,15 @@ public class Main implements Callable<Integer> {
     @CommandLine.Option(names = {"--no-arrows"}, description = "Don't draw arrows between send and receive")
     boolean noArrows = false;
 
+    @CommandLine.Option(names = {"--draw-return"}, description = "Draw the return statements")
+    boolean drawReturn = false;
+
+    @CommandLine.Option(names = {"--no-draw-throw"}, description = "Don't draw throw statements")
+    boolean noDrawThrow = false;
+
+    @CommandLine.Option(names = {"--no-draw-break-continue"}, description = "Don't draw break or continue statements")
+    boolean noBreakContinue = false;
+
     public static void main(String []args) throws IOException {
 
         final Main app = CommandLine.populateCommand(new Main(), args);
@@ -63,6 +72,9 @@ public class Main implements Callable<Integer> {
         DrawerUtil.setDrawLineNumbers(drawLineNumbers);
         DrawerUtil.setDrawBoxAroundSubFlows(!noDrawBoxAroundSubflow);
         DrawerUtil.setDrawArrows(!noArrows);
+        DrawerUtil.setDrawReturn(drawReturn);
+        DrawerUtil.setDrawThrow(!noDrawThrow);
+        DrawerUtil.setDrawBreakContinue(!noBreakContinue);
 
         DrawerUtil.drawAllStartableClasses(analyzer, outputPath);
         return 0;

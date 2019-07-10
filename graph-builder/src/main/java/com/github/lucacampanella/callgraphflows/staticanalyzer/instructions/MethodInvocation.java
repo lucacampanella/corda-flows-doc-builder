@@ -66,7 +66,7 @@ public class MethodInvocation extends InstructionStatement {
 
                 if (methodInv.getTarget() instanceof CtInvocation) { //the target is the "inner" invocation
                     MethodInvocation targetInv = MethodInvocation.fromCtStatement((CtInvocation) methodInv.getTarget(), analyzer);
-                    methodInvocation.internalMethodInvocations.addIfRelevantForAnalysis(targetInv);
+                    methodInvocation.internalMethodInvocations.addIfRelevantForLoopFlowBreakAnalysis(targetInv);
                 }
             }
 
@@ -112,13 +112,13 @@ public class MethodInvocation extends InstructionStatement {
                     }
                     final Branch allRelevantMethodInvocations = StaticAnalyzerUtils.getAllRelevantMethodInvocations(expr,
                             analyzer);
-                    methodInvocation.internalMethodInvocations.addIfRelevantForAnalysis(allRelevantMethodInvocations);
+                    methodInvocation.internalMethodInvocations.addIfRelevantForLoopFlowBreakAnalysis(allRelevantMethodInvocations);
                 }
             }
             try {
                 final Branch bodyStatements = MatcherHelper.fromCtStatementsToStatements(
                         dynamicallyDispatchedExecutable.getBody().getStatements(), analyzer);
-                methodInvocation.body.addIfRelevantForAnalysis(bodyStatements);
+                methodInvocation.body.addIfRelevantForLoopFlowBreakAnalysis(bodyStatements);
             } catch (NullPointerException e) {
                 LOGGER.warn("Couldn't retrieve the body of method {} adding an empty one", inv);
             }
@@ -155,18 +155,20 @@ public class MethodInvocation extends InstructionStatement {
     }
 
     @Override
-    public boolean isRelevantForAnalysis() {
-        return internalMethodInvocations.isRelevant() ||
-                body.getStatements().stream().anyMatch(stmt -> {
-                    if((!stmt.isRelevantForAnalysis()) ||
-                        stmt instanceof FlowAssignment ||
-                            stmt instanceof FlowConstructor ||
-                            stmt instanceof SessionAssignment) {
-                        return false;
-                    }
-                    return true;
-                });
+    public boolean isRelevantForLoopFlowBreakAnalysis() {
+        return isRelevantForProtocolAnalysis();
     }
+
+    @Override
+    public boolean isRelevantForMethodFlowBreakAnalysis() {
+        return isRelevantForProtocolAnalysis();
+    }
+
+    @Override
+    public boolean isRelevantForProtocolAnalysis() {
+        return body.isRelevantForProtocolAnalysis();
+    }
+
 
     @Override
     public Optional<InitiateFlow> getInitiateFlowStatementAtThisLevel() {
@@ -188,8 +190,14 @@ public class MethodInvocation extends InstructionStatement {
 
     @Override
     public CombinationsHolder getResultingCombinations() {
-        final CombinationsHolder res = super.getResultingCombinations();
-        res.appendToAllCombinations(getBody());
+        final CombinationsHolder res = CombinationsHolder.fromBranch(body);
+        res.removeAllLocks();
         return res;
+    }
+
+    @Override
+    public boolean checkIfContainsValidProtocolAndSetupLinks() {
+        return super.checkIfContainsValidProtocolAndSetupLinks()
+                && getBody().allInitiatingFlowsHaveValidProtocolAndSetupLinks();
     }
 }

@@ -9,6 +9,7 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisErrorExce
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.ClassDescriptionContainer;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.CodeFlowBreak;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spoon.reflect.declaration.CtClass;
@@ -81,5 +82,17 @@ public final class DrawerUtil {
 
     public static void setDrawArrows(boolean drawArrows) {
         AnalyzerWithModel.setDrawArrows(drawArrows);
+    }
+
+    public static void setDrawReturn(boolean drawReturn) {
+        CodeFlowBreak.setDrawReturn(drawReturn);
+    }
+
+    public static void setDrawThrow(boolean drawThrow) {
+        CodeFlowBreak.setDrawThrow(drawThrow);
+    }
+
+    public static void setDrawBreakContinue(boolean drawBreakContinue) {
+        CodeFlowBreak.setDrawBreakContinue(drawBreakContinue);
     }
 }

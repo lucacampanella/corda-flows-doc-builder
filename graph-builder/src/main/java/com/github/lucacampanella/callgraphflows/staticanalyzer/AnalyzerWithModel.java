@@ -91,14 +91,14 @@ public class AnalyzerWithModel {
                 else {
                     LOGGER.error("Class {} contains initiateFlow call, but can't find corresponding class", klass.getQualifiedName());
                 }
-            }
-            if(drawArrows) {
-                final boolean validProtocol =
-                        res.checkIfContainsValidProtocolAndSetupLinks();//check the protocol and draws possible links
-                LOGGER.info("Class {} contains valid protocol? {}", klass.getQualifiedName(), validProtocol);
-            }
-            else {
-                LOGGER.info("Set on not drawing arrows, the protocol is not figured out");
+                if(drawArrows) {
+                    final boolean validProtocol =
+                            res.checkIfContainsValidProtocolAndSetupLinks();//check the protocol and draws possible links
+                    LOGGER.info("Class {} contains valid protocol? {}", klass.getQualifiedName(), validProtocol);
+                }
+                else {
+                    LOGGER.info("Set on not drawing arrows, the protocol is not figured out");
+                }
             }
 
             classToAnalysisResultMap.put(klass, res);

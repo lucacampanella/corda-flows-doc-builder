@@ -4,6 +4,7 @@ import com.github.lucacampanella.TestUtils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.IfElse;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.MethodInvocation;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.StatementInterface;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.While;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.DoubleExtendingSuperclassTestFlow;
@@ -107,12 +108,12 @@ public class GeneralTests {
     @Test
     public void ContinueBreakTest() throws IOException, AnalysisErrorException {
         final AnalysisResult analysisResult = drawAndReturnAnalysis(ContinueBreakTestFlow.class);
-        assertThat(analysisResult.getStatements()).hasSize(4);
+        assertThat(analysisResult.getStatements()).hasSize(5);
         While whileStatement = (While) analysisResult.getStatements().getStatements().get(1);
-        assertThat(whileStatement.getBranchTrue().getStatements()).hasSize(3);
-        IfElse ifElseInWhile = (IfElse)  whileStatement.getBranchTrue().getStatements().get(0);
+        assertThat(whileStatement.getBody().getStatements()).hasSize(3);
+        IfElse ifElseInWhile = (IfElse)  whileStatement.getBody().getStatements().get(0);
         assertThat(ifElseInWhile.getBranchTrue()).hasSize(2);
-        assertThat(analysisResult.getCounterpartyClassResult().getStatements()).hasSize(4);
+        assertThat(analysisResult.getCounterpartyClassResult().getStatements()).hasSize(5);
     }
 
     @Test
@@ -141,6 +142,81 @@ public class GeneralTests {
     }
 
     @Test
+    public void SendMultipleTransactionsFlowTest() throws IOException, AnalysisErrorException {
+        final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(fromClassSrcToPath(GraphForDocsFlow.class));
+        final AnalysisResult analysisResult =
+                analyzer.analyzeFlowLogicClass(analyzer.getClass(GraphForDocsFlow.SendMultipleTransactionsFlow.class));
+        DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
+        LOGGER.trace("{}", analysisResult.getStatements());
+    }
+
+    @Test
+    public void ContinueTestFlowTest() throws IOException, AnalysisErrorException {
+        final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(fromClassSrcToPath(ContinueTestFlow.class));
+        final AnalysisResult analysisResult =
+                analyzer.analyzeFlowLogicClass(analyzer.getClass(ContinueTestFlow.Initiator.class));
+        assertThat(analysisResult.checkIfContainsValidProtocolAndSetupLinks()).isEqualTo(true);
+        assertThat(CombinationsHolder.fromBranch(analysisResult.getStatements()).getAllCombinations()).hasSize(7);
+        DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
+        LOGGER.trace("{}", analysisResult.getStatements());
+    }
+
+    @Test
+    public void BreakTestFlowTest() throws IOException, AnalysisErrorException {
+        final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(fromClassSrcToPath(BreakTestFlow.class));
+        final AnalysisResult analysisResult =
+                analyzer.analyzeFlowLogicClass(analyzer.getClass(BreakTestFlow.Initiator.class));
+        assertThat(analysisResult.checkIfContainsValidProtocolAndSetupLinks()).isEqualTo(true);
+        assertThat(CombinationsHolder.fromBranch(analysisResult.getStatements()).getAllCombinations()).hasSize(5);
+        DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
+        LOGGER.trace("{}", analysisResult.getStatements());
+    }
+
+    @Test
+    public void ThrowTestFlowTest() throws IOException, AnalysisErrorException {
+        final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(fromClassSrcToPath(ThrowTestFlow.class));
+        final AnalysisResult analysisResult =
+                analyzer.analyzeFlowLogicClass(analyzer.getClass(ThrowTestFlow.Initiator.class));
+        assertThat(analysisResult.checkIfContainsValidProtocolAndSetupLinks()).isEqualTo(true);
+        assertThat(CombinationsHolder.fromBranch(analysisResult.getStatements()).getAllCombinations()).hasSize(2);
+        assertThat(analysisResult.getStatements()).hasSize(7);
+        assertThat(analysisResult.getStatements().getStatements().stream().map(StatementInterface::toString)
+        .filter(str -> str.contains("methodWithAThrowAndNORelevantStuff")).findAny()).isEmpty();
+        assertThat(analysisResult.getStatements().getStatements().stream().map(StatementInterface::toString)
+                .filter(str -> str.contains("methodWithAThrowAndRelevantStuff")).findAny()).isPresent();
+        DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
+        LOGGER.trace("{}", analysisResult.getStatements());
+    }
+
+    @Test
+    public void ReturnTestFlowTest() throws IOException, AnalysisErrorException {
+        final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(fromClassSrcToPath(ReturnTestFlow.class));
+        final AnalysisResult analysisResult =
+                analyzer.analyzeFlowLogicClass(analyzer.getClass(ReturnTestFlow.Initiator.class));
+        assertThat(analysisResult.checkIfContainsValidProtocolAndSetupLinks()).isEqualTo(true);
+        assertThat(CombinationsHolder.fromBranch(analysisResult.getStatements()).getAllCombinations()).hasSize(2);
+        assertThat(analysisResult.getStatements()).hasSize(7);
+        assertThat(analysisResult.getStatements().getStatements().stream().map(StatementInterface::toString)
+                .filter(str -> str.contains("methodWithAReturnAndNORelevantStuff")).findAny()).isEmpty();
+        assertThat(analysisResult.getStatements().getStatements().stream().map(StatementInterface::toString)
+                .filter(str -> str.contains("methodWithAReturnAndRelevantStuff")).findAny()).isPresent();
+        DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
+        LOGGER.trace("{}", analysisResult.getStatements());
+    }
+
+    @Test
+    public void ReturnThrowBreakContinueTestFlowTest() throws IOException, AnalysisErrorException {
+        final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(fromClassSrcToPath(ReturnThrowBreakContinueTestFlow.class));
+        final AnalysisResult analysisResult =
+                analyzer.analyzeFlowLogicClass(analyzer.getClass(ReturnThrowBreakContinueTestFlow.Initiator.class));
+        assertThat(analysisResult.checkIfContainsValidProtocolAndSetupLinks()).isEqualTo(true);
+        assertThat(CombinationsHolder.fromBranch(analysisResult.getStatements()).getAllCombinations()).hasSize(114);
+        assertThat(analysisResult.getStatements()).hasSize(4);
+        DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
+        LOGGER.trace("{}", analysisResult.getStatements());
+    }
+
+    @Test
     public void InitiatedByInnerClassAcceptorTest() throws IOException, AnalysisErrorException {
         final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(fromClassSrcToPath(InitiatorBaseFlow.class),
                 fromClassSrcToPath(ExtendingSuperclassTestFlow.class),
@@ -150,7 +226,7 @@ public class GeneralTests {
         DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
         LOGGER.trace("{}", analysisResult.getStatements());
         assertThat(analysisResult.getStatements().getStatements().get(1)).isInstanceOf(MethodInvocation.class);
-        assertThat(((MethodInvocation) analysisResult.getStatements().getStatements().get(1)).getBody()).hasSize(2);
+        assertThat(((MethodInvocation) analysisResult.getStatements().getStatements().get(1)).getBody()).hasSize(3);
     }
 
     @Test

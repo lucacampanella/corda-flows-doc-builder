@@ -67,7 +67,7 @@ public class Receive extends InstructionStatement implements StatementWithCompan
     @Override
     public boolean acceptCompanion(StatementWithCompanionInterface companion) {
         boolean accepted = false;
-        accepted = isAccepted(companion.getRealCompanionStatement(), accepted, receivedType);
+        accepted = isAccepted(companion, accepted, receivedType);
 
         return accepted;
     }
@@ -88,10 +88,9 @@ public class Receive extends InstructionStatement implements StatementWithCompan
 
     @Override
     public void createGraphLink(StatementWithCompanionInterface companion) {
-        final StatementWithCompanionInterface realCompanion = companion.getRealCompanionStatement();
-        ((GBaseSimpleComponent) realCompanion.getGraphElem()).setBrother(graphElem);
-        if(realCompanion instanceof SendAndReceive) {
-            ((SendAndReceive) realCompanion).setSentConsumed(true); //we consumed the send state of SendAndReceive
+        ((GBaseSimpleComponent) companion.getGraphElem()).setBrother(graphElem);
+        if(companion instanceof SendAndReceive) {
+            ((SendAndReceive) companion).setSentConsumed(true); //we consumed the send state of SendAndReceive
         }
     }
 
@@ -100,7 +99,7 @@ public class Receive extends InstructionStatement implements StatementWithCompan
     }
 
     @Override
-    public boolean isSendOrReceive() {
+    public boolean hasSendOrReceiveAtThisLevel() {
         return true;
     }
 

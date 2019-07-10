@@ -9,7 +9,7 @@ import net.corda.core.transactions.SignedTransaction;
 import java.util.LinkedList;
 import java.util.List;
 
-public class DoWhileTestFlow {
+public class BreakTestFlow {
 
         @InitiatingFlow
         @StartableByRPC
@@ -29,15 +29,17 @@ public class DoWhileTestFlow {
 
                 FlowSession session = initiateFlow(otherParty);
 
-                if(!list.isEmpty()) {
+                while(true) {
                     int i = 0;
-                    do {
-                        session.send(true);
-                        subFlow(new SendTransactionFlow(session, list.get(i)));
-                        i++;
-                    } while (i < list.size());
+                    session.send(true);
+                    subFlow(new SendTransactionFlow(session, list.get(i)));
+                    boolean condition = false;
+                    if(condition) {
+                        break;
+                    }
+                    session.send(true);
+                    i++;
                 }
-                session.send(false);
                 session.send("END");
 
                 return null;
@@ -57,9 +59,14 @@ public class DoWhileTestFlow {
             @Override
             public Void call() throws FlowException {
 
-                while (otherSession.receive(Boolean.class).unwrap(data -> data)) {
-                    subFlow(new ReceiveTransactionFlow(otherSession, true, StatesToRecord.ALL_VISIBLE));
-                }
+                otherSession.receive(Boolean.class);
+                subFlow(new ReceiveTransactionFlow(otherSession, true, StatesToRecord.ALL_VISIBLE));
+                otherSession.receive(Boolean.class);
+
+                otherSession.receive(Boolean.class);
+                subFlow(new ReceiveTransactionFlow(otherSession, true, StatesToRecord.ALL_VISIBLE));
+                //here the break is triggered
+
                 otherSession.receive(String.class);
                 return null;
             }
