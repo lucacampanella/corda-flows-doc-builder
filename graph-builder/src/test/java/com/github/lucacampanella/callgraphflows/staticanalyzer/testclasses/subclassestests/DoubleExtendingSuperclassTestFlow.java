@@ -18,7 +18,7 @@ public class DoubleExtendingSuperclassTestFlow {
         @Suspendable
         @Override
         protected String realCallMethod(FlowSession session) {
-            session.send("StrignPayload");
+            session.send("StringPayload");
             super.realCallMethod(session);
             this.printingMethod();
             printingMethod();

@@ -106,8 +106,9 @@ public class GeneralTests {
     }
 
     @Test
-    public void ContinueBreakTest() throws IOException, AnalysisErrorException {
-        final AnalysisResult analysisResult = drawAndReturnAnalysis(ContinueBreakTestFlow.class);
+    public void ContinueBreakTest() throws AnalysisErrorException {
+        final AnalysisResult analysisResult = getSourceClassAnalyzerFromClasses(ContinueBreakTestFlow.class)
+                .analyzeFlowLogicClass(ContinueBreakTestFlow.Initiator.class);
         assertThat(analysisResult.getStatements()).hasSize(5);
         While whileStatement = (While) analysisResult.getStatements().getStatements().get(1);
         assertThat(whileStatement.getBody().getStatements()).hasSize(3);
@@ -118,8 +119,8 @@ public class GeneralTests {
 
     @Test
     public void ContainerFlowTest() throws IOException, AnalysisErrorException {
-        final AnalysisResult analysisResult = drawAndReturnAnalysis(ContainerFlow.class,
-                DoWhileTestFlow.class);
+        final AnalysisResult analysisResult = getSourceClassAnalyzerFromClasses(ContainerFlow.class,
+                DoWhileTestFlow.class).analyzeFlowLogicClass(ContainerFlow.class);
         LOGGER.trace("{}", analysisResult.getStatements());
     }
 
@@ -231,10 +232,17 @@ public class GeneralTests {
 
     @Test
     public void dynamicallyDispatchedMethod() throws AnalysisErrorException, IOException {
-        AnalysisResult analysisResult = drawAndReturnAnalysis(InitiatorBaseFlow.class, ExtendingSuperclassTestFlow.class,
+        final SourceClassAnalyzer sourceClassAnalyzerFromClasses = getSourceClassAnalyzerFromClasses(InitiatorBaseFlow.class, ExtendingSuperclassTestFlow.class,
                 DoubleExtendingSuperclassTestFlow.class);
+        final AnalysisResult analysisResult =
+                sourceClassAnalyzerFromClasses.analyzeFlowLogicClass(DoubleExtendingSuperclassTestFlow.Initiator.class);
         LOGGER.info("{}", analysisResult.getStatements());
    }
+
+    private SourceClassAnalyzer getSourceClassAnalyzerFromClasses(Class... toBeAnalyzed) {
+        return new SourceClassAnalyzer(Arrays.stream(toBeAnalyzed)
+                .map(TestUtils::fromClassSrcToPath).collect(Collectors.toList()));
+    }
 
     public AnalysisResult drawAndReturnAnalysis(Class... toBeAnalyzed) throws AnalysisErrorException, IOException {
         final List<String> pathToClasses = Arrays.stream(toBeAnalyzed).map(TestUtils::fromClassSrcToPath).collect(Collectors.toList());

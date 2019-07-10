@@ -66,6 +66,7 @@ public final class DrawerUtil {
         final ClassDescriptionContainer classDescription = analysisResult.getClassDescription();
 
         GGraphBuilder graphBuilder = GGraphBuilder.fromAnalysisResult(analysisResult);
+        Paths.get(outPath, "images").toFile().mkdirs();
         graphBuilder.drawToFile(Paths.get(outPath, "images", classDescription.getFullyQualifiedName() + ".svg").toString());
 
         AsciiDocBuilder asciiDocBuilder = AsciiDocBuilder.fromAnalysisResult(analysisResult);

@@ -77,6 +77,11 @@ public class ClassCallStackHolder {
                 final List<CtTypeReference<?>> actualTypeArguments = currRef.getActualTypeArguments();
                 for(CtTypeReference actualTypeArg : actualTypeArguments) {
                     if(actualTypeArg.getTypeParameterDeclaration().equals(typeParameterRef.getDeclaration())) {
+                        if(actualTypeArg == elem) {
+                            LOGGER.warn("Couldn't retrieve generics for type {}, continuing without." +
+                                    "This can result in the arrows not drawn correctly", elem);
+                            return elem;
+                        }
                         return resolveEventualGenerics(actualTypeArg);
                     }
                 }

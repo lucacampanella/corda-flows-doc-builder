@@ -1,6 +1,7 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
+import net.corda.core.flows.FlowLogic;
 import net.corda.core.flows.InitiatedBy;
 import net.corda.core.flows.StartableByRPC;
 import org.slf4j.Logger;
@@ -48,6 +49,13 @@ public class AnalyzerWithModel {
         return (CtClass<T>) results.get(0);
     }
 
+    public AnalysisResult analyzeFlowLogicClass(Class klass) throws AnalysisErrorException {
+        final CtClass ctClass = getClass(klass);
+        if(ctClass == null) {
+            throw new IllegalArgumentException("The class is not in the model");
+        }
+        return analyzeFlowLogicClass(ctClass);
+    }
 
     public AnalysisResult analyzeFlowLogicClass(CtClass klass) throws AnalysisErrorException {
         if(classToAnalysisResultMap.containsKey(klass)) {
@@ -55,6 +63,9 @@ public class AnalyzerWithModel {
             return classToAnalysisResultMap.get(klass);
         }
         else {
+            if(!klass.isSubtypeOf(MatcherHelper.getTypeReference(FlowLogic.class))) {
+                throw new IllegalArgumentException("Class " +klass.getQualifiedName() +" doesn't extend FlowLogic");
+            }
             LOGGER.info("*** analyzing class {}", klass.getQualifiedName());
             final CtMethod callMethod = StaticAnalyzerUtils.findCallMethod(klass);
             if (callMethod == null) {

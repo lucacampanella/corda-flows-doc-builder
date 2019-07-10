@@ -86,7 +86,10 @@ public class MethodInvocation extends InstructionStatement {
             }
 
             try {
-                methodInvocation.returnType = StaticAnalyzerUtils.nullifyIfVoidTypeAndGetString(inv.getExecutable().getType());
+                methodInvocation.returnType = StaticAnalyzerUtils
+                        .nullifyIfVoidTypeAndGetString(
+                                analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(
+                                        inv.getExecutable().getDeclaration().getType()));
             } catch(NullPointerException e) {
                 LOGGER.warn("Couldn't figure out the return type of method {}, continuing without", inv);
             }
