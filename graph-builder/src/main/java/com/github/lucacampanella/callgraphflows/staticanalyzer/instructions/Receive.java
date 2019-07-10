@@ -88,7 +88,7 @@ public class Receive extends InstructionStatement implements StatementWithCompan
 
     @Override
     public void createGraphLink(StatementWithCompanionInterface companion) {
-        ((GBaseSimpleComponent) companion.getGraphElem()).setBrother(graphElem);
+        ((GBaseSimpleComponent) companion.getGraphElem()).setBrotherSafely(graphElem);
         if(companion instanceof SendAndReceive) {
             ((SendAndReceive) companion).setSentConsumed(true); //we consumed the send state of SendAndReceive
         }

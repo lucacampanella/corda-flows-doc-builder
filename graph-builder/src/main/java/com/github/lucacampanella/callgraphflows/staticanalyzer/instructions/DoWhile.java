@@ -51,9 +51,7 @@ public class DoWhile extends LoopBranchingStatement {
     @Override
     protected void buildGraphElem() {
         GConditionalBranchIndented elem = graphElem;
-        final GBaseText enteringArrowText = new GBaseText("do");
-        enteringArrowText.setTextColor(GBaseText.LESS_IMPORTANT_TEXT_COLOR);
-        elem.setExitingArrowText(enteringArrowText);
+        elem.setEnteringArrowText("do");
         getBody().getStatements().forEach(stmt -> elem.addComponent(stmt.getGraphElem()));
         elem.setExitingArrowText(getConditionInstruction());
     }

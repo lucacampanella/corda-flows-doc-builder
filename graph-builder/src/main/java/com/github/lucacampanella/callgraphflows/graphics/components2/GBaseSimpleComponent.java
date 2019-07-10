@@ -16,6 +16,16 @@ public abstract class GBaseSimpleComponent extends GBaseComponent {
     private int lastDrawnStartX = -1;
     private int lastDrawnStartY = -1;
 
+    public void setBrotherSafely(GBaseSimpleComponent brother) {
+        //if brother already set, set it as a link (not same height)
+        if(this.brother != null) {
+            addLink(brother);
+        }
+        else {
+            setBrother(brother);
+        }
+    }
+
     public void setBrother(GBaseSimpleComponent brother) {
         this.brother = brother;
         brother.setEnteringBrother(this);

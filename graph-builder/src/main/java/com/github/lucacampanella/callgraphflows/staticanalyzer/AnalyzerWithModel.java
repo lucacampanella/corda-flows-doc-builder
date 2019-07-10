@@ -71,7 +71,7 @@ public class AnalyzerWithModel {
             setCurrentAnalyzingClass(klass);
 
             AnalysisResult res = new AnalysisResult(ClassDescriptionContainer.fromClass(klass));
-            res.getClassDescription().setReturnType(StaticAnalyzerUtils.nullifyIfVoidType(callMethod.getType()));
+            res.getClassDescription().setReturnType(StaticAnalyzerUtils.nullifyIfVoidTypeAndGetString(callMethod.getType()));
 
             final Branch interestingStatements = MatcherHelper.fromCtStatementsToStatements(
                     callMethod.getBody().getStatements(), this);

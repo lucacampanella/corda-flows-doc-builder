@@ -114,15 +114,6 @@ public class ClassDescriptionContainer {
         this.returnType = returnType;
     }
 
-    public void setReturnType(CtTypeReference returnTypeRef) {
-        if(returnTypeRef != null) {
-            setReturnType(returnTypeRef.toString());
-        }
-        else {
-            setReturnType((String) null);
-        }
-    }
-
     public String getReturnType() {
         return returnType;
     }

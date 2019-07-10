@@ -1,7 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
 
-import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseText;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GSubFlowIndented;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
 
@@ -45,15 +44,8 @@ public class CordaSubFlow extends SubFlowBase implements StatementWithCompanionI
     protected void buildGraphElem() {
         graphElem.setEnteringArrowText(initiatingInstruction);
 
-        StringBuilder returnArrowTextBuilder = new StringBuilder();
         if(returnType.isPresent() && !returnType.get().equals("java.lang.Void")) {
-            returnArrowTextBuilder.append(Utils.removePackageDescriptionIfWanted(returnType.get()));
-        }
-        if(returnArrowTextBuilder.length() > 0) {
-            final GBaseText exitingTextComponent = new GBaseText(returnArrowTextBuilder.toString());
-            exitingTextComponent.setTextColor(GBaseText.LESS_IMPORTANT_TEXT_COLOR);
-
-            graphElem.setExitingArrowText(exitingTextComponent);
+            graphElem.setExitingArrowText(Utils.removePackageDescriptionIfWanted(returnType.get()));
         }
     }
 
@@ -61,9 +53,9 @@ public class CordaSubFlow extends SubFlowBase implements StatementWithCompanionI
     public void createGraphLink(StatementWithCompanionInterface companion) {
         if(companion instanceof CordaSubFlow) {
             if (isInitiatingFlow() != null && isInitiatingFlow()) {
-                this.getInitiatingInstruction().setBrother(((CordaSubFlow) companion).getInitiatingInstruction());
+                this.getInitiatingInstruction().setBrotherSafely(((CordaSubFlow) companion).getInitiatingInstruction());
             } else {
-                ((CordaSubFlow) companion).getInitiatingInstruction().setBrother(this.getInitiatingInstruction());
+                ((CordaSubFlow) companion).getInitiatingInstruction().setBrotherSafely(this.getInitiatingInstruction());
             }
         }
     }

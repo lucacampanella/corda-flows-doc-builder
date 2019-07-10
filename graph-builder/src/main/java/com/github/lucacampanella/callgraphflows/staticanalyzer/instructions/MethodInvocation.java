@@ -1,5 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
+import com.github.lucacampanella.callgraphflows.DrawerUtil;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseComponent;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseText;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GConditionalBranchIndented;
@@ -32,6 +33,7 @@ public class MethodInvocation extends InstructionStatement {
     Map<String, String> callerSessionNameToCalleeSessionName = new HashMap<>();
     Map<String, String> callerFlowNameToCalleeFlowName = new HashMap<>();
     GConditionalBranchIndented indentedComponent = new GConditionalBranchIndented();
+    String returnType = null;
 
     protected MethodInvocation(CtStatement statement) {
         super(statement.getPosition() instanceof  NoSourcePosition ? 0 : statement.getPosition().getLine(),
@@ -81,6 +83,12 @@ public class MethodInvocation extends InstructionStatement {
                 //could use getExecutableDeclaration instaead of getDeclaration, but this would also mean
                 //analyzing the body of corda methods, for now this is ok
                 dynamicallyDispatchedExecutable = declaration;
+            }
+
+            try {
+                methodInvocation.returnType = StaticAnalyzerUtils.nullifyIfVoidTypeAndGetString(inv.getExecutable().getType());
+            } catch(NullPointerException e) {
+                LOGGER.warn("Couldn't figure out the return type of method {}, continuing without", inv);
             }
 
             final List<CtExpression> arguments = inv.getArguments();
@@ -152,6 +160,9 @@ public class MethodInvocation extends InstructionStatement {
     protected void buildGraphElem() {
         indentedComponent.setEnteringArrowText((GBaseText) super.getGraphElem());
         body.forEach(stmt -> indentedComponent.addComponent(stmt.getGraphElem()));
+        if(returnType != null) {
+            indentedComponent.setExitingArrowText(Utils.removePackageDescriptionIfWanted(returnType));
+        }
     }
 
     @Override

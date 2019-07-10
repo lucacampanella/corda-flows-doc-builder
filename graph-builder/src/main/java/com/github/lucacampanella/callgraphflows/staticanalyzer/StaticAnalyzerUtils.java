@@ -73,11 +73,19 @@ public class StaticAnalyzerUtils {
     }
 
     public static CtTypeReference nullifyIfVoidType(CtTypeReference typeRef) {
-        if(typeRef.isSubtypeOf(MatcherHelper.getTypeReference(Void.class)) ||
+        if(typeRef.box().isSubtypeOf(MatcherHelper.getTypeReference(Void.class)) ||
         typeRef.isSubtypeOf(MatcherHelper.getTypeReference(Unit.class))) {
             return null;
         }
         return typeRef;
+    }
+
+    public static String nullifyIfVoidTypeAndGetString(CtTypeReference typeRef) {
+        final CtTypeReference possiblyNullRef = nullifyIfVoidType(typeRef);
+        if(possiblyNullRef == null) {
+            return null;
+        }
+        return typeRef.toString();
     }
 
 //    public static boolean checkTwoClassesAndBuildGraphs(CtClass initiatingClass, CtClass initiatedClass,

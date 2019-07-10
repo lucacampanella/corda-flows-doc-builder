@@ -88,7 +88,7 @@ public class SendAndReceive extends InstructionStatement implements StatementWit
         final StatementWithCompanionInterface realCompanion = companion;
         if(!isSentConsumed) { // we treat it as a send
             if(realCompanion instanceof Receive) {
-                graphElem.setBrother((GBaseSimpleComponent) realCompanion.getGraphElem());
+                graphElem.setBrotherSafely((GBaseSimpleComponent) realCompanion.getGraphElem());
             }
             else if(realCompanion instanceof SendAndReceive) {
                 ((SendAndReceive) realCompanion).setSentConsumed(false); //we consumed the send state of SendAndReceive

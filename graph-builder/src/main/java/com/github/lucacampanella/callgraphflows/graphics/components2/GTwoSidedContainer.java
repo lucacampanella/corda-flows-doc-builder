@@ -219,9 +219,7 @@ public class GTwoSidedContainer extends GBaseComponent {
 
         final String returnType = classDescription.getReturnType();
         if(returnType != null && !returnType.equals("java.lang.Void")) {
-            final GBaseText exitingTextComponent = new GBaseText(Utils.removePackageDescriptionIfWanted(returnType));
-            exitingTextComponent.setTextColor(GBaseText.LESS_IMPORTANT_TEXT_COLOR);
-            mainFlow.setExitingArrowText(exitingTextComponent);
+            mainFlow.setExitingArrowText(Utils.removePackageDescriptionIfWanted(returnType));
         }
 
         twoSidedContainer.setMainSubFlow(mainFlow);

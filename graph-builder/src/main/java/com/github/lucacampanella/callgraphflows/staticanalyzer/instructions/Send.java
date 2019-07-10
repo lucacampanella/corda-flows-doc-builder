@@ -70,7 +70,7 @@ public class Send extends InstructionStatement implements StatementWithCompanion
 
     @Override
     public void createGraphLink(StatementWithCompanionInterface companion) {
-        graphElem.setBrother((GBaseSimpleComponent) companion.getGraphElem());
+        graphElem.setBrotherSafely((GBaseSimpleComponent) companion.getGraphElem());
         if(companion instanceof SendAndReceive) {
             // it must be equal to a Receive statement
             ((SendAndReceive) companion).setSentConsumed(false); //reset counter

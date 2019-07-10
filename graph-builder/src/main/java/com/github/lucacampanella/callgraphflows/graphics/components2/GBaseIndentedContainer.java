@@ -59,6 +59,12 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
         }
     }
 
+    private GBaseText getDefaultEnteringExitingArrowText(String text) {
+        GBaseText res = new GBaseText(text);
+        res.setTextColor(GBaseText.LESS_IMPORTANT_TEXT_COLOR);
+        return res;
+    }
+
 
     public void addComponent(GBaseComponent component) {
         if(component != null) {
@@ -327,6 +333,14 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
             this.exitingArrowText = null;
         }
         recomputeDims();
+    }
+
+    public void setEnteringArrowText(String enteringArrowText) {
+        setEnteringArrowText(getDefaultEnteringExitingArrowText(enteringArrowText));
+    }
+
+    public void setExitingArrowText(String exitingArrowText) {
+        setExitingArrowText(getDefaultEnteringExitingArrowText(exitingArrowText));
     }
 
     @Override
