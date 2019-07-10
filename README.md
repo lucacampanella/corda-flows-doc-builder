@@ -123,8 +123,12 @@ files that produced the `jar`, so that information such as line numbers or comme
 if the initiating classes have a top level comment, this is inserted in the ascii doc. The `sourceFilesPath` option
 is particularly useful in combination with `analyzeOnlySourceFiles` and `drawLineNumbers`.  
   * Example: `sourceFilesPath = ['src/main/java']`  
-  * Default: `[]`, empty list / array  
-- `drawLineNumbers`: boolean option to draw line numbers left to the expression. If the files are decompiled
+  * Default: `[]`, empty list / array
+- `drawArrows`: draw the arrows between send and receive and between corresponding Corda subflows.
+If the option is disabled, the plugin won't try to pigure out if the send and receive protocol match.
+  * Example: `drawArrows = false`  
+  * Default: `true`
+- `drawLineNumbers`: draw line numbers left to the expression. If the files are decompiled
 and not added with the option `sourceFilesPath`, the line numbers will correspond to the ones generated 
 during decompilation.
   * Example: `drawLineNumbers = true`  
@@ -137,6 +141,24 @@ classes tagged as `@StartableByRPC` that are found in the Jar.
 - `drawBoxes`: draw dashed boxes around each subflow, to better see division of labour between flows.
   * Example: `drawBoxes = false`  
   * Default: `true`
+- `drawReturn`: draw the `return` statements. This can be particularly useful when an anticipated return
+prevents the flow to send or receive some object, because the user of the docs sees how this can happen.
+  * Example: `drawReturn = true`
+  * Default: `false`;
+- `drawThrow`: draw the `throw` statements. This can be particularly useful when a throw
+prevents the flow to send or receive some object, because the user of the docs sees how this can happen.
+  * Example: `drawThrow = false`
+  * Default: `true`;
+- `drawBreakContinue`: draw the `break` and `continue` statements. This can be particularly useful when a loop
+that contains send and receives makes use of them.
+  * Example: `drawBreakContinue = false`
+  * Default: `true`;
+- `drawStatementsWithRelevantMethods`: draw also the statement in which a relevant method is called, not only
+the relevant method. For example with an instruction such as `SignedTransaction signedTransaction = super.call();`
+if this option is enabled, after the part representing the body of the `super.call()`, this instruction
+will also be shown.
+  * Example: `drawStatementsWithRelevantMethods = true`
+  * Default: `false`;
 
 For example using the Groovy DSL:
 ```
@@ -205,7 +227,16 @@ Default: `false`
 to only analyze and output the documentation regarding these source files and omit all the other
 classes tagged as `@StartableByRPC` that are found in Jar files.
 - `--no-box-subflows`: don't draw dashed boxes around each subflow.
-
+- `--no-arrows`: don't draw the arrows between send and receive and between corresponding Corda subflows.
+If the option is present, the plugin won't try to pigure out if the send and receive protocol match.
+- `--draw-return`: draw the `return` statements. This can be particularly useful when an anticipated return
+    prevents the flow to send or receive some object, because the user of the docs sees how this can happen.
+- `--no-draw-throw`: don't draw the `throw` statements.
+- `--no-draw-break-continue`: don't draw the `break` and `continue` statements.
+- `--draw-statements-with-relevant-methods`: draw also the statement in which a relevant method is called, not only
+the relevant method. For example with an instruction such as `SignedTransaction signedTransaction = super.call();`
+if this option is enabled, after the part representing the body of the `super.call()`, this instruction
+will also be shown.
 
 ## Running the tests
 

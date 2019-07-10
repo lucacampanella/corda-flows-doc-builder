@@ -28,11 +28,11 @@ public class JarAnalyzerJavaExec extends JavaExec {
     String pathToExecJar = null;
     boolean drawLineNumbers = false;
     boolean analyzeOnlySourceFiles = false;
-    boolean drawArrows = true;
-    boolean drawBoxes = true;
     boolean removeJavaAgents = true; //remove agents like quasar that might be pluggen in to any javaexec task by the quasar plugin
     String logLevel = null;
     List<String> sourceFilesPath = null;
+    boolean drawArrows = true;
+    boolean drawBoxes = true;
     boolean drawReturn = false;
     boolean drawThrow = true;
     boolean drawBreakContinue = true;
