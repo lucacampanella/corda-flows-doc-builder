@@ -6,6 +6,8 @@ import spoon.reflect.code.CtStatement;
 
 public class StatementWithRelevantMethods extends InstructionStatement {
 
+    private static boolean toBePainted = false;
+
     protected StatementWithRelevantMethods(CtStatement statement) {
         super(statement);
     }
@@ -25,7 +27,10 @@ public class StatementWithRelevantMethods extends InstructionStatement {
 
     @Override
     public boolean toBePainted() {
-        return internalMethodInvocations.toBePainted(); //todo: do we want to paint the
-        //statement even if only some of the methods that are called in this line are relevant?
+        return toBePainted && internalMethodInvocations.toBePainted();
+    }
+
+    public static void setToBePainted(boolean toBePainted) {
+        StatementWithRelevantMethods.toBePainted = toBePainted;
     }
 }

@@ -10,6 +10,7 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalysisResult;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.ClassDescriptionContainer;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.CodeFlowBreak;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.StatementWithRelevantMethods;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spoon.reflect.declaration.CtClass;
@@ -91,6 +92,10 @@ public final class DrawerUtil {
 
     public static void setDrawThrow(boolean drawThrow) {
         CodeFlowBreak.setDrawThrow(drawThrow);
+    }
+
+    public static void setDrawStatementsWithRelevantMethods(boolean drawStatementsWithRelevantMethods) {
+        StatementWithRelevantMethods.setToBePainted(drawStatementsWithRelevantMethods);
     }
 
     public static void setDrawBreakContinue(boolean drawBreakContinue) {

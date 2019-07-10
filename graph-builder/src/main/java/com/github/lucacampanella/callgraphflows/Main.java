@@ -47,6 +47,11 @@ public class Main implements Callable<Integer> {
     @CommandLine.Option(names = {"--no-draw-break-continue"}, description = "Don't draw break or continue statements")
     boolean noBreakContinue = false;
 
+    @CommandLine.Option(names = {"--draw-statements-with-relevant-methods"},
+            description = "Not only draw the relevant methods contained inside a statement, but also the " +
+                    " statement itself, placed after all the relevant methods.")
+    boolean drawStatementsWithRelevantMethods = false;
+
     public static void main(String []args) throws IOException {
 
         final Main app = CommandLine.populateCommand(new Main(), args);
@@ -75,6 +80,7 @@ public class Main implements Callable<Integer> {
         DrawerUtil.setDrawReturn(drawReturn);
         DrawerUtil.setDrawThrow(!noDrawThrow);
         DrawerUtil.setDrawBreakContinue(!noBreakContinue);
+        DrawerUtil.setDrawStatementsWithRelevantMethods(drawStatementsWithRelevantMethods);
 
         DrawerUtil.drawAllStartableClasses(analyzer, outputPath);
         return 0;

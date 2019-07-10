@@ -36,6 +36,7 @@ public class JarAnalyzerJavaExec extends JavaExec {
     boolean drawReturn = false;
     boolean drawThrow = true;
     boolean drawBreakContinue = true;
+    boolean drawStatementsWithRelevantMethods = false;
 
     @TaskAction
     @Override
@@ -78,6 +79,10 @@ public class JarAnalyzerJavaExec extends JavaExec {
         if(!drawBreakContinue) {
             getLogger().info("drawBreakContinue = false");
             args.add("--no-draw-break-continue");
+        }
+        if(drawStatementsWithRelevantMethods) {
+            getLogger().info("drawStatementsWithRelevantMethods = true");
+            args.add("--draw-statements-with-relevant-methods");
         }
         getLogger().info("args = {}", args);
 
@@ -207,6 +212,11 @@ public class JarAnalyzerJavaExec extends JavaExec {
     @Input
     public boolean isDrawBreakContinue() {
         return drawBreakContinue;
+    }
+
+    @Input
+    public boolean isDrawStatementsWithRelevantMethods() {
+        return drawStatementsWithRelevantMethods;
     }
 
     private LogLevel getCurrentLogLevel() {
