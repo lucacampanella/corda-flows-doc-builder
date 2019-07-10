@@ -4,10 +4,7 @@ import com.github.lucacampanella.callgraphflows.DrawerUtil;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseComponent;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseText;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GConditionalBranchIndented;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.CombinationsHolder;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.StaticAnalyzerUtils;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
 import com.github.lucacampanella.callgraphflows.utils.Utils;
 import net.corda.core.flows.FlowLogic;
@@ -16,9 +13,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spoon.reflect.code.*;
 import spoon.reflect.cu.position.NoSourcePosition;
+import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtExecutable;
 import spoon.reflect.declaration.CtMethod;
 import spoon.reflect.declaration.CtParameter;
+import spoon.support.reflect.code.CtSuperAccessImpl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +38,6 @@ public class MethodInvocation extends InstructionStatement {
         super(statement.getPosition() instanceof  NoSourcePosition ? 0 : statement.getPosition().getLine(),
                 Utils.fromStatementToString(statement));
     }
-
 
     public static MethodInvocation fromCtStatement(CtStatement statement, AnalyzerWithModel analyzer) {
 
@@ -65,10 +63,18 @@ public class MethodInvocation extends InstructionStatement {
 
             if(statement instanceof CtInvocation) {
                 CtInvocation methodInv = (CtInvocation) statement;
+                final CtExpression target = methodInv.getTarget();
 
-                if (methodInv.getTarget() instanceof CtInvocation) { //the target is the "inner" invocation
-                    MethodInvocation targetInv = MethodInvocation.fromCtStatement((CtInvocation) methodInv.getTarget(), analyzer);
+                if (target instanceof CtInvocation) { //the target is the "inner" invocation
+                    MethodInvocation targetInv = MethodInvocation.fromCtStatement((CtInvocation) target, analyzer);
                     methodInvocation.internalMethodInvocations.addIfRelevantForLoopFlowBreakAnalysis(targetInv);
+                }
+                else if(target instanceof CtSuperAccessImpl) { //we add the name of the actual class if the target is super, for clarity
+                    if(target.getType() != null ) {
+                        methodInvocation.graphElem.setText(statement.toString() + " // " +
+                                ClassDescriptionContainer.fromClass((CtClass) target.getType().getTypeDeclaration())
+                                        .getNameWithParent());
+                    }
                 }
             }
 

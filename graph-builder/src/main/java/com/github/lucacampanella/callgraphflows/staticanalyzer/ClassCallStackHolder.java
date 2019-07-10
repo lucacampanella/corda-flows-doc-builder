@@ -47,7 +47,7 @@ public class ClassCallStackHolder {
         CtClass callerClass = StaticAnalyzerUtils.getLowerContainingClass(inv);
 
         for(CtTypeReference<?> currRef : classStack) {
-            final CtClass<?> curr = (CtClass<?>) currRef.getDeclaration();
+            final CtClass<?> curr = (CtClass<?>) currRef.getTypeDeclaration();
             if (curr == callerClass)
             //we arrived at the class calling the method without finding an implementation lower in the class stack
             //this means the method is implemented here for the first time
@@ -76,7 +76,7 @@ public class ClassCallStackHolder {
             for(CtTypeReference currRef : classStack) {
                 final List<CtTypeReference<?>> actualTypeArguments = currRef.getActualTypeArguments();
                 for(CtTypeReference actualTypeArg : actualTypeArguments) {
-                    if(actualTypeArg.getTypeParameterDeclaration().equals(typeParameterRef.getDeclaration())) {
+                    if(actualTypeArg.getTypeParameterDeclaration().equals(typeParameterRef.getTypeDeclaration())) {
                         if(actualTypeArg == elem) {
                             LOGGER.warn("Couldn't retrieve generics for type {}, continuing without." +
                                     "This can result in the arrows not drawn correctly", elem);

@@ -171,7 +171,7 @@ public class SubFlowBuilder {
         else { //is not a corda flow
             try {
                 AnalysisResult resultOfClassAnalysis = analyzer.analyzeFlowLogicClass(
-                        (CtClass) subFlowInfo.subFlowType.getDeclaration());
+                        (CtClass) subFlowInfo.subFlowType.getTypeDeclaration());
                 subFlowInfo.isInitiatingFlow = resultOfClassAnalysis.hasCounterpartyResult();
                 if (subFlowInfo.isInitiatingFlow) {
                     result = new InitiatingSubFlow();
