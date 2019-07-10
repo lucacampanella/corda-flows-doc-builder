@@ -1,7 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
 import com.github.lucacampanella.callgraphflows.staticanalyzer.instructions.*;
-import org.hibernate.Session;
 
 import java.util.HashMap;
 import java.util.LinkedList;
