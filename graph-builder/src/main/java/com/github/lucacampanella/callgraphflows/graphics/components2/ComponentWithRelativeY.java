@@ -9,11 +9,6 @@ public class ComponentWithRelativeY {
     public ComponentWithRelativeY() {
     }
 
-    public ComponentWithRelativeY(GBaseComponent comp, int y) {
-        this.comp = comp;
-        this.y = y;
-    }
-
     public ComponentWithRelativeY(GBaseComponent comp) {
         this.comp = comp;
     }

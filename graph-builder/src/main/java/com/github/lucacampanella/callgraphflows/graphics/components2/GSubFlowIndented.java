@@ -13,10 +13,6 @@ public class GSubFlowIndented extends GBaseIndentedContainer {
 
     }
 
-    public GSubFlowIndented(GBaseText enteringArrowText, GBaseText exitingArrowText) {
-        super(enteringArrowText, exitingArrowText);
-    }
-
     @Override
     protected Color getAwtColor() {
         return getColor().getAwtColor();

@@ -247,6 +247,8 @@ public class GeneralTests {
         DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
         assertThat(analysisResult.getGraphicRepresentationNoTitles().getMainSubFlow().toString())
                 .contains("initiateFlow");
+        assertThat(analysisResult.getGraphicRepresentationNoTitles().toString())
+                .contains("initiateFlow");
    }
 
     @Test
