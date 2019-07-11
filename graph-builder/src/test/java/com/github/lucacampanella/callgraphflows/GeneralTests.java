@@ -260,6 +260,15 @@ public class GeneralTests {
         assertThat(analysisResult.checkIfContainsValidProtocolAndSetupLinks()).isEqualTo(true);
     }
 
+
+    @Test
+    public void LateInitiateFlowTestFlowTest() throws AnalysisErrorException, IOException {
+        final AnalysisResult analysisResult =
+                getSourceClassAnalyzerFromClasses(LateInitiateFlowTestFlow.class)
+                        .analyzeFlowLogicClass(LateInitiateFlowTestFlow.Initiator.class);
+        DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
+    }
+
     private void testAnalyzeByRPCWithClass(Class toBeAnalyzed) throws IOException {
         final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(TestUtils.fromClassSrcToPath(toBeAnalyzed));
 
