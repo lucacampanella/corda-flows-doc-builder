@@ -245,6 +245,8 @@ public class GeneralTests {
                 sourceClassAnalyzerFromClasses.analyzeFlowLogicClass(DoubleExtendingSuperclassTestFlow.Initiator.class);
         LOGGER.info("{}", analysisResult.getStatements());
         DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
+        assertThat(analysisResult.getGraphicRepresentationNoTitles().getMainSubFlow().toString())
+                .contains("initiateFlow");
    }
 
     @Test

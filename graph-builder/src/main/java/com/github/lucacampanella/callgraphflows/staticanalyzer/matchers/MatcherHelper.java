@@ -97,15 +97,6 @@ public final class MatcherHelper {
         return method.getBody().getStatement(0);
     }
 
-    public static Pattern getPattern(String name) {
-        return  PatternBuilder.create(
-                new PatternBuilderHelper((CtType<?>) model.getElements(
-                        new NamedElementFilter(CtClass.class, "MatcherContainer")
-                ).get(0)).setBodyOfMethod(name).getPatternElements())
-                .configurePatternParameters()
-                .build();
-    }
-
     public static CtTypeReference getTypeReference(Class klass) {
         return typesMap.computeIfAbsent(klass, key -> {
             CtMethod<?> method = (CtMethod<?>) model.getElements(
@@ -309,23 +300,6 @@ public final class MatcherHelper {
     }
 
     public static Branch fromCtStatementsToStatements(List<CtStatement> ctStatements,
-                                                      AnalyzerWithModel analyzer,
-                                                      BiConsumer<Branch, Branch> addCheckingFunction) {
-
-        final Branch res = new Branch();
-
-        for(CtStatement ctStatement : ctStatements) {
-            //here we desugar already!
-            final StatementInterface statement = instantiateStatement(ctStatement, analyzer);
-            if(statement != null) {
-                Branch desugared = statement.desugar();
-                addCheckingFunction.accept(res, desugared);
-            }
-        }
-        return res;
-    }
-
-    public static Branch fromCtStatementsToStatements(List<CtStatement> ctStatements,
                                                       AnalyzerWithModel analyzer) {
         final Branch res = new Branch();
 
@@ -340,22 +314,17 @@ public final class MatcherHelper {
         return res;
     }
 
-//    public static Branch fromCtStatementsToStatementsForLoopBody(List<CtStatement> ctStatements,
-//                                                      AnalyzerWithModel analyzer) {
-//        //return fromCtStatementsToStatements(ctStatements, analyzer, Branch::addIfRelevantForAnalysisOrIfRelevantForLoop);
-//    }
-
     public static StatementInterface instantiateStatementIfQueryableMatches(CtElement queryable,
                                                                                          CtStatement statement,
                                                                                          AnalyzerWithModel analyzer) {
         if (matchesAnyChildren(queryable, SEND_MATCHER) ||
-                matchesAnyChildren(statement, SEND_WITH_BOOL_MATCHER)) { //TODO: test the second line
+                matchesAnyChildren(statement, SEND_WITH_BOOL_MATCHER)) {
             return Send.fromCtStatement(statement, analyzer);
         } else if (matchesAnyChildren(queryable, RECEIVE_MATCHER) ||
-                matchesAnyChildren(statement, RECEIVE_WITH_BOOL_MATCHER)) { //TODO: test the second line
+                matchesAnyChildren(statement, RECEIVE_WITH_BOOL_MATCHER)) {
             return Receive.fromCtStatement(statement, analyzer);
         } else if (matchesAnyChildren(queryable, SEND_AND_RECEIVE_MATCHER) ||
-                matchesAnyChildren(statement, SEND_AND_RECEIVE_WITH_BOOL_MATCHER)) { //TODO: test the second line
+                matchesAnyChildren(statement, SEND_AND_RECEIVE_WITH_BOOL_MATCHER)) {
             return SendAndReceive.fromCtStatement(statement, analyzer);
         }
         else if (matchesAnyChildren(queryable, SUB_FLOW_MATCHER)) {

@@ -10,7 +10,7 @@ import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GBaseIndentedContainer extends GBaseContainer {
+public abstract class   GBaseIndentedContainer extends GBaseContainer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GBaseIndentedContainer.class);
 
@@ -183,17 +183,6 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
         //else we are in the situation in which setUpDimensionsUntilInitiateFlow was called and thus we already computed
         // a lot, but we arrive here with a null lastCompWithNewY
 
-        if(currCompIndex == -1) { //we are still on the entering arrow text
-            if(lastCompWithNewY == null) {
-                throw new IllegalArgumentException("You passed a null object but we had just given back" +
-                        "the entering arrow");
-            }
-            LOGGER.error("THIS SHOULD NEVER HAPPEN");
-            enteringArrowText.setY(lastCompWithNewY.getY());
-            currY = lastCompWithNewY.getY() + enteringArrowText.getComp().getHeight(g2);
-            currCompIndex = 0;
-        }
-
         for(; currCompIndex < components.size(); ++currCompIndex) {
             final ComponentWithRelativeY currCompWithY = components.get(currCompIndex);
             final GBaseComponent currComp = currCompWithY.getComp();
@@ -360,14 +349,6 @@ public abstract class GBaseIndentedContainer extends GBaseContainer {
         }
 
         return sb.toString();
-    }
-
-    public GBaseText getEnteringArrowText() {
-        return enteringArrowText.getComp();
-    }
-
-    public GBaseText getExitingArrowText() {
-        return exitingArrowText.getComp();
     }
 
     public int getRectStartOffset(SVGGraphics2D g2) {
