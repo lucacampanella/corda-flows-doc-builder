@@ -1,15 +1,12 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseText;
-import com.github.lucacampanella.callgraphflows.graphics.components2.GConditionalBranchIndented;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.CombinationsHolder;
-import com.github.lucacampanella.callgraphflows.utils.Utils;
-import com.github.lucacampanella.callgraphflows.graphics.components2.GInstruction;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
+import com.github.lucacampanella.callgraphflows.staticanalyzer.CombinationsHolder;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
-import org.jetbrains.annotations.NotNull;
-import spoon.reflect.code.*;
+import spoon.reflect.code.CtDo;
+import spoon.reflect.code.CtStatement;
+import spoon.reflect.code.CtStatementList;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,9 +1,8 @@
 package com.github.lucacampanella.plugin;
 
-import groovyjarjarpicocli.CommandLine;
 import org.gradle.api.logging.LogLevel;
-import org.gradle.api.tasks.*;
 import org.gradle.api.tasks.Optional;
+import org.gradle.api.tasks.*;
 import org.slf4j.event.Level;
 
 import java.util.*;

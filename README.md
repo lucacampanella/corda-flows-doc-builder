@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/lucacampanella/corda-flows-doc-builder.svg?branch=master)](https://travis-ci.org/lucacampanella/corda-flows-doc-builder)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.github.lucacampanella%3Acorda-flows-doc-builder&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.github.lucacampanella%3Acorda-flows-doc-builder)
 
 Gradle plugin to automatically generate graph that represent Corda flows interactions. 
 The plugin is intended to help developers automatically build documentation regarding the 

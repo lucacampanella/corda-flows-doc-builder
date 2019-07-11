@@ -127,46 +127,6 @@ public class AnalyzerWithModel {
         return currClassCallStackHolder;
     }
 
-    //    ** A new responder written to override an existing responder must _still_ be annotated with `@InitiatedBy`
-    //    referencing the base initiator.
-    //    ** A new initiator written to override an existing initiator must _not_ have the @InitiatingFlow annotation.
-//    public Map<CtClass, CtClass> getInitiatedClassToInitiatingMap() {
-//
-//        //find all classes that are initiated by flows
-//        List<CtClass> initiatedClasses = getClassesByAnnotation(InitiatedBy.class);
-//
-//        //retain only the ones that are furthest away from FlowLogic.class, these are the one that will actually
-//        // be run by corda
-//        Set<CtClass> furthestInitiatedClasses = new HashSet<>();
-//        initiatedClasses.forEach(klass -> furthestInitiatedClasses.add(getFurthestAwaySubclass(klass)));
-//
-//        //map them to the class that initiates them
-//        Map<CtClass, CtClass> initiatedClassToInitiating = new HashMap<>(initiatedClasses.size());
-//
-//        for(CtClass klass : furthestInitiatedClasses) {
-//            final Optional<CtAnnotation<? extends Annotation>> initiatedByAnnotationOptional = klass.getAnnotations().stream()
-//                    .filter(ctAnnotation ->
-//                    ctAnnotation.getActualAnnotation().annotationType() == InitiatedBy.class).findFirst();
-//
-//            if(initiatedByAnnotationOptional.isPresent()) {
-//                final CtAnnotation<? extends Annotation> initiatedByAnnotation = initiatedByAnnotationOptional.get();
-//
-//                final CtExpression referenceToClass = (CtExpression) initiatedByAnnotation.getAllValues().get("value");
-//
-//                //maybe not the best way to get the class, but the only one I found
-//                CtPath path = new CtPathStringBuilder().fromString("." +
-//                        ((CtFieldReadImpl) referenceToClass).getTarget().toString());
-//
-//                final CtClass initiatingClass = (CtClass) path.evaluateOn(model.getRootPackage()).get(0);
-//
-//                initiatedClassToInitiating.put(klass, initiatingClass);
-//            }
-//
-//        }
-//
-//        return initiatedClassToInitiating;
-//    }
-
     public List<CtClass> getClassesByAnnotation(Class annotationClass) {
         List<CtElement> elements = model.getElements(new AnnotationFilter<>(annotationClass));
 

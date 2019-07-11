@@ -1,13 +1,10 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
-import spoon.reflect.code.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import spoon.reflect.code.CtStatement;
+import spoon.reflect.code.CtStatementList;
+import spoon.reflect.code.CtWhile;
 
 public class While extends LoopBranchingStatement {
     private While() {

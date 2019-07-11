@@ -1,13 +1,12 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.utils.Utils;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel;
-import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
-import spoon.reflect.code.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.github.lucacampanella.callgraphflows.utils.Utils;
+import spoon.reflect.code.CtExpression;
+import spoon.reflect.code.CtForEach;
+import spoon.reflect.code.CtStatement;
+import spoon.reflect.code.CtStatementList;
 
 public class ForEach extends LoopBranchingStatement {
 

@@ -7,7 +7,6 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.AnalyzerWithModel
 import com.github.lucacampanella.callgraphflows.staticanalyzer.Branch;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.CombinationsHolder;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.matchers.MatcherHelper;
-import com.github.lucacampanella.callgraphflows.utils.Utils;
 import spoon.reflect.code.CtExpression;
 import spoon.reflect.code.CtIf;
 import spoon.reflect.code.CtStatement;

@@ -12,8 +12,6 @@ import java.util.List;
 
 public abstract class   GBaseIndentedContainer extends GBaseContainer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GBaseIndentedContainer.class);
-
     protected static class GBaseTextWithRelativeY extends ComponentWithRelativeY {
         private GBaseText comp = null;
 

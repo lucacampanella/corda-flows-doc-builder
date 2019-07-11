@@ -3,10 +3,12 @@ package com.github.lucacampanella.callgraphflows.staticanalyzer;
 import net.corda.core.flows.InitiatingFlow;
 import net.corda.core.flows.StartableByRPC;
 import spoon.reflect.declaration.CtClass;
-import spoon.reflect.reference.CtTypeReference;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ClassDescriptionContainer {

@@ -1,6 +1,5 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer.instructions;
 
-import com.github.lucacampanella.callgraphflows.DrawerUtil;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseComponent;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GBaseText;
 import com.github.lucacampanella.callgraphflows.graphics.components2.GConditionalBranchIndented;
@@ -69,12 +68,11 @@ public class MethodInvocation extends InstructionStatement {
                     MethodInvocation targetInv = MethodInvocation.fromCtStatement((CtInvocation) target, analyzer);
                     methodInvocation.internalMethodInvocations.addIfRelevantForLoopFlowBreakAnalysis(targetInv);
                 }
-                else if(target instanceof CtSuperAccessImpl) { //we add the name of the actual class if the target is super, for clarity
-                    if(target.getType() != null ) {
-                        methodInvocation.graphElem.setText(statement.toString() + " // " +
+                else if(target instanceof CtSuperAccessImpl && target.getType() != null ) {
+                    //we add the name of the actual class if the target is super, for clarity
+                    methodInvocation.graphElem.setText(statement.toString() + " // " +
                                 ClassDescriptionContainer.fromClass((CtClass) target.getType().getTypeDeclaration())
                                         .getNameWithParent());
-                    }
                 }
             }
 
@@ -116,7 +114,7 @@ public class MethodInvocation extends InstructionStatement {
                 }
                 else {
                     LOGGER.trace("expr: {} of type {} {}", expr, expr.getType(), expr.getShortRepresentation());
-                    if(expr.getType() != null) { //todo: I think this just means void, but test
+                    if(expr.getType() != null) {
                         if (analyzer.getCurrClassCallStackHolder().resolveEventualGenerics(expr.getType())
                                 .isSubtypeOf(MatcherHelper.getTypeReference(FlowSession.class))) {
                             addToMapIfNoException(methodInvocation.callerSessionNameToCalleeSessionName, inv, i);

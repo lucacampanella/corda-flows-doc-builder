@@ -10,7 +10,7 @@ import java.awt.*;
 public class GSubFlowIndented extends GBaseIndentedContainer {
 
     public GSubFlowIndented() {
-
+        super();
     }
 
     @Override

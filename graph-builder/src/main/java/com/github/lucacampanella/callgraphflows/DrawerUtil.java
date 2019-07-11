@@ -29,6 +29,8 @@ public final class DrawerUtil {
 
     public static final String DEFAULT_OUT_DIR = Paths.get("build", "graphs").toString();
 
+    private static final String IMAGES_FOLDER_NAME = "images";
+
     public static void drawAllStartableClasses(AnalyzerWithModel analyzerWithModel, String outPath) throws IOException {
         if(outPath == null) {
             outPath = DEFAULT_OUT_DIR;
@@ -38,7 +40,7 @@ public final class DrawerUtil {
 
         final List<CtClass> startableByRPCClasses = analyzerWithModel.getClassesToBeAnalyzed();
         LOGGER.info("Found these classes annotated with @StartableByRPC: ");
-        Paths.get(outPath, "images").toFile().mkdirs(); //create all directories necessary for the output
+        Paths.get(outPath, IMAGES_FOLDER_NAME).toFile().mkdirs(); //create all directories necessary for the output
         for (CtClass klass : startableByRPCClasses) {
             LOGGER.info("**** Analyzing class {} ", klass.getQualifiedName());
             drawFromClass(analyzerWithModel, klass, outPath);
@@ -67,8 +69,8 @@ public final class DrawerUtil {
         final ClassDescriptionContainer classDescription = analysisResult.getClassDescription();
 
         GGraphBuilder graphBuilder = GGraphBuilder.fromAnalysisResult(analysisResult);
-        Paths.get(outPath, "images").toFile().mkdirs();
-        graphBuilder.drawToFile(Paths.get(outPath, "images", classDescription.getFullyQualifiedName() + ".svg").toString());
+        Paths.get(outPath, IMAGES_FOLDER_NAME).toFile().mkdirs();
+        graphBuilder.drawToFile(Paths.get(outPath, IMAGES_FOLDER_NAME, classDescription.getFullyQualifiedName() + ".svg").toString());
 
         AsciiDocBuilder asciiDocBuilder = AsciiDocBuilder.fromAnalysisResult(analysisResult);
         asciiDocBuilder.writeToFile(Paths.get(outPath, classDescription.getFullyQualifiedName() + ".adoc").toString());

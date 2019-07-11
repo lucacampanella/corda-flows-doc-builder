@@ -9,12 +9,11 @@ import net.corda.core.flows.FlowSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spoon.Launcher;
-import spoon.pattern.Pattern;
-import spoon.pattern.PatternBuilder;
-import spoon.pattern.PatternBuilderHelper;
 import spoon.reflect.CtModel;
 import spoon.reflect.code.*;
-import spoon.reflect.declaration.*;
+import spoon.reflect.declaration.CtElement;
+import spoon.reflect.declaration.CtMethod;
+import spoon.reflect.declaration.CtTypedElement;
 import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.filter.NamedElementFilter;
 import spoon.reflect.visitor.filter.TypeFilter;
@@ -26,7 +25,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 /**
