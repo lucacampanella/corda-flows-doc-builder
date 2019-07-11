@@ -43,10 +43,12 @@ public class AnalyzerWithModel {
 
     public <T> CtClass<T> getClass(Class<T> klass) {
         final List<CtClass> results = model.getElements(new NamedElementFilter(CtClass.class, klass.getSimpleName()));
-        if(results.isEmpty()) {
-            return null;
+        for(CtClass ctClass : results) {
+            if(ctClass.getQualifiedName().equals(klass.getName())) {
+                return (CtClass<T>) ctClass;
+            }
         }
-        return (CtClass<T>) results.get(0);
+        return null;
     }
 
     public AnalysisResult analyzeFlowLogicClass(Class klass) throws AnalysisErrorException {

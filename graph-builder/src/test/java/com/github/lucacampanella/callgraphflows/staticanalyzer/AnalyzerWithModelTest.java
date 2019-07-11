@@ -1,5 +1,6 @@
 package com.github.lucacampanella.callgraphflows.staticanalyzer;
 
+import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.ThrowTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.DoubleExtendingSuperclassTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.ExtendingSuperclassTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.InitiatorBaseFlow;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtType;
+import spoon.reflect.visitor.filter.NamedElementFilter;
 
 import java.io.IOException;
 import java.util.List;
@@ -86,5 +88,24 @@ class AnalyzerWithModelTest {
          final CtClass ctClass = initiatingClasses.get(0);
         final List<CtClass> allSubClasses = analyzerWithModel.getAllSubClassesIncludingThis(ctClass);
         assertThat(allSubClasses).hasSize(3);
+    }
+
+    @Test
+    void getClassTest() {
+        final CtClass<DoubleExtendingSuperclassTestFlow.Initiator> doubleInitiator
+                = analyzerWithModel.getClass(DoubleExtendingSuperclassTestFlow.Initiator.class);
+
+        final CtClass<ExtendingSuperclassTestFlow.Initiator> singleInitiator
+                = analyzerWithModel.getClass(ExtendingSuperclassTestFlow.Initiator.class);
+
+        final CtClass<DoubleExtendingSuperclassTestFlow> doubleExtending
+                = analyzerWithModel.getClass(DoubleExtendingSuperclassTestFlow.class);
+
+        final CtClass<ThrowTestFlow> notInModel
+                = analyzerWithModel.getClass(ThrowTestFlow.class);
+
+        assertThat(doubleInitiator).isNotEqualTo(singleInitiator);
+        assertThat(doubleInitiator).isNotEqualTo(doubleExtending);
+        assertThat(notInModel).isNull();
     }
 }

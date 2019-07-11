@@ -260,11 +260,6 @@ public class GeneralTests {
         assertThat(analysisResult.checkIfContainsValidProtocolAndSetupLinks()).isEqualTo(true);
     }
 
-    private SourceClassAnalyzer getSourceClassAnalyzerFromClasses(Class... toBeAnalyzed) {
-        return new SourceClassAnalyzer(Arrays.stream(toBeAnalyzed)
-                .map(TestUtils::fromClassSrcToPath).collect(Collectors.toList()));
-    }
-
     private void testAnalyzeByRPCWithClass(Class toBeAnalyzed) throws IOException {
         final SourceClassAnalyzer analyzer = new SourceClassAnalyzer(TestUtils.fromClassSrcToPath(toBeAnalyzed));
 
@@ -277,6 +272,11 @@ public class GeneralTests {
         for (CtClass clazz : Classes) {
             DrawerUtil.drawFromClass(analyzer, clazz, DrawerUtil.DEFAULT_OUT_DIR);
         }
+    }
+
+    public static SourceClassAnalyzer getSourceClassAnalyzerFromClasses(Class... toBeAnalyzed) {
+        return new SourceClassAnalyzer(Arrays.stream(toBeAnalyzed)
+                .map(TestUtils::fromClassSrcToPath).collect(Collectors.toList()));
     }
 
     @Test
