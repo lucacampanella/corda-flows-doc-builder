@@ -10,6 +10,7 @@ import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.*;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.DoubleExtendingSuperclassTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.ExtendingSuperclassTestFlow;
 import com.github.lucacampanella.callgraphflows.staticanalyzer.testclasses.subclassestests.InitiatorBaseFlow;
+import net.corda.core.flows.InitiatingFlow;
 import net.corda.core.flows.StartableByRPC;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -229,6 +230,7 @@ public class GeneralTests {
                 fromClassSrcToPath(DoubleExtendingSuperclassTestFlow.class));
         final AnalysisResult analysisResult =
                 analyzer.analyzeFlowLogicClass(analyzer.getClass(DoubleExtendingSuperclassTestFlow.Initiator.class));
+        StaticAnalyzerUtils.getAllWronglyDoubleAnnotatedClasses(analyzer.getClassesByAnnotation(InitiatingFlow.class));
         DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
         LOGGER.trace("{}", analysisResult.getStatements());
         assertThat(analysisResult.getStatements().getStatements().get(1)).isInstanceOf(MethodInvocation.class);
@@ -244,6 +246,15 @@ public class GeneralTests {
         LOGGER.info("{}", analysisResult.getStatements());
         DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
    }
+
+    @Test
+    public void InitiateFlowInIfTestFlowTest() throws AnalysisErrorException, IOException {
+        final AnalysisResult analysisResult =
+                getSourceClassAnalyzerFromClasses(InitiateFlowInIfTestFlow.class)
+                        .analyzeFlowLogicClass(InitiateFlowInIfTestFlow.Initiator.class);
+        DrawerUtil.drawFromAnalysis(analysisResult, DrawerUtil.DEFAULT_OUT_DIR);
+        assertThat(analysisResult.checkIfContainsValidProtocolAndSetupLinks()).isEqualTo(true);
+    }
 
     private SourceClassAnalyzer getSourceClassAnalyzerFromClasses(Class... toBeAnalyzed) {
         return new SourceClassAnalyzer(Arrays.stream(toBeAnalyzed)

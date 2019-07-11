@@ -346,36 +346,6 @@ public class StaticAnalyzerUtils {
 //        return result;
 //    }
 
-    public static class WrongFlowLogicInSubflowException extends Exception {
-        private final String message;
-
-        public WrongFlowLogicInSubflowException(String msg) {
-            this.message = msg;
-        }
-
-        @Override
-        public String getMessage() {
-            return message;
-        }
-    }
-
-    static StatementWithCompanionInterface consumeUntilBlocking(Queue<StatementInterface> queue) throws WrongFlowLogicInSubflowException {
-        while(!queue.isEmpty()) {
-            StatementInterface statement = queue.peek();
-            final boolean validProtocol = statement.checkIfContainsValidProtocolAndSetupLinks();
-            if(!validProtocol) {
-                throw new WrongFlowLogicInSubflowException(
-                        "The sub flow " + statement.getStringDescription() + " contains a wrong flow protocol");
-            }
-            if (statement.needsCompanion()) {
-                return (StatementWithCompanionInterface) statement;
-            }
-            queue.remove();
-        }
-
-        return null; //we return null if we consumed all the queue without finding aa blocking statement
-    }
-
     public static Optional<String> findTargetSessionName(CtStatement ctStatement, AnalyzerWithModel analyzer) {
         final List<CtVariableRead> mentionedSessions = ctStatement.
                 getElements(new TypeFilter<>(CtVariableRead.class))
