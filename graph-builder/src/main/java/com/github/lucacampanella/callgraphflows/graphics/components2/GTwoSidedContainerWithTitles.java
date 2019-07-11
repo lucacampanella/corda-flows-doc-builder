@@ -19,26 +19,6 @@ public class GTwoSidedContainerWithTitles extends GBaseComponent {
     private GBaseText mainSubFlowTitle = null;
     private GBaseText counterpartySubFlowTitle = null;
 
-    public void setMainSubFlow(GBaseText titleComp, GSubFlowIndented mainSubFlow) {
-        twoSidedContainer.setMainSubFlow(mainSubFlow);
-        this.mainSubFlowTitle = titleComp;
-    }
-
-    public void setMainSubFlow(String title, GSubFlowIndented mainSubFlow) {
-        twoSidedContainer.setMainSubFlow(mainSubFlow);
-        setMainSubFlow(getTitleBox(title), mainSubFlow);
-    }
-
-    public void setCounterpartySubFlow(GBaseText titleComp, GSubFlowIndented counterpartySubFlow, GInstruction initiateFlowInstruction) {
-        twoSidedContainer.setCounterpartySubFlow(counterpartySubFlow, initiateFlowInstruction);
-        this.counterpartySubFlowTitle = titleComp;
-    }
-
-    public void setCounterpartySubFlow(String title, GSubFlowIndented counterpartySubFlow, GInstruction initiateFlowInstruction) {
-        twoSidedContainer.setCounterpartySubFlow(counterpartySubFlow, initiateFlowInstruction);
-        setCounterpartySubFlow(getTitleBox(title), counterpartySubFlow, initiateFlowInstruction);
-    }
-
     @Override
     public int computeHeight(SVGGraphics2D g2) {
         return twoSidedContainer.getHeight(g2) + getTitleSectionHeight(g2);

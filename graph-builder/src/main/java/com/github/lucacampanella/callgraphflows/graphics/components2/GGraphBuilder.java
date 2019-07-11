@@ -20,24 +20,12 @@ public class GGraphBuilder {
 
     GTwoSidedContainerWithTitles gTwoSidedContainerWithTitles = new GTwoSidedContainerWithTitles();
 
-    public GGraphBuilder() {
-        //empty constructor
-    }
-
     public GGraphBuilder(GTwoSidedContainerWithTitles twoSidedContainer) {
         this.gTwoSidedContainerWithTitles = twoSidedContainer;
     }
 
     public static GGraphBuilder fromAnalysisResult(AnalysisResult analysisResult) {
         return new GGraphBuilder(GTwoSidedContainerWithTitles.fromAnalysisResult(analysisResult));
-    }
-
-    public void setLeftSession(String title, GSubFlowIndented flow) {
-        gTwoSidedContainerWithTitles.setMainSubFlow(title, flow);
-    }
-
-    public void setRightSession(String title, GSubFlowIndented flow, GInstruction initiatingInstructionOfMainFlow) {
-        gTwoSidedContainerWithTitles.setCounterpartySubFlow(title, flow, initiatingInstructionOfMainFlow);
     }
 
     public void drawToFile(String path) throws IOException {
