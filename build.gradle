@@ -9,16 +9,10 @@ buildscript {
 }
 
 plugins {
-    //id 'com.gradle.build-scan' version '2.3'
     id 'com.github.ben-manes.versions' version '0.21.0' // task: dependencyUpdates
     id 'org.ajoberstar.reckon' version '0.11.0'
     id 'org.sonarqube' version '2.7.1'
 }
-
-//buildScan {
-//    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
-//    termsOfServiceAgree = 'yes'
-//}
 
 reckon {
     scopeFromProp()
@@ -52,12 +46,13 @@ allprojects {
     ext {
         corda_release_group = 'net.corda'
         corda_release_version = '4.0'
-        spoon_version = '7.4.0' //TODO: understand how to propagate this
+        spoon_version = '7.4.0'
         assertj_version = '3.12.2'
-        junit5_version = '5.4.2'
+        junit5_version = '5.5.0'
         short_description='Gradle plugin to automatically generate graph that represent Corda flows interactions.'
         url='https://github.com/lucacampanella/corda-flows-doc-builder'
         git_url = url + ".git"
+        kotlin_version = "1.3.41"
     }
     
     group 'com.github.lucacampanella'
@@ -154,15 +149,15 @@ subprojects {
                 artifact sourcesJar
                 artifact javadocJar
                 pom {
-                    //name = project.name todo: change fro gradle 5
+                    name = project.name
                     description = project.short_description
                     url = project.url
-//                    licenses {
-//                        license {
-//                            name = 'The Apache License, Version 2.0'
-//                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-//                        }
-//                    }
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
                 }
             }
         }

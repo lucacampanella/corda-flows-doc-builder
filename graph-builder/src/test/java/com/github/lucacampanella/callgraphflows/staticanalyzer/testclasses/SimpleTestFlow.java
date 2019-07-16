@@ -50,8 +50,6 @@ public class SimpleTestFlow {
         @Override
         public Void call() throws FlowException {
 
-            boolean condition = true;
-
             otherSession.receive(Boolean.class);
             otherSession.send("Test");
             return null;

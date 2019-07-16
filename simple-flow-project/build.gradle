@@ -9,15 +9,11 @@ plugins {
     id 'com.github.lucacampanella.plugin.flows-doc-builder-plugin'
 }
 
-//apply plugin: 'com.github.lucacampanella.plugin.flows-doc-builder-plugin'
-
 ext {
     corda_release_group = 'net.corda'
     corda_release_version = '4.0'
 }
 repositories {
-    // Use jcenter for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
     mavenCentral()
     jcenter()
 }

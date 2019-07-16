@@ -6,16 +6,13 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:5.0.0'//4.0.1'// todo: change fro gradle 5
-//--------------------------------------- Added for publishing on sonartype
-//        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'3
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.21'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.1.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 plugins {
     id 'application'
-//    id 'maven-publish'
 }
 apply plugin: 'kotlin'
 apply plugin: 'com.github.johnrengelman.shadow'
@@ -37,28 +34,19 @@ dependencies {
     implementation "fr.inria.gforge.spoon:spoon-core:$spoon_version"
 
     implementation "org.jboss.windup.decompiler.fernflower:fernflower:2.5.0.Final"
-    implementation "org.benf:cfr:0.135"
+    implementation "org.benf:cfr:0.135"//145 doesn't work for some reason
 
     implementation "org.jfree:jfreesvg:3.4"
     implementation "org.slf4j:slf4j-simple:1.7.26"
     implementation "info.picocli:picocli:3.9.6"
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.3.21"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     testImplementation "org.slf4j:slf4j-simple:1.7.26"
     testImplementation project(":test-utils").sourceSets.test.output
 }
-//jar {
-//    from configurations.implementation.collect {
-//
-//        it.isDirectory() ? it : zipTree(it)
-//    }
-//} todo: change fro gradle 5
-mainClassName = 'com.github.lucacampanella.callgraphflows.Main'
 
-//application {
-//    mainClassName = 'com.github.lucacampanella.callgraphflows.Main'
-//}
+mainClassName = 'com.github.lucacampanella.callgraphflows.Main'
 
 task copyTestJarToResources(type: Copy) {
     from buildDir.toURI().toURL().toString() + "/libs/JarAnalyzerTestJar.jar";
@@ -110,53 +98,10 @@ task generateIndexFileForTests() {
 
 test.finalizedBy generateIndexFileForTests
 
-//task copyKotlinTestJarToResources(type: Copy) {
-//    from buildDir.toURI().toURL().toString() + "/libs/KotlinTestJar.jar";
-//    into sourceSets.test.output.resourcesDir
-//}
-//
-//task createKotlinTestJar(type: Jar) {
-//
-////    archiveFileName = "KotlinTestJar.jar"
-////    from {
-////        sourceSets.test.output
-////    }
-////    //include '**/kotlin/**/*.class'
-////    includeEmptyDirs false
-//
-//
-//    println file(buildDir.toString() + "/classes/kotlin/test").listFiles({File file -> file.toString().contains("KotlinTestFlow")} as FileFilter)
-//    from file(buildDir.toString() + "/classes/kotlin/test").listFiles({File file -> file.toString().contains("KotlinTestFlow")} as FileFilter)
-//    archiveFileName = "KotlinTestJar.jar"
-////    doLast {
-////        println "kotlin test jar"
-////        println sourceSets.test.output.classesDirs
-////        println sourceSets.test.output.classesDirs.asFileTree.filter {
-////            it.toString().contains("KotlinTestFlow")
-////        }.collect()
-////
-////
-////        //println file(sourceSets.test.output.asPath).listFiles()
-////        //println configurations.testRuntimeClasspath.asPath//collect { it.isDirectory() ? it : zipTree(it) }
-////        from sourceSets.test.output.classesDirs.asFileTree.filter { it.toString().contains("KotlinTestFlow")}.collect()
-////    }
-//
-//}
-//
-//copyKotlinTestJarToResources.dependsOn(createKotlinTestJar)
-//tasks.withType(Test).each{it -> it.dependsOn(copyKotlinTestJarToResources)}
-
-
-//createKotlinTestJar.dependsOn(compileTestKotlin)
-//processTestResources.dependsOn(createKotlinTestJar)
-//processTestResources {
-//    from file(buildDir.toString() + "/libs/KotlinTestJar.jar")
-//}
-
 publishing {
     publications {
         mavenJava(MavenPublication) {
             artifact shadowJar
         }
     }
-} //todo: change fro gradle 5
+}

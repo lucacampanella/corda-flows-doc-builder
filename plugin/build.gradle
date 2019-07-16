@@ -6,9 +6,6 @@ plugins {
 
 repositories {
     mavenCentral()
-//    maven {
-//        url "https://dl.bintray.com/lucacampanella/mvn-release"
-//    }
 }
 
 dependencies {
