@@ -148,7 +148,7 @@ public class MethodInvocation extends InstructionStatement {
             map.put(inv.getArguments().get(i).toString(),
                     ((CtParameter) inv.getExecutable().getDeclaration().getParameters().get(i))
                             .getSimpleName());
-        }catch (NullPointerException e) {
+        }catch (IndexOutOfBoundsException | NullPointerException e) {
             LOGGER.warn("Error while retrieving parameter name for method: {}", inv);
         }
     }
