@@ -66,7 +66,10 @@ public class FernflowerDecompiler implements Decompiler {
 			java.util.Enumeration enumEntries = jar.entries();
 			while (enumEntries.hasMoreElements()) {
 				java.util.jar.JarEntry file = (java.util.jar.JarEntry) enumEntries.nextElement();
-				java.io.File f = new java.io.File(destDir + java.io.File.separator + file.getName());
+				java.io.File f = new File(destDir, file.getName());
+       if(!f.toPath().normalize().startsWith(destDir)) {
+           throw new IOException("Bad zip entry");
+       }
 				f.getParentFile().mkdirs();
 				if (file.isDirectory()) { // if its a directory, create it
 					f.mkdir();
